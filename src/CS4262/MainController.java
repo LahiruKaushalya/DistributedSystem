@@ -6,7 +6,14 @@ package CS4262;
  */
 public class MainController {
     
+    private static MainFrame mainFrame;
+
     public static void main(String args[]){
-        new MainFrame().setVisible(true);
+        mainFrame = new MainFrame();
+        mainFrame.setVisible(true);
+    }
+    
+    public MainFrame getMainFrame() {
+        return mainFrame;
     }
 }
