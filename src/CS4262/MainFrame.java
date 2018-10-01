@@ -1,5 +1,8 @@
 package CS4262;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 /**
  *
  * @author Lahiru Kaushalya
@@ -8,6 +11,9 @@ public class MainFrame extends javax.swing.JFrame {
 
     public MainFrame() {
         initComponents();
+        this.setResizable(false);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize(); //Set frame position
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
     }
 
     /**
@@ -19,22 +25,126 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane = new javax.swing.JTabbedPane();
+        ConnectionPanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        ConnectionPanelTextArea = new javax.swing.JTextArea();
+        ipLabel = new javax.swing.JLabel();
+        portLabel = new javax.swing.JLabel();
+        ipTextField = new javax.swing.JTextField();
+        portTextField = new javax.swing.JTextField();
+        connectBtn = new javax.swing.JButton();
+        RoutingTablePanel = new javax.swing.JPanel();
+        ContentPanel = new javax.swing.JPanel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setAlwaysOnTop(true);
+
+        jTabbedPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        jTabbedPane.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+
+        ConnectionPanelTextArea.setColumns(20);
+        ConnectionPanelTextArea.setRows(5);
+        jScrollPane1.setViewportView(ConnectionPanelTextArea);
+
+        ipLabel.setText("IP Address");
+
+        portLabel.setText("Port");
+
+        connectBtn.setText("CONNECT");
+
+        javax.swing.GroupLayout ConnectionPanelLayout = new javax.swing.GroupLayout(ConnectionPanel);
+        ConnectionPanel.setLayout(ConnectionPanelLayout);
+        ConnectionPanelLayout.setHorizontalGroup(
+            ConnectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ConnectionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(ConnectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
+                    .addGroup(ConnectionPanelLayout.createSequentialGroup()
+                        .addGroup(ConnectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(ipLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
+                            .addComponent(portLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(ConnectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ipTextField)
+                            .addComponent(portTextField)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ConnectionPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(connectBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        ConnectionPanelLayout.setVerticalGroup(
+            ConnectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ConnectionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(ConnectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ipLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ipTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(ConnectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(portLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(portTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(connectBtn)
+                .addGap(23, 23, 23))
+        );
+
+        jTabbedPane.addTab("Connect", ConnectionPanel);
+
+        javax.swing.GroupLayout RoutingTablePanelLayout = new javax.swing.GroupLayout(RoutingTablePanel);
+        RoutingTablePanel.setLayout(RoutingTablePanelLayout);
+        RoutingTablePanelLayout.setHorizontalGroup(
+            RoutingTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 372, Short.MAX_VALUE)
+        );
+        RoutingTablePanelLayout.setVerticalGroup(
+            RoutingTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 331, Short.MAX_VALUE)
+        );
+
+        jTabbedPane.addTab("Routing Table", RoutingTablePanel);
+
+        javax.swing.GroupLayout ContentPanelLayout = new javax.swing.GroupLayout(ContentPanel);
+        ContentPanel.setLayout(ContentPanelLayout);
+        ContentPanelLayout.setHorizontalGroup(
+            ContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 372, Short.MAX_VALUE)
+        );
+        ContentPanelLayout.setVerticalGroup(
+            ContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 331, Short.MAX_VALUE)
+        );
+
+        jTabbedPane.addTab("Content", ContentPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 484, Short.MAX_VALUE)
+            .addComponent(jTabbedPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 360, Short.MAX_VALUE)
+            .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel ConnectionPanel;
+    private javax.swing.JTextArea ConnectionPanelTextArea;
+    private javax.swing.JPanel ContentPanel;
+    private javax.swing.JPanel RoutingTablePanel;
+    private javax.swing.JButton connectBtn;
+    private javax.swing.JLabel ipLabel;
+    private javax.swing.JTextField ipTextField;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTabbedPane jTabbedPane;
+    private javax.swing.JLabel portLabel;
+    private javax.swing.JTextField portTextField;
     // End of variables declaration//GEN-END:variables
 }
