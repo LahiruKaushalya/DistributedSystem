@@ -16,7 +16,8 @@ import java.util.logging.Logger;
  * @author Lahiru Kaushalya
  */
 public class BSConnector {
-
+    
+    private final String bsipAddress;
     private final String ipAddress;
     private final String username;
     private static String response;
@@ -26,8 +27,9 @@ public class BSConnector {
     
     private ArrayList<ArrayList<String>> nodes;
 
-    public BSConnector(String ipAddress, String username, int port) {
-
+    public BSConnector(String bsipAddress, String ipAddress, String username, int port) {
+        
+        this.bsipAddress = bsipAddress;
         this.ipAddress = ipAddress;
         this.username = username;
         this.port = port;
@@ -49,7 +51,7 @@ public class BSConnector {
                         DatagramPacket dp;
                         byte[] buf = new byte[1024];
                         DatagramSocket ds = new DatagramSocket();
-                        InetAddress ip = InetAddress.getByName("localhost");
+                        InetAddress ip = InetAddress.getByName(bsipAddress);
 
                         dp = new DatagramPacket(message.getBytes(), message.length(), ip, 55555);
                         ds.send(dp);
