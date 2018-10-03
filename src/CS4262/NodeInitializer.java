@@ -1,12 +1,14 @@
 package CS4262;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 /**
  *
  * @author Lahiru Kaushalya
  */
+
+//This will recieve all of the available nodes in the bootstrap server
+
 public class NodeInitializer {
     
     private final String ipAddress;
@@ -19,8 +21,12 @@ public class NodeInitializer {
         this.port = mc.getPort();
     }
     
-    public void initializeNode(ArrayList<ArrayList<String>> nodes) {
-
+    /**
+     * 
+     * @param nodes 
+     */
+    public void initializeNode(ArrayList<ArrayList<String>> nodes) 
+    {
         System.out.print(nodes);
     }
 }
