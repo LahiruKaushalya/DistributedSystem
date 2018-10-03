@@ -18,20 +18,20 @@ import java.util.logging.Logger;
 public class BSConnector {
     
     private static Node node;
-    private final long TIMEOUT;
     private static String response;
+    
+    private final long TIMEOUT;
     private final String bsipAddress;
     private final MainController mainController;
     
-    private ArrayList<Node> nodes;
+    private ArrayList<NodeDTO> nodes;
 
     public BSConnector(String bsipAddress, String ipAddress, String username, int port) {
         
         this.TIMEOUT = 5000;
         this.bsipAddress = bsipAddress;
         this.mainController = new MainController();
-        this.node = new Node(ipAddress, port);
-        node.setUsername(username);
+        this.node = new Node(ipAddress, port, username);
         mainController.setNode(node);
     }
     
@@ -144,11 +144,11 @@ public class BSConnector {
                     return out;
                 default:
                     out += "Registration success. " + value + " nodes available\n\nIP Address\tPort\n";
-                    this.nodes = new ArrayList<Node>();
+                    this.nodes = new ArrayList<NodeDTO>();
                     for (int i = 0; i < value; i++) {
                         String ip = st.nextToken();
                         String port = st.nextToken();
-                        nodes.add(new Node(ip, Integer.parseInt(port)));
+                        nodes.add(new NodeDTO(ip, Integer.parseInt(port)));
                         out += ip + "\t" + port + "\n";
                     }
                     return out;

@@ -11,18 +11,44 @@ import java.util.ArrayList;
  *
  * @author Sankaja
  */
-public class Node 
-{
-    private String username;
+
+//Create node object for data transfer perposes
+
+class NodeDTO{
+    
     private final String ipAdress;
     private final int port;
+    
+    public NodeDTO(String ip, int port)
+    { 
+        this.ipAdress = ip;
+        this.port = port;
+    }
+    
+    public String getIpAdress() {
+        return ipAdress;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+}
+
+public class Node extends NodeDTO
+{
+    private final String username;
+    private String id;
     private ArrayList<String> content;
     
-    public Node(String ip, int port)
+    private Node successor;
+    private Node predecessor;
+    
+    public Node(String ip, int port, String username)
     { 
+        super(ip, port);
+        this.username = username;
         this.content = new ArrayList<String>();
-        this.port = port;
-        this.ipAdress = ip;
     }
     
     /**
@@ -32,22 +58,15 @@ public class Node
         return username;
     }
     
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     /**
-     * @return the ipAdress
+     * @return the node id
      */
-    public String getIpAdress() {
-        return ipAdress;
+    public String getId() {
+        return id;
     }
-
-    /**
-     * @return the port
-     */
-    public int getPort() {
-        return port;
+    
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**
@@ -67,5 +86,26 @@ public class Node
         this.content = content;
     }
     
+    /**
+     * @return the successor
+     */
+    public Node getSuccessor() {
+        return successor;
+    }
+
+    public void setSuccessor(Node successor) {
+        this.successor = successor;
+    }
+    
+    /**
+     * @return the predecessor
+     */
+    public Node getPredecessor() {
+        return predecessor;
+    }
+
+    public void setPredecessor(Node predecessor) {
+        this.predecessor = predecessor;
+    }
     
 }

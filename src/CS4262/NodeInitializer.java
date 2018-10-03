@@ -23,7 +23,7 @@ public class NodeInitializer {
      * 
      * @param nodes 
      */
-    public void initializeNode(ArrayList<Node> nodes) 
+    public void initializeNode(ArrayList<NodeDTO> nodes) 
     {
         System.out.print(nodes);
     }
