@@ -9,12 +9,15 @@ import javax.swing.JOptionPane;
  * @author Lahiru Kaushalya
  */
 public class MainFrame extends javax.swing.JFrame {
-
+    
+    private BSConnector bsConnector;
+    
     public MainFrame() {
         initComponents();
         this.setResizable(false);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize(); //Set frame position
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+        unregBtn.setEnabled(false);
     }
 
     /**
@@ -32,13 +35,14 @@ public class MainFrame extends javax.swing.JFrame {
         portLabel = new javax.swing.JLabel();
         ipTextField = new javax.swing.JTextField();
         portTextField = new javax.swing.JTextField();
-        connectBtn = new javax.swing.JButton();
+        regtBtn = new javax.swing.JButton();
         connectScrollPane = new javax.swing.JScrollPane();
         connectTextPane = new javax.swing.JTextPane();
         usernameLbl = new javax.swing.JLabel();
         usernameTextField = new javax.swing.JTextField();
         bsServerIPLbl = new javax.swing.JLabel();
         bsServerIPTextField = new javax.swing.JTextField();
+        unregBtn = new javax.swing.JButton();
         searchPanel = new javax.swing.JPanel();
         downloadBtn = new javax.swing.JButton();
         fileNameLbl = new javax.swing.JLabel();
@@ -58,23 +62,34 @@ public class MainFrame extends javax.swing.JFrame {
         jTabbedPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         jTabbedPane.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
+        ipLbl.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         ipLbl.setText("IP Address");
 
+        portLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         portLabel.setText("Port");
 
-        connectBtn.setText("CONNECT");
-        connectBtn.addActionListener(new java.awt.event.ActionListener() {
+        regtBtn.setText("REGISTER");
+        regtBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                connectBtnActionPerformed(evt);
+                regtBtnActionPerformed(evt);
             }
         });
 
         connectTextPane.setEditable(false);
         connectScrollPane.setViewportView(connectTextPane);
 
+        usernameLbl.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         usernameLbl.setText("Username");
 
+        bsServerIPLbl.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         bsServerIPLbl.setText("BS Server IP");
+
+        unregBtn.setText("UNREGISTER");
+        unregBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                unregBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout connectionPanelLayout = new javax.swing.GroupLayout(connectionPanel);
         connectionPanel.setLayout(connectionPanelLayout);
@@ -84,20 +99,21 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(connectScrollPane)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, connectionPanelLayout.createSequentialGroup()
-                        .addGap(222, 222, 222)
-                        .addComponent(connectBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(connectionPanelLayout.createSequentialGroup()
-                        .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(bsServerIPLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(portLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ipLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(usernameLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ipLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
-                            .addComponent(portLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(bsServerIPLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ipTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
-                            .addComponent(portTextField)
-                            .addComponent(usernameTextField)
+                        .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(ipTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(portTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(usernameTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(connectionPanelLayout.createSequentialGroup()
+                                .addComponent(unregBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(regtBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(bsServerIPTextField))))
                 .addContainerGap())
         );
@@ -105,7 +121,7 @@ public class MainFrame extends javax.swing.JFrame {
             connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, connectionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(connectScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                .addComponent(connectScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(bsServerIPLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -122,9 +138,11 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(usernameLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(usernameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(connectBtn)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(regtBtn)
+                    .addComponent(unregBtn))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jTabbedPane.addTab("Connect", connectionPanel);
@@ -155,9 +173,9 @@ public class MainFrame extends javax.swing.JFrame {
             searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(searchPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(fileNameLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                .addComponent(fileNameLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(fileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                .addComponent(fileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(searchScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -183,7 +201,7 @@ public class MainFrame extends javax.swing.JFrame {
             contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(contentPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(contentScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                .addComponent(contentScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -205,7 +223,7 @@ public class MainFrame extends javax.swing.JFrame {
             routingTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(routingTablePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(routingScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                .addComponent(routingScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -219,13 +237,13 @@ public class MainFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+            .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void connectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectBtnActionPerformed
+    private void regtBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regtBtnActionPerformed
         
         String bsipAddress = bsServerIPTextField.getText();
         String ipAddress = ipTextField.getText();
@@ -233,13 +251,18 @@ public class MainFrame extends javax.swing.JFrame {
         String username = usernameTextField.getText();
         
         if(!bsipAddress.equals("") && !ipAddress.equals("") && !port.equals("") && !username.equals("")){
-            BSConnector bsConnector = new BSConnector(bsipAddress.trim(), ipAddress.trim(), username.trim(), Integer.parseInt(port.trim()));
-            bsConnector.connect();
+            bsConnector = new BSConnector(bsipAddress.trim(), ipAddress.trim(), username.trim(), Integer.parseInt(port.trim()));
+            bsConnector.register();
+            unregBtn.setEnabled(true);
         }
         else{
             JOptionPane.showMessageDialog(this,"Incomplete information"); 
         }
-    }//GEN-LAST:event_connectBtnActionPerformed
+    }//GEN-LAST:event_regtBtnActionPerformed
+
+    private void unregBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unregBtnActionPerformed
+        bsConnector.unregister();
+    }//GEN-LAST:event_unregBtnActionPerformed
 
     public void updateConnctionResponce(String responce){
         connectTextPane.setText(responce);
@@ -252,7 +275,6 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel bsServerIPLbl;
     private javax.swing.JTextField bsServerIPTextField;
-    private javax.swing.JButton connectBtn;
     private javax.swing.JScrollPane connectScrollPane;
     private javax.swing.JTextPane connectTextPane;
     private javax.swing.JPanel connectionPanel;
@@ -267,12 +289,14 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane;
     private javax.swing.JLabel portLabel;
     private javax.swing.JTextField portTextField;
+    private javax.swing.JButton regtBtn;
     private javax.swing.JScrollPane routingScrollPane;
     private javax.swing.JPanel routingTablePanel;
     private javax.swing.JTextPane routingTextPane;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JScrollPane searchScrollPane;
     private javax.swing.JTextPane searchTextPane;
+    private javax.swing.JButton unregBtn;
     private javax.swing.JLabel usernameLbl;
     private javax.swing.JTextField usernameTextField;
     // End of variables declaration//GEN-END:variables

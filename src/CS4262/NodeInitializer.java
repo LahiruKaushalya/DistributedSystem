@@ -11,21 +11,19 @@ import java.util.ArrayList;
 
 public class NodeInitializer {
     
-    private final String ipAddress;
-    private final int port;
+    private final Node node;
     private final MainController mc;
     
     public NodeInitializer(){
         this.mc = new MainController();
-        this.ipAddress = mc.getIpAddress();
-        this.port = mc.getPort();
+        this.node = mc.getNode();
     }
     
     /**
      * 
      * @param nodes 
      */
-    public void initializeNode(ArrayList<ArrayList<String>> nodes) 
+    public void initializeNode(ArrayList<Node> nodes) 
     {
         System.out.print(nodes);
     }

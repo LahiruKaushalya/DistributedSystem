@@ -5,7 +5,7 @@
  */
 package CS4262;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  *
@@ -13,15 +13,27 @@ import java.util.List;
  */
 public class Node 
 {
-    private String ipAdress;
-    private String port;
-    private List<String> content;
+    private String username;
+    private final String ipAdress;
+    private final int port;
+    private ArrayList<String> content;
     
-    public Node(String ip, String port, List<String> content)
-    {
-        this.content = content;
+    public Node(String ip, int port)
+    { 
+        this.content = new ArrayList<String>();
         this.port = port;
         this.ipAdress = ip;
+    }
+    
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+    
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
@@ -34,14 +46,14 @@ public class Node
     /**
      * @return the port
      */
-    public String getPort() {
+    public int getPort() {
         return port;
     }
 
     /**
      * @return the content
      */
-    public List<String> getContent() {
+    public ArrayList<String> getContent() {
         return content;
     }
 
@@ -51,7 +63,7 @@ public class Node
      * In case of a content update e.g. graceful departure,
      * get content list, update it and set it
      */
-    public void setContent(List<String> content) {
+    public void setContent(ArrayList<String> content) {
         this.content = content;
     }
     

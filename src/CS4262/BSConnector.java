@@ -17,58 +17,30 @@ import java.util.logging.Logger;
  */
 public class BSConnector {
     
-    private final String bsipAddress;
-    private final String ipAddress;
-    private final String username;
+    private static Node node;
+    private final long TIMEOUT;
     private static String response;
-    private final int port;
-    private long TIMEOUT;
+    private final String bsipAddress;
     private final MainController mainController;
     
-    private ArrayList<ArrayList<String>> nodes;
+    private ArrayList<Node> nodes;
 
     public BSConnector(String bsipAddress, String ipAddress, String username, int port) {
         
-        this.bsipAddress = bsipAddress;
-        this.ipAddress = ipAddress;
-        this.username = username;
-        this.port = port;
         this.TIMEOUT = 5000;
+        this.bsipAddress = bsipAddress;
         this.mainController = new MainController();
-
-        mainController.setIpAddress(ipAddress);
-        mainController.setUsername(username);
-        mainController.setPort(port);
+        this.node = new Node(ipAddress, port);
+        node.setUsername(username);
+        mainController.setNode(node);
     }
-
-    public void connect() {
+    
+    public void register() {
         
         try {
             Thread t = new Thread() {
                 public void run() {
-                    try {
-                        String message = genarateConnectMsg();
-                        DatagramPacket dp;
-                        byte[] buf = new byte[1024];
-                        DatagramSocket ds = new DatagramSocket();
-                        InetAddress ip = InetAddress.getByName(bsipAddress);
-
-                        dp = new DatagramPacket(message.getBytes(), message.length(), ip, 55555);
-                        ds.send(dp);
-
-                        dp = new DatagramPacket(buf, 1024);
-                        ds.receive(dp);
-
-                        response = new String(dp.getData(), 0, dp.getLength());
-                        ds.close();
-                        
-                    } catch (SocketException ex) {
-                        Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (UnknownHostException ex) {
-                        Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IOException ex) {
-                        Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    send(" REG ");
                 }
             };
             t.start();
@@ -86,10 +58,61 @@ public class BSConnector {
             }
         }
     }
-
-    private String genarateConnectMsg() {
+    
+    public void unregister() {
+        try {
+            Thread t = new Thread() {
+                public void run() {
+                    send(" UNREG ");
+                }
+            };
+            t.start();
+            t.join(TIMEOUT);
+        } 
+        catch (InterruptedException ex) {
+            Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        finally{
+            if(response == null){
+                mainController.getMainFrame().displayError("Server Error"); 
+            } else {
+                String processedResponse = processResponce(response);
+                mainController.getMainFrame().updateConnctionResponce(processedResponse);
+            }
+        }
+    }
+    
+    private void send(String code){
+        try {
+            String message = genarateMsg(code);
+            DatagramPacket dp;
+            byte[] buf = new byte[1024];
+            DatagramSocket ds = new DatagramSocket();
+            InetAddress ip = InetAddress.getByName(bsipAddress);
+            
+            dp = new DatagramPacket(message.getBytes(), message.length(), ip, 55555);
+            ds.send(dp);
+            
+            dp = new DatagramPacket(buf, 1024);
+            ds.receive(dp);
+            
+            response = new String(dp.getData(), 0, dp.getLength());
+            ds.close();
+        } 
+        catch (SocketException ex) {
+            Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        catch (UnknownHostException ex) {
+            Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        catch (IOException ex) {
+            Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private String genarateMsg(String code) {
         String message;
-        message = " REG " + ipAddress + " " + String.valueOf(port) + " " + username;
+        message = code + node.getIpAdress() + " " + String.valueOf(node.getPort()) + " " + node.getUsername();
         message = "00" + String.valueOf(message.length() + 5) + message;
         return message;
     }
@@ -99,13 +122,13 @@ public class BSConnector {
         StringTokenizer st = new StringTokenizer(response, " ");
         String out = response + "\n\n";
         String length = st.nextToken();
-        String regResponse = st.nextToken();
-        int noNodes = Integer.parseInt(st.nextToken());
+        String resCode = st.nextToken();
+        int value = Integer.parseInt(st.nextToken());
 
-        if (regResponse.equals("REGOK")) {
-            switch (noNodes) {
+        if (resCode.equals("REGOK")) {
+            switch (value) {
                 case 0:
-                    out += "Registration success.\nNo other nodes available";
+                    out += "Registration successful.\nNo other nodes available";
                     return out;
                 case 9999:
                     out += "Registration failed.\nThere is some error in the command";
@@ -120,22 +143,29 @@ public class BSConnector {
                     out += "Registration failed.\nCan not register. BS full.";
                     return out;
                 default:
-                    out += "Registration success. " + noNodes + " nodes available\n\nIP Address\tPort\n";
-                    this.nodes = new ArrayList<ArrayList<String>>();
-                    ArrayList<String> temp; 
-                    for (int i = 0; i < noNodes; i++) {
+                    out += "Registration success. " + value + " nodes available\n\nIP Address\tPort\n";
+                    this.nodes = new ArrayList<Node>();
+                    for (int i = 0; i < value; i++) {
                         String ip = st.nextToken();
                         String port = st.nextToken();
-                        temp = new ArrayList<String>();
-                        temp.add(ip);
-                        temp.add(port);
-                        nodes.add(temp);
+                        nodes.add(new Node(ip, Integer.parseInt(port)));
                         out += ip + "\t" + port + "\n";
                     }
                     return out;
             }
-        } else {
-            out += "Registration failed.";
+        } 
+        else if (resCode.equals("UNROK")){
+            switch(value){
+                case 0:
+                    out += "Unregistration successful.";
+                    return out;
+                default:
+                    out += "Error while unregistering.\nIP and port may not be in the registry or command is incorrect.";
+                    return out;
+            }
+        }
+        else {
+            out += "Error";
             return out;
         }
     }
