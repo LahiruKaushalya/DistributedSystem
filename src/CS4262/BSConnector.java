@@ -30,8 +30,11 @@ public class BSConnector {
         
         this.TIMEOUT = 5000;
         this.bsipAddress = bsipAddress;
-        this.mainController = new MainController();
-        this.node = new Node(ipAddress, port, username);
+        this.mainController = MainController.getInstance();
+        
+        String nodeID = NodeInitializer.generateNodeID(ipAddress, port);
+        
+        this.node = new Node(ipAddress, port, username, nodeID);
         mainController.setNode(node);
     }
     
@@ -99,12 +102,9 @@ public class BSConnector {
             response = new String(dp.getData(), 0, dp.getLength());
             ds.close();
         } 
-        catch (SocketException ex) {
+        catch (SocketException | UnknownHostException ex) {
             Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        catch (UnknownHostException ex) {
-            Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
         catch (IOException ex) {
             Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
         }

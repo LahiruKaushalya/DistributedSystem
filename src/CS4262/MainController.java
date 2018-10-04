@@ -7,11 +7,20 @@ package CS4262;
 public class MainController {
     
     private static Node node;
-
     private static MainFrame mainFrame;
-
+    private static MainController instance;
+    
+    public static MainController getInstance() {
+        if(instance == null){
+            instance = new MainController();
+        }
+        return instance;
+    }
+      
+    private MainController(){}
+    
     public static void main(String args[]){
-        mainFrame = new MainFrame();
+        MainController.mainFrame = MainFrame.getInstance();
         mainFrame.setVisible(true);
     }
     
@@ -26,4 +35,5 @@ public class MainController {
     public MainFrame getMainFrame() {
         return mainFrame;
     }
+    
 }

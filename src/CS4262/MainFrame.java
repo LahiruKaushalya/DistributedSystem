@@ -10,9 +10,17 @@ import javax.swing.JOptionPane;
  */
 public class MainFrame extends javax.swing.JFrame {
     
+    private static MainFrame instance;
     private BSConnector bsConnector;
+
+    public static MainFrame getInstance() {
+        if(instance == null){
+            MainFrame.instance = new MainFrame();
+        }
+        return instance;
+    }
     
-    public MainFrame() {
+    private MainFrame() {
         initComponents();
         this.setResizable(false);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize(); //Set frame position

@@ -16,17 +16,17 @@ import java.util.ArrayList;
 
 class NodeDTO{
     
-    private final String ipAdress;
+    private final String ipAddress;
     private final int port;
     
     public NodeDTO(String ip, int port)
     { 
-        this.ipAdress = ip;
+        this.ipAddress = ip;
         this.port = port;
     }
     
     public String getIpAdress() {
-        return ipAdress;
+        return ipAddress;
     }
 
     public int getPort() {
@@ -38,16 +38,17 @@ class NodeDTO{
 public class Node extends NodeDTO
 {
     private final String username;
-    private String id;
-    private ArrayList<String> content;
+    private final String id;
     
+    private ArrayList<String> content;
     private Node successor;
     private Node predecessor;
     
-    public Node(String ip, int port, String username)
+    public Node(String ip, int port, String username, String nodeID)
     { 
         super(ip, port);
         this.username = username;
+        this.id = nodeID;
         this.content = new ArrayList<String>();
     }
     
@@ -63,10 +64,6 @@ public class Node extends NodeDTO
      */
     public String getId() {
         return id;
-    }
-    
-    public void setId(String id) {
-        this.id = id;
     }
 
     /**
