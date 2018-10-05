@@ -29,7 +29,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jTabbedPane" min="-2" pref="408" max="-2" attributes="0"/>
+          <Component id="jTabbedPane" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -56,33 +56,32 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="connectScrollPane" max="32767" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="portLabel" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="ipLbl" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="bsServerIPLbl" alignment="0" pref="109" max="32767" attributes="0"/>
-                                  <Component id="usernameLbl" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="portLabel" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="ipLbl" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="bsServerIPLbl" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="usernameLbl" min="-2" pref="98" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="ipTextField" alignment="1" max="32767" attributes="0"/>
                                   <Component id="portTextField" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="usernameTextField" alignment="1" max="32767" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="unregBtn" min="-2" pref="130" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="regtBtn" min="-2" pref="130" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      <Component id="unregBtn" pref="140" max="32767" attributes="0"/>
+                                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                                      <Component id="regtBtn" pref="140" max="32767" attributes="0"/>
                                   </Group>
                                   <Component id="bsServerIPTextField" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="usernameTextField" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -111,12 +110,12 @@
                           <Component id="usernameLbl" min="-2" pref="25" max="-2" attributes="0"/>
                           <Component id="usernameTextField" min="-2" pref="25" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="regtBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="unregBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="14" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -202,61 +201,81 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="details_sucLbl" min="-2" pref="195" max="-2" attributes="0"/>
-                                  <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                                      <Component id="details_sucIpLbl" min="-2" pref="67" max="-2" attributes="0"/>
-                                      <Group type="102" attributes="0">
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="details_sucIdLbl" min="-2" pref="71" max="-2" attributes="0"/>
-                                              <Component id="details_sucPortLbl" alignment="0" min="-2" pref="67" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                              <Component id="details_sucIpDisplayLbl" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="details_sucPortDisplayLbl" pref="100" max="32767" attributes="0"/>
-                                              <Component id="details_sucIdDisplayLbl" alignment="1" max="32767" attributes="0"/>
-                                          </Group>
-                                      </Group>
-                                  </Group>
-                              </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="details_prePortLbl" min="-2" pref="67" max="-2" attributes="0"/>
-                                          <Component id="details_preipLbl" min="-2" pref="67" max="-2" attributes="0"/>
-                                          <Component id="details_preidLbl" min="-2" pref="67" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="details_sucIpLbl" alignment="0" min="-2" pref="67" max="-2" attributes="0"/>
+                                                  <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                                                      <Component id="details_sucPortLbl" max="32767" attributes="0"/>
+                                                      <Component id="details_sucIdLbl" min="-2" pref="67" max="-2" attributes="0"/>
+                                                  </Group>
+                                                  <Group type="102" alignment="0" attributes="0">
+                                                      <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
+                                                      <Component id="details_sucIpDisplayLbl" max="32767" attributes="0"/>
+                                                  </Group>
+                                              </Group>
+                                          </Group>
+                                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                                              <Component id="details_sucIdDisplayLbl" alignment="1" min="-2" pref="93" max="-2" attributes="0"/>
+                                              <Component id="details_sucLbl" alignment="0" min="-2" pref="188" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Component id="details_sucPortDisplayLbl" alignment="1" min="-2" pref="93" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="details_preIdDisplayLbl" alignment="1" pref="107" max="32767" attributes="0"/>
-                                          <Component id="details_preIpDisplayLbl" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="details_prePortDisplayLbl" alignment="1" max="32767" attributes="0"/>
-                                      </Group>
+                                      <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="details_preLbl" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="details_ipLbl" alignment="0" pref="74" max="32767" attributes="0"/>
-                                  <Component id="details_portLbl" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="details_idLbl" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="details_idDisplayLbl" pref="104" max="32767" attributes="0"/>
-                                  <Component id="details_ipDisplayLbl" max="32767" attributes="0"/>
-                                  <Component id="details_portDisplayLbl" max="32767" attributes="0"/>
+                                  <Component id="details_preLbl" min="-2" pref="192" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="detailsScrollPane" max="32767" attributes="0"/>
-                          <Component id="details_nodeDetailsLbl" max="32767" attributes="0"/>
-                          <Component id="details_nodeConentLbl" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="details_nodeDetailsLbl" alignment="0" min="-2" pref="188" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                                              <Group type="102" alignment="1" attributes="0">
+                                                  <Group type="103" groupAlignment="0" attributes="0">
+                                                      <Component id="details_prePortLbl" min="-2" pref="67" max="-2" attributes="0"/>
+                                                      <Component id="details_preipLbl" min="-2" pref="67" max="-2" attributes="0"/>
+                                                  </Group>
+                                                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                      <Component id="details_prePortDisplayLbl" pref="101" max="32767" attributes="0"/>
+                                                      <Component id="details_preIpDisplayLbl" max="32767" attributes="0"/>
+                                                  </Group>
+                                              </Group>
+                                              <Group type="102" alignment="0" attributes="0">
+                                                  <Component id="details_preidLbl" min="-2" pref="67" max="-2" attributes="0"/>
+                                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                  <Component id="details_preIdDisplayLbl" max="32767" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                                  <Component id="details_ipLbl" alignment="0" pref="74" max="32767" attributes="0"/>
+                                                  <Component id="details_portLbl" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="details_idLbl" max="32767" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                                  <Component id="details_ipDisplayLbl" alignment="0" pref="90" max="32767" attributes="0"/>
+                                                  <Component id="details_idDisplayLbl" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="details_portDisplayLbl" max="32767" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="detailsScrollPane" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="details_nodeConentLbl" pref="198" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -266,27 +285,30 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="details_nodeDetailsLbl" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="details_idLbl" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="details_idDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
+                          <Component id="details_nodeDetailsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="details_nodeConentLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="details_ipLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="details_ipDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="details_portLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="details_portDisplayLbl" alignment="3" min="-2" pref="16" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="details_sucLbl" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="details_idLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="details_idDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
+                              </Group>
                               <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="details_ipLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="details_ipDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="details_portLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="details_portDisplayLbl" alignment="3" min="-2" pref="16" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="details_sucLbl" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="details_sucIdLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="details_sucIdDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
@@ -301,10 +323,9 @@
                                   <Component id="details_sucPortLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="details_sucPortDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
                               </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                               <Component id="details_preLbl" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="details_preidLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="details_preIdDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
@@ -320,12 +341,9 @@
                                   <Component id="details_prePortDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
                               </Group>
                           </Group>
+                          <Component id="detailsScrollPane" alignment="0" min="-2" pref="319" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="details_nodeConentLbl" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="detailsScrollPane" min="-2" pref="132" max="-2" attributes="0"/>
-                      <EmptySpace pref="10" max="32767" attributes="0"/>
+                      <EmptySpace pref="15" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -504,7 +522,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="180" max="-2" attributes="0"/>
-                              <Component id="downloadBtn" pref="225" max="32767" attributes="0"/>
+                              <Component id="downloadBtn" pref="228" max="32767" attributes="0"/>
                           </Group>
                           <Component id="fileNameLbl" alignment="0" max="32767" attributes="0"/>
                           <Component id="fileNameTextField" alignment="0" max="32767" attributes="0"/>
@@ -523,7 +541,7 @@
                       <Component id="fileNameTextField" min="-2" pref="30" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="searchScrollPane" min="-2" pref="217" max="-2" attributes="0"/>
-                      <EmptySpace pref="32" max="32767" attributes="0"/>
+                      <EmptySpace pref="24" max="32767" attributes="0"/>
                       <Component id="downloadBtn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -573,7 +591,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="routingScrollPane" pref="405" max="32767" attributes="0"/>
+                      <Component id="routingScrollPane" pref="408" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -582,7 +600,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="routingScrollPane" pref="367" max="32767" attributes="0"/>
+                      <Component id="routingScrollPane" pref="359" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

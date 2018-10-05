@@ -58,8 +58,14 @@ public class BSConnector {
             if(response == null){
                 mainController.getMainFrame().displayError("Server Error"); 
             } else {
+                //Start Node TCP Server
+                NodeServer nodeServerThread = new NodeServer(node);
+                nodeServerThread.start();
+                //Process bootstrap server responce
                 String processedResponse = processResponce(response);
+                //Update UI
                 mainController.getMainFrame().updateConnctionResponce(processedResponse);
+                //Initialize neighbours
                 new NodeInitializer().initializeNode(nodes);
             }
         }
