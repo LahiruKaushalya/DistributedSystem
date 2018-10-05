@@ -23,6 +23,7 @@ public class BSConnector {
     private final long TIMEOUT;
     private final String bsipAddress;
     private final MainController mainController;
+    private final IDCreator idCreator;
     
     private ArrayList<NodeDTO> nodes;
 
@@ -31,11 +32,13 @@ public class BSConnector {
         this.TIMEOUT = 5000;
         this.bsipAddress = bsipAddress;
         this.mainController = MainController.getInstance();
+        this.idCreator = new IDCreator();
         
-        String nodeID = NodeInitializer.generateNodeID(ipAddress, port);
+        String nodeID = idCreator.generateNodeID(ipAddress, port);
         
         this.node = new Node(ipAddress, port, username, nodeID);
         mainController.setNode(node);
+        mainController.getMainFrame().updateNodeDetails(node);
     }
     
     public void register() {
