@@ -45,6 +45,7 @@ public class BSConnector {
         
         try {
             Thread t = new Thread() {
+                @Override
                 public void run() {
                     send(" REG ");
                 }
@@ -58,9 +59,6 @@ public class BSConnector {
             if(response == null){
                 mainController.getMainFrame().displayError("Server Error"); 
             } else {
-                //Start Node TCP Server
-                NodeServer nodeServerThread = new NodeServer(node);
-                nodeServerThread.start();
                 //Process bootstrap server responce
                 String processedResponse = processResponce(response);
                 //Update UI
@@ -135,8 +133,12 @@ public class BSConnector {
         int value = Integer.parseInt(st.nextToken());
 
         if (resCode.equals("REGOK")) {
+            NodeServer nodeServerThread;
             switch (value) {
                 case 0:
+                    //Start Node TCP Server
+                    nodeServerThread = NodeServer.getInstance(node);
+                    nodeServerThread.start();
                     out += "Registration successful.\nNo other nodes available";
                     return out;
                 case 9999:
@@ -152,6 +154,9 @@ public class BSConnector {
                     out += "Registration failed.\nCan not register. BS full.";
                     return out;
                 default:
+                    //Start Node TCP Server
+                    nodeServerThread = NodeServer.getInstance(node);
+                    nodeServerThread.start();
                     out += "Registration success. " + value + " nodes available\n\nIP Address\tPort\n";
                     this.nodes = new ArrayList<NodeDTO>();
                     for (int i = 0; i < value; i++) {

@@ -1,7 +1,7 @@
 package CS4262;
 
-import java.io.BufferedInputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,13 +15,17 @@ import java.util.logging.Logger;
 public class NodeServer extends Thread {
     
     private final Node node;
+    private ServerSocket server;
+    private static NodeServer instance; 
     
-    private Socket socket; 
-    private ServerSocket server; 
-    private DataInputStream inStream; 
+    public static NodeServer getInstance(Node node) {
+        if(instance == null){
+            instance = new NodeServer(node);
+        }
+        return instance;
+    }
     
-    
-    public NodeServer(Node node){
+    private NodeServer(Node node){
         this.node = node; 
     }
     
@@ -30,17 +34,29 @@ public class NodeServer extends Thread {
         try {
             System.out.println("Server starts on port " + node.getPort());
             server = new ServerSocket(node.getPort());
-            socket = server.accept();
-            inStream = new DataInputStream(new BufferedInputStream(socket.getInputStream())); 
-            String data;
             
             while(true){
-                data = inStream.readUTF(); 
-                System.out.println(data);
+                //Socket object to receive incoming node requests
+                Socket socket = server.accept();
+                
+                //Obtaining input and out streams 
+                DataInputStream inStream = new DataInputStream(socket.getInputStream()); 
+                DataOutputStream outStream = new DataOutputStream(socket.getOutputStream());
+                
+                //Create a new ClientHandler thread object 
+                Thread ch = new ClientHandler(node, socket, inStream, outStream); 
+                ch.start(); 
             }
-            
-        } catch (IOException ex) {
+        } 
+        catch (IOException ex) {
             Logger.getLogger(NodeServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            try {
+                server.close();
+            } catch (IOException ex) {
+                Logger.getLogger(NodeServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
