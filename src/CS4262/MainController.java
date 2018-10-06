@@ -1,5 +1,7 @@
 package CS4262;
 
+import CS4262.Models.Node;
+
 /**
  *
  * @author Lahiru Kaushalya

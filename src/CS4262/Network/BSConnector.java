@@ -1,4 +1,10 @@
-package CS4262;
+package CS4262.Network;
+
+import CS4262.Helpers.IDCreator;
+import CS4262.MainController;
+import CS4262.Models.Node;
+import CS4262.Models.NodeDTO;
+import CS4262.Core.NodeInitializer;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

@@ -1,5 +1,6 @@
-package CS4262;
+package CS4262.Helpers;
 
+import CS4262.Core.NodeInitializer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;

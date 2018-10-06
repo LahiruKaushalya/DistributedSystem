@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package CS4262;
+package CS4262.Models;
 
 import java.util.ArrayList;
 
@@ -11,30 +6,6 @@ import java.util.ArrayList;
  *
  * @author Sankaja
  */
-
-//Create node object for data transfer perposes
-
-class NodeDTO{
-    
-    private final String ipAddress;
-    private final int port;
-    
-    public NodeDTO(String ip, int port)
-    { 
-        this.ipAddress = ip;
-        this.port = port;
-    }
-    
-    public String getIpAdress() {
-        return ipAddress;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-}
-
 public class Node extends NodeDTO
 {
     private final String username;
@@ -106,3 +77,4 @@ public class Node extends NodeDTO
     }
     
 }
+

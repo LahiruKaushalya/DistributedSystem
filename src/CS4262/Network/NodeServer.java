@@ -1,4 +1,6 @@
-package CS4262;
+package CS4262.Network;
+
+import CS4262.Models.Node;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -61,3 +63,4 @@ public class NodeServer extends Thread {
     }
     
 }
+

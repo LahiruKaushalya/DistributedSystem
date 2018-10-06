@@ -292,14 +292,14 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="3" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="details_idLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="details_idDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="details_ipLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="details_ipDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
+                                  <Component id="details_ipLbl" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -309,34 +309,34 @@
                               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                               <Component id="details_sucLbl" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="details_sucIdLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="details_sucIdDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="details_sucIpLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="details_sucIpDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="details_sucPortLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="details_sucPortDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                               <Component id="details_preLbl" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="details_preidLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="details_preIdDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="details_preipLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="details_preIpDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="details_prePortLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="details_prePortDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
                               </Group>
