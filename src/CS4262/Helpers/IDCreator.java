@@ -1,6 +1,7 @@
 package CS4262.Helpers;
 
 import CS4262.Core.NodeInitializer;
+import CS4262.MainController;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
@@ -13,9 +14,9 @@ import java.util.logging.Logger;
 public class IDCreator {
     
     private final int BIN_ID_LENGTH;
-    
+
     public IDCreator(){
-        this.BIN_ID_LENGTH = 8;
+        this.BIN_ID_LENGTH = Integer.parseInt(MainController.getProp().getProperty("binIDLenght"));
     }
     
     public String generateNodeID(String ip, int port) {

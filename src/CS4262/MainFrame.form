@@ -63,21 +63,19 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="portLabel" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="ipLbl" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="bsServerIPLbl" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="usernameLbl" min="-2" pref="98" max="-2" attributes="0"/>
+                                  <Component id="ipLbl" alignment="1" pref="98" max="32767" attributes="0"/>
+                                  <Component id="bsServerIPLbl" alignment="0" min="-2" pref="89" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="ipTextField" alignment="1" max="32767" attributes="0"/>
                                   <Component id="portTextField" alignment="1" max="32767" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="unregBtn" pref="140" max="32767" attributes="0"/>
+                                      <Component id="unregBtn" pref="124" max="32767" attributes="0"/>
                                       <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                                      <Component id="regtBtn" pref="140" max="32767" attributes="0"/>
+                                      <Component id="regtBtn" pref="124" max="32767" attributes="0"/>
                                   </Group>
                                   <Component id="bsServerIPTextField" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="usernameTextField" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -89,7 +87,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="connectScrollPane" min="-2" pref="153" max="-2" attributes="0"/>
+                      <Component id="connectScrollPane" pref="177" max="32767" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="bsServerIPLbl" max="32767" attributes="0"/>
@@ -105,17 +103,12 @@
                           <Component id="portLabel" max="32767" attributes="0"/>
                           <Component id="portTextField" min="-2" pref="25" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="usernameLbl" min="-2" pref="25" max="-2" attributes="0"/>
-                          <Component id="usernameTextField" min="-2" pref="25" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="regtBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="unregBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="14" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -159,14 +152,6 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JLabel" name="usernameLbl">
-              <Properties>
-                <Property name="horizontalAlignment" type="int" value="11"/>
-                <Property name="text" type="java.lang.String" value="Username"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="usernameTextField">
-            </Component>
             <Component class="javax.swing.JLabel" name="bsServerIPLbl">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="11"/>
@@ -202,80 +187,30 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="details_sucIpLbl" alignment="0" min="-2" pref="67" max="-2" attributes="0"/>
-                                                  <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                                                      <Component id="details_sucPortLbl" max="32767" attributes="0"/>
-                                                      <Component id="details_sucIdLbl" min="-2" pref="67" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Group type="102" alignment="0" attributes="0">
-                                                      <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
-                                                      <Component id="details_sucIpDisplayLbl" max="32767" attributes="0"/>
-                                                  </Group>
-                                              </Group>
-                                          </Group>
-                                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                                              <Component id="details_sucIdDisplayLbl" alignment="1" min="-2" pref="93" max="-2" attributes="0"/>
-                                              <Component id="details_sucLbl" alignment="0" min="-2" pref="188" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Component id="details_sucPortDisplayLbl" alignment="1" min="-2" pref="93" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="details_preLbl" min="-2" pref="192" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="details_nodeDetailsLbl" alignment="0" min="-2" pref="188" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                                              <Group type="102" alignment="1" attributes="0">
-                                                  <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="details_prePortLbl" min="-2" pref="67" max="-2" attributes="0"/>
-                                                      <Component id="details_preipLbl" min="-2" pref="67" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                      <Component id="details_prePortDisplayLbl" pref="101" max="32767" attributes="0"/>
-                                                      <Component id="details_preIpDisplayLbl" max="32767" attributes="0"/>
-                                                  </Group>
-                                              </Group>
-                                              <Group type="102" alignment="0" attributes="0">
-                                                  <Component id="details_preidLbl" min="-2" pref="67" max="-2" attributes="0"/>
-                                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                                  <Component id="details_preIdDisplayLbl" max="32767" attributes="0"/>
-                                              </Group>
-                                          </Group>
+                                          <Component id="details_nodeConentLbl" alignment="0" min="-2" pref="198" max="-2" attributes="0"/>
                                           <Group type="102" alignment="0" attributes="0">
                                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                                  <Component id="details_ipLbl" alignment="0" pref="74" max="32767" attributes="0"/>
                                                   <Component id="details_portLbl" alignment="0" max="32767" attributes="0"/>
-                                                  <Component id="details_idLbl" max="32767" attributes="0"/>
+                                                  <Component id="details_idLbl" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="details_ipLbl" alignment="0" pref="150" max="32767" attributes="0"/>
                                               </Group>
                                               <EmptySpace type="separate" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                                  <Component id="details_ipDisplayLbl" alignment="0" pref="90" max="32767" attributes="0"/>
-                                                  <Component id="details_idDisplayLbl" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="details_ipDisplayLbl" alignment="0" pref="202" max="32767" attributes="0"/>
                                                   <Component id="details_portDisplayLbl" max="32767" attributes="0"/>
+                                                  <Component id="details_idDisplayLbl" alignment="0" max="32767" attributes="0"/>
                                               </Group>
                                           </Group>
                                       </Group>
                                   </Group>
                               </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="detailsScrollPane" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="details_nodeConentLbl" pref="198" max="32767" attributes="0"/>
-                              </Group>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
+                          <Component id="detailsScrollPane" alignment="1" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -285,65 +220,27 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="details_nodeDetailsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="details_nodeConentLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="details_nodeDetailsLbl" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="details_idLbl" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="details_idDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="details_ipDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
-                                  <Component id="details_ipLbl" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="details_portLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="details_portDisplayLbl" alignment="3" min="-2" pref="16" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="details_sucLbl" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="details_sucIdLbl" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="details_sucIdDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="details_sucIpLbl" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="details_sucIpDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="details_sucPortLbl" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="details_sucPortDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="details_preLbl" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="details_preidLbl" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="details_preIdDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="details_preipLbl" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="details_preIpDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="details_prePortLbl" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="details_prePortDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Component id="detailsScrollPane" alignment="0" min="-2" pref="319" max="-2" attributes="0"/>
+                          <Component id="details_idLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="details_idDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="15" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="details_ipDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
+                          <Component id="details_ipLbl" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="details_portLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="details_portDisplayLbl" alignment="3" min="-2" pref="16" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="details_nodeConentLbl" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="detailsScrollPane" pref="197" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -415,94 +312,52 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="details_sucIpLbl">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="IP Address"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="details_sucIdLbl">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="ID"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="details_sucIdDisplayLbl">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="12" style="0"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="details_sucIpDisplayLbl">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="12" style="0"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="details_sucPortLbl">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Port"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="details_sucPortDisplayLbl">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="12" style="0"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="details_sucLbl">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="14" style="1"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Successor"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="details_preLbl">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="14" style="1"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Predecessor"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="details_preidLbl">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="ID"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="details_preIdDisplayLbl">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="12" style="0"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="details_preipLbl">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="IP Address"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="details_preIpDisplayLbl">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="12" style="0"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="details_prePortLbl">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Port"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="details_prePortDisplayLbl">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="12" style="0"/>
-                </Property>
-              </Properties>
-            </Component>
+          </SubComponents>
+        </Container>
+        <Container class="javax.swing.JPanel" name="routingTablePanel">
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="Routing Table">
+                <Property name="tabTitle" type="java.lang.String" value="Routing Table"/>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="routingScrollPane" pref="376" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace pref="19" max="32767" attributes="0"/>
+                      <Component id="routingScrollPane" min="-2" pref="328" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Container class="javax.swing.JScrollPane" name="routingScrollPane">
+              <AuxValues>
+                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+              </AuxValues>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+              <SubComponents>
+                <Component class="javax.swing.JTextPane" name="routingTextPane">
+                  <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="searchPanel">
@@ -522,7 +377,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="180" max="-2" attributes="0"/>
-                              <Component id="downloadBtn" pref="228" max="32767" attributes="0"/>
+                              <Component id="downloadBtn" pref="196" max="32767" attributes="0"/>
                           </Group>
                           <Component id="fileNameLbl" alignment="0" max="32767" attributes="0"/>
                           <Component id="fileNameTextField" alignment="0" max="32767" attributes="0"/>
@@ -541,9 +396,9 @@
                       <Component id="fileNameTextField" min="-2" pref="30" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="searchScrollPane" min="-2" pref="217" max="-2" attributes="0"/>
-                      <EmptySpace pref="24" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="downloadBtn" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace pref="14" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -569,52 +424,6 @@
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
                 <Component class="javax.swing.JTextPane" name="searchTextPane">
-                  <Properties>
-                    <Property name="editable" type="boolean" value="false"/>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-          </SubComponents>
-        </Container>
-        <Container class="javax.swing.JPanel" name="routingTablePanel">
-          <Constraints>
-            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Routing Table">
-                <Property name="tabTitle" type="java.lang.String" value="Routing Table"/>
-              </JTabbedPaneConstraints>
-            </Constraint>
-          </Constraints>
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="routingScrollPane" pref="408" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="routingScrollPane" pref="359" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-          <SubComponents>
-            <Container class="javax.swing.JScrollPane" name="routingScrollPane">
-              <AuxValues>
-                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-              </AuxValues>
-
-              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-              <SubComponents>
-                <Component class="javax.swing.JTextPane" name="routingTextPane">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                   </Properties>

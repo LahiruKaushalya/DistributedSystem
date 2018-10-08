@@ -32,8 +32,9 @@ public class BSConnector {
     private final IDCreator idCreator;
     
     private ArrayList<NodeDTO> nodes;
+    private NodeServer nodeServerThread;;
 
-    public BSConnector(String bsipAddress, String ipAddress, String username, int port) {
+    public BSConnector(String bsipAddress, String ipAddress, int port) {
         
         this.TIMEOUT = 5000;
         this.bsipAddress = bsipAddress;
@@ -42,7 +43,7 @@ public class BSConnector {
         
         String nodeID = idCreator.generateNodeID(ipAddress, port);
         
-        this.node = new Node(ipAddress, port, username, nodeID);
+        BSConnector.node = new Node(ipAddress, port, nodeID);
         mainController.setNode(node);
         mainController.getMainFrame().updateNodeDetails(node);
     }
@@ -69,8 +70,6 @@ public class BSConnector {
                 String processedResponse = processResponce(response);
                 //Update UI
                 mainController.getMainFrame().updateConnctionResponce(processedResponse);
-                //Initialize neighbours
-                new NodeInitializer().initializeNode(nodes);
             }
         }
     }
@@ -78,6 +77,7 @@ public class BSConnector {
     public void unregister() {
         try {
             Thread t = new Thread() {
+                @Override
                 public void run() {
                     send(" UNREG ");
                 }
@@ -125,68 +125,78 @@ public class BSConnector {
     
     private String genarateMsg(String code) {
         String message;
-        message = code + node.getIpAdress() + " " + String.valueOf(node.getPort()) + " " + node.getUsername();
+        String ip = node.getIpAdress();
+        int port = node.getPort();
+        message = code + ip + " " + port + " " + idCreator.generateNodeID(ip, port);
         message = "00" + String.valueOf(message.length() + 5) + message;
         return message;
     }
 
     private String processResponce(String response) {
-
         StringTokenizer st = new StringTokenizer(response, " ");
         String out = response + "\n\n";
         String length = st.nextToken();
         String resCode = st.nextToken();
         int value = Integer.parseInt(st.nextToken());
 
-        if (resCode.equals("REGOK")) {
-            NodeServer nodeServerThread;
-            switch (value) {
-                case 0:
-                    //Start Node TCP Server
-                    nodeServerThread = NodeServer.getInstance(node);
-                    nodeServerThread.start();
-                    out += "Registration successful.\nNo other nodes available";
-                    return out;
-                case 9999:
-                    out += "Registration failed.\nThere is some error in the command";
-                    return out;
-                case 9998:
-                    out += "Registration failed.\nAlready registered to you.\nUnregister first";
-                    return out;
-                case 9997:
-                    out += "Registration failed.\nRegistered to another user.\nTry a different IP and port";
-                    return out;
-                case 9996:
-                    out += "Registration failed.\nCan not register. BS full.";
-                    return out;
-                default:
-                    //Start Node TCP Server
-                    nodeServerThread = NodeServer.getInstance(node);
-                    nodeServerThread.start();
-                    out += "Registration success. " + value + " nodes available\n\nIP Address\tPort\n";
-                    this.nodes = new ArrayList<NodeDTO>();
-                    for (int i = 0; i < value; i++) {
-                        String ip = st.nextToken();
-                        String port = st.nextToken();
-                        nodes.add(new NodeDTO(ip, Integer.parseInt(port)));
-                        out += ip + "\t" + port + "\n";
-                    }
-                    return out;
-            }
-        } 
-        else if (resCode.equals("UNROK")){
-            switch(value){
-                case 0:
-                    out += "Unregistration successful.";
-                    return out;
-                default:
-                    out += "Error while unregistering.\nIP and port may not be in the registry or command is incorrect.";
-                    return out;
-            }
+        switch (resCode) {
+            case "REGOK":
+                switch (value) {
+                    case 0:
+                        out += "Registration successful.\nNo other nodes available";
+                        onRegSuccess();
+                        return out;
+                    case 9999:
+                        out += "Registration failed.\nThere is some error in the command";
+                        return out;
+                    case 9998:
+                        out += "Registration failed.\nAlready registered to you.\nUnregister first";
+                        return out;
+                    case 9997:
+                        out += "Registration failed.\nRegistered to another user.\nTry a different IP and port";
+                        return out;
+                    case 9996:
+                        out += "Registration failed.\nCan not register. BS full.";
+                        return out;
+                    default:
+                        out += "Registration success. " + value + " nodes available\n\nIP Address\tPort\n";
+                        this.nodes = new ArrayList<NodeDTO>();
+                        for (int i = 0; i < value; i++) {
+                            String ip = st.nextToken();
+                            String port = st.nextToken();
+                            nodes.add(new NodeDTO(ip, Integer.parseInt(port)));
+                            out += ip + "\t" + port + "\n";
+                        }
+                        onRegSuccess();
+                        return out;
+                }
+            case "UNROK":
+                switch(value){
+                    case 0:
+                        out += "Unregistration successful.";
+                        onUnregSuccess();
+                        return out;
+                    default:
+                        out += "Error while unregistering.\nIP and port may not be in the registry or command is incorrect.";
+                        return out;
+                }
+            default:
+                out += "Error";
+                return out;
         }
-        else {
-            out += "Error";
-            return out;
+    }
+    
+    private void onRegSuccess(){
+        //Start Node TCP Server
+        nodeServerThread = NodeServer.getInstance(node);
+        nodeServerThread.start();
+        //Initialize neighbours
+        new NodeInitializer().initializeNode(nodes);
+    }
+    
+    private void onUnregSuccess(){
+        if(nodeServerThread.isAlive()){
+            nodeServerThread.interrupt();
         }
     }
 }

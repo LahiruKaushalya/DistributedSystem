@@ -74,24 +74,29 @@ public class ClientHandler extends Thread{
             }
             response = "0013 JOINOK 0";
         }
+        if(command.equals("LEAVE")){
+            try{
+                leaveMsgHandler(st);
+            }
+            catch(Exception e){
+                response = "0017 LEAVEOK 9999";
+            }
+            response = "0014 LEAVEOKOK 0";
+        }
         return response;
     }
     
     private void joinMsgHandler(StringTokenizer st) {
         String ip = st.nextToken();
         int port = Integer.parseInt(st.nextToken());
+        String id = idCreator.generateNodeID(ip, port);
+        
+    }
+    
+    private void leaveMsgHandler(StringTokenizer st) {
+        String ip = st.nextToken();
+        int port = Integer.parseInt(st.nextToken());
         String id = st.nextToken();
-        Node newNode = new Node(ip, port, "", id);
-
-        int neighbourId = idCreator.getComparableID(id);
-        int nodeId = idCreator.getComparableID(node.getId());
-
-        if (neighbourId < nodeId) {
-            node.setPredecessor(newNode);
-            mc.getMainFrame().updatePredecessorDetails(newNode);
-        } else if (nodeId < neighbourId) {
-            node.setSuccessor(newNode);
-            mc.getMainFrame().updateSuccessorDetails(newNode);
-        }
+        
     }
 }

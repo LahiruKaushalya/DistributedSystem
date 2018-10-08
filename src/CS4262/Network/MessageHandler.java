@@ -19,6 +19,7 @@ public class MessageHandler {
     private final Node node;
     
     private static MessageHandler instance;
+    private String response;
     
     public static MessageHandler getInstance() {
         if(instance == null){
@@ -31,10 +32,9 @@ public class MessageHandler {
         this.node = MainController.getInstance().getNode();
     }
     
-    public void join(Node receiver){
+    public String sendMsg(Node receiver, String msg){
         try {
             Thread t = new Thread() {
-                String res;
                 Socket socket;
                 DataOutputStream outStream;
                 DataInputStream inStream;
@@ -43,22 +43,19 @@ public class MessageHandler {
                 public void run() {
                     try {
                         socket = new Socket(receiver.getIpAdress(), receiver.getPort());
-                        //Generate Join message
-                        String message = generateJoinMsg(node);
+                        
                         // sends message to the socket
                         outStream = new DataOutputStream(socket.getOutputStream());
-                        outStream.writeUTF(message);
+                        outStream.writeUTF(msg);
                         
                         inStream = new DataInputStream(socket.getInputStream());
-                        res = inStream.readUTF();
-                        
+                        response = inStream.readUTF();
                     } 
                     catch (IOException ex) {
                         Logger.getLogger(MessageHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     finally{
                         try {
-                            System.out.println(res);
                             inStream.close();
                             outStream.close();
                             socket.close();
@@ -70,14 +67,32 @@ public class MessageHandler {
                 }
             };
             t.start();
+            t.join(2000);
         }
         catch (Exception ex) {
             Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return response;
+    }
+    
+    public String join(Node receiver){
+        String message = generateJoinMsg(node);
+        return sendMsg(receiver, message);
+    }
+    
+    public void leave(Node receiver){
+        String message = generateLeaveMsg(node);
+        sendMsg(receiver, message);
     }
     
     private String generateJoinMsg(Node sender){
         String msg = " JOIN ";
+        msg += sender.getIpAdress() + " " + sender.getPort();
+        return "00" + String.valueOf(msg.length() + 5) + msg;  
+    }
+    
+    private String generateLeaveMsg(Node sender){
+        String msg = " LEAVE ";
         msg += sender.getIpAdress() + " " + sender.getPort() + " " + sender.getId();
         return "00" + String.valueOf(msg.length() + 5) + msg;  
     }

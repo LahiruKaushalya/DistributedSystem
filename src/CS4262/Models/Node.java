@@ -1,5 +1,6 @@
 package CS4262.Models;
 
+import CS4262.MainController;
 import java.util.ArrayList;
 
 /**
@@ -8,26 +9,17 @@ import java.util.ArrayList;
  */
 public class Node extends NodeDTO
 {
-    private final String username;
     private final String id;
     
     private ArrayList<String> content;
-    private Node successor;
-    private Node predecessor;
-    
-    public Node(String ip, int port, String username, String nodeID)
+    private Node[] routes;
+
+    public Node(String ip, int port, String nodeID)
     { 
         super(ip, port);
-        this.username = username;
         this.id = nodeID;
         this.content = new ArrayList<String>();
-    }
-    
-    /**
-     * @return the username
-     */
-    public String getUsername() {
-        return username;
+        this.routes = new Node[Integer.parseInt(MainController.getProp().getProperty("binIDLenght"))];
     }
     
     /**
@@ -54,26 +46,12 @@ public class Node extends NodeDTO
         this.content = content;
     }
     
-    /**
-     * @return the successor
-     */
-    public Node getSuccessor() {
-        return successor;
+    public Node[] getRoutes() {
+        return routes;
     }
 
-    public void setSuccessor(Node successor) {
-        this.successor = successor;
-    }
-    
-    /**
-     * @return the predecessor
-     */
-    public Node getPredecessor() {
-        return predecessor;
-    }
-
-    public void setPredecessor(Node predecessor) {
-        this.predecessor = predecessor;
+    public void setRoutes(Node[] routes) {
+        this.routes = routes;
     }
     
 }
