@@ -1,5 +1,6 @@
 package CS4262.Models;
 
+import CS4262.Helpers.IDCreator;
 import CS4262.MainController;
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ public class Node extends NodeDTO
         super(ip, port);
         this.id = nodeID;
         this.content = new ArrayList<String>();
-        this.routes = new Node[Integer.parseInt(MainController.getProp().getProperty("binIDLenght"))];
+        this.routes = new Node[new IDCreator().getBIN_ID_LENGTH()];
     }
     
     /**

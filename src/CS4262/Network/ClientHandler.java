@@ -1,8 +1,10 @@
 package CS4262.Network;
 
+import CS4262.Core.RouteInitializer;
 import CS4262.Helpers.IDCreator;
 import CS4262.MainController;
 import CS4262.Models.Node;
+import CS4262.Models.NodeDTO;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -24,6 +26,7 @@ public class ClientHandler extends Thread{
     private final DataInputStream inStream;
     private final DataOutputStream outStream;
     private final MainController mc;
+    private final RouteInitializer routeInitializer; 
     
     public ClientHandler(Node node, Socket socket, DataInputStream inStream, DataOutputStream outStream){
         this.node = node;
@@ -32,6 +35,7 @@ public class ClientHandler extends Thread{
         this.outStream = outStream;
         this.idCreator = new IDCreator();
         this.mc = MainController.getInstance();
+        this.routeInitializer = new RouteInitializer();
     }
     
     @Override
@@ -89,8 +93,7 @@ public class ClientHandler extends Thread{
     private void joinMsgHandler(StringTokenizer st) {
         String ip = st.nextToken();
         int port = Integer.parseInt(st.nextToken());
-        String id = idCreator.generateNodeID(ip, port);
-        
+        routeInitializer.updateRoutes(new NodeDTO(ip, port));
     }
     
     private void leaveMsgHandler(StringTokenizer st) {

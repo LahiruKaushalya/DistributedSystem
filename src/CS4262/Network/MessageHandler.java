@@ -2,6 +2,7 @@ package CS4262.Network;
 
 import CS4262.MainController;
 import CS4262.Models.Node;
+import CS4262.Models.NodeDTO;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -32,7 +33,7 @@ public class MessageHandler {
         this.node = MainController.getInstance().getNode();
     }
     
-    public String sendMsg(Node receiver, String msg){
+    public String sendMsg(NodeDTO receiver, String msg){
         try {
             Thread t = new Thread() {
                 Socket socket;
@@ -75,7 +76,7 @@ public class MessageHandler {
         return response;
     }
     
-    public String join(Node receiver){
+    public String join(NodeDTO receiver){
         String message = generateJoinMsg(node);
         return sendMsg(receiver, message);
     }

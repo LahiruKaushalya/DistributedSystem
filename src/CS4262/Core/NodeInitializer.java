@@ -31,10 +31,13 @@ public class NodeInitializer {
      *
      * @param nodes
      */
-    public void initializeNode(ArrayList<NodeDTO> nodes) {
-
-        if (nodes != null) {
-            
+    public void initializeNode(ArrayList<NodeDTO> neighbours) {
+        String response;
+        if (neighbours != null) {
+            for(NodeDTO neighbour : neighbours){
+                response = msgHandler.join(neighbour);
+                System.out.println(response);
+            }
         }
     }
     

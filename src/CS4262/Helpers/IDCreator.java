@@ -15,8 +15,12 @@ public class IDCreator {
     
     private final int BIN_ID_LENGTH;
 
+    public int getBIN_ID_LENGTH() {
+        return BIN_ID_LENGTH;
+    }
+
     public IDCreator(){
-        this.BIN_ID_LENGTH = Integer.parseInt(MainController.getProp().getProperty("binIDLenght"));
+        this.BIN_ID_LENGTH = 8;
     }
     
     public String generateNodeID(String ip, int port) {
