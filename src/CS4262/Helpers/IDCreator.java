@@ -1,7 +1,6 @@
 package CS4262.Helpers;
 
 import CS4262.Core.NodeInitializer;
-import CS4262.MainController;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
@@ -20,7 +19,7 @@ public class IDCreator {
     }
 
     public IDCreator(){
-        this.BIN_ID_LENGTH = 8;
+        this.BIN_ID_LENGTH = 10;
     }
     
     public String generateNodeID(String ip, int port) {

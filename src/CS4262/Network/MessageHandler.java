@@ -8,6 +8,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,17 +82,62 @@ public class MessageHandler {
         return sendMsg(receiver, message);
     }
     
-    public void leave(Node receiver){
-        String message = generateLeaveMsg(node);
-        sendMsg(receiver, message);
+    public String updateRoutes(NodeDTO receiver, NodeDTO sender, ArrayList<Node> addi){
+        String message = generateUpdateRoutesMsg(sender, addi);
+        return sendMsg(receiver, message);
     }
     
+    public String leave(Node receiver){
+        String message = generateLeaveMsg(node);
+        return sendMsg(receiver, message);
+    }
+    
+    /*
+    Join message format 
+    length JOIN sender_ip sender_port
+    */
     private String generateJoinMsg(Node sender){
         String msg = " JOIN ";
         msg += sender.getIpAdress() + " " + sender.getPort();
         return "00" + String.valueOf(msg.length() + 5) + msg;  
     }
     
+    /*
+    Update Routes message format 
+    length UPDATE_ROUTES sender_ip sender_port nodes_count node1_ip node1_port ....
+    */
+    private String generateUpdateRoutesMsg(NodeDTO sender, ArrayList<Node> addi){
+        String msg = " UPDATE_ROUTES ";
+        msg += sender.getIpAdress() + " " + sender.getPort();
+        
+        Node[] neighbours = node.getRoutes();
+        int count = 0;
+        String tempStr = "";
+        
+        for(Node neighbour : neighbours){
+            if(neighbour != null){
+                count++;
+                tempStr += " " + neighbour.getIpAdress() + " " + neighbour.getPort();
+            }
+        }
+        
+        if (addi != null) {
+            if (addi.size() != 0) {
+                count += addi.size();
+                for (Node neighbour : addi) {
+                    tempStr += " " + neighbour.getIpAdress() + " " + neighbour.getPort();
+                }
+            }
+        }
+        
+        msg += " " + count + tempStr;
+        return "00" + String.valueOf(msg.length() + 5) + msg;  
+    }
+    
+    /*
+    Leave message format 
+    length LEAVE sender_ip sender_port
+    */
     private String generateLeaveMsg(Node sender){
         String msg = " LEAVE ";
         msg += sender.getIpAdress() + " " + sender.getPort() + " " + sender.getId();

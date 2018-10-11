@@ -159,8 +159,8 @@ public class BSConnector {
                         out += "Registration failed.\nCan not register. BS full.";
                         return out;
                     default:
-                        out += "Registration success. " + value + " nodes available\n\nIP Address\tPort\n";
-                        this.nodes = new ArrayList<NodeDTO>();
+                        out += "Registration success.\n\nIP Address\tPort\n";
+                        this.nodes = new ArrayList<>();
                         for (int i = 0; i < value; i++) {
                             String ip = st.nextToken();
                             String port = st.nextToken();

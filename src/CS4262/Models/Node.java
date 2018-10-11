@@ -1,7 +1,6 @@
 package CS4262.Models;
 
 import CS4262.Helpers.IDCreator;
-import CS4262.MainController;
 import java.util.ArrayList;
 
 /**
@@ -12,6 +11,7 @@ public class Node extends NodeDTO
 {
     private final String id;
     
+    private Node successor;
     private ArrayList<String> content;
     private Node[] routes;
 
@@ -36,6 +36,13 @@ public class Node extends NodeDTO
     public ArrayList<String> getContent() {
         return content;
     }
+    
+    /**
+     * @return the successor
+     */
+    public Node getSuccessor() {
+        return successor;
+    }
 
     /**
      * @param content the content to set
@@ -55,5 +62,8 @@ public class Node extends NodeDTO
         this.routes = routes;
     }
     
+    public void setSuccessor(Node successor) {
+        this.successor = successor;
+    }
 }
 
