@@ -14,6 +14,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +30,7 @@ public class BSConnector {
     private final long TIMEOUT;
     private final String bsipAddress;
     private final MainController mainController;
+    private final MessageHandler msgHandler;
     private final IDCreator idCreator;
     
     private ArrayList<NodeDTO> nodes;
@@ -41,11 +43,14 @@ public class BSConnector {
         this.mainController = MainController.getInstance();
         this.idCreator = new IDCreator();
         
+        //node initialization
         String nodeID = idCreator.generateNodeID(ipAddress, port);
-        
         BSConnector.node = new Node(ipAddress, port, nodeID);
         mainController.setNode(node);
         mainController.getMainFrame().updateNodeDetails(node);
+        
+        //After node initialization
+        this.msgHandler = MessageHandler.getInstance();
     }
     
     public void register() {
@@ -60,9 +65,11 @@ public class BSConnector {
             t.start();
             t.join(TIMEOUT);
 
-        } catch (InterruptedException ex) {
+        } 
+        catch (InterruptedException ex) {
             Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
+        } 
+        finally{
             if(response == null){
                 mainController.getMainFrame().displayError("Server Error"); 
             } else {
@@ -189,14 +196,32 @@ public class BSConnector {
     private void onRegSuccess(){
         //Start Node TCP Server
         nodeServerThread = NodeServer.getInstance(node);
-        nodeServerThread.start();
+        nodeServerThread.startServer();
         //Initialize neighbours
         new NodeInitializer().initializeNode(nodes);
     }
     
     private void onUnregSuccess(){
-        if(nodeServerThread.isAlive()){
-            nodeServerThread.interrupt();
+        Node[] neighbours = node.getRoutes();
+        try {  
+            Thread t = new Thread(){
+                @Override
+                public void run(){
+                    for (Node neighbour : neighbours) {
+                        if(neighbour != null){
+                            msgHandler.leave(neighbour);
+                        }
+                    }
+                }
+            };
+            t.start();
+            t.join(TIMEOUT);
+        } 
+        catch (InterruptedException ex) {
+            Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally {
+            nodeServerThread.stopServer();
         }
     }
 }

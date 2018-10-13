@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,9 +15,10 @@ import java.util.logging.Logger;
  *
  * @author Lahiru Kaushalya
  */
-public class NodeServer extends Thread {
+public class NodeServer implements Runnable {
     
     private final Node node;
+    private final Thread thread;
     private ServerSocket server;
     private static NodeServer instance; 
     
@@ -28,7 +30,8 @@ public class NodeServer extends Thread {
     }
     
     private NodeServer(Node node){
-        this.node = node; 
+        this.node = node;
+        this.thread = new Thread(this);
     }
     
     @Override
@@ -36,18 +39,26 @@ public class NodeServer extends Thread {
         try {
             System.out.println("Server starts on port " + node.getPort());
             server = new ServerSocket(node.getPort());
-            
+            server.setSoTimeout(500);
             while(true){
-                //Socket object to receive incoming node requests
-                Socket socket = server.accept();
-                
-                //Obtaining input and out streams 
-                DataInputStream inStream = new DataInputStream(socket.getInputStream()); 
-                DataOutputStream outStream = new DataOutputStream(socket.getOutputStream());
-                
-                //Create a new ClientHandler thread object 
-                Thread ch = new ClientHandler(node, socket, inStream, outStream); 
-                ch.start(); 
+                try {
+                    //Socket object to receive incoming node requests
+                    Socket socket = server.accept();
+                    
+                    //Obtaining input and out streams 
+                    DataInputStream inStream = new DataInputStream(socket.getInputStream());
+                    DataOutputStream outStream = new DataOutputStream(socket.getOutputStream());
+                    
+                    //Create a new ClientHandler thread object 
+                    Thread ch = new ClientHandler(node, socket, inStream, outStream);
+                    ch.start();
+                }
+                catch(SocketTimeoutException ex){
+                    //Check for unregistration
+                    if(thread.isInterrupted()){
+                        break;
+                    }
+                }
             }
         } 
         catch (IOException ex) {
@@ -56,11 +67,21 @@ public class NodeServer extends Thread {
         finally{
             try {
                 server.close();
-            } catch (IOException ex) {
+                instance = null;
+                System.out.println("Server stopped.");
+            } 
+            catch (IOException ex) {
                 Logger.getLogger(NodeServer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
     
+    public void stopServer(){
+        thread.interrupt();
+    }
+    
+    public void startServer(){
+        thread.start();
+    }
 }
 

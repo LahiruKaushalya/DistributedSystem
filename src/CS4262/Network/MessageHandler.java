@@ -82,12 +82,17 @@ public class MessageHandler {
         return sendMsg(receiver, message);
     }
     
-    public String updateRoutes(NodeDTO receiver, NodeDTO sender, ArrayList<Node> addi){
-        String message = generateUpdateRoutesMsg(sender, addi);
+    public String updateRoutes(NodeDTO receiver, NodeDTO sender, ArrayList<Node> addi, int hopCount){
+        String message = generateUpdateRoutesMsg(sender, addi, hopCount);
         return sendMsg(receiver, message);
     }
     
-    public String leave(Node receiver){
+    public String removeNode(NodeDTO receiver, NodeDTO sender, NodeDTO remove){
+        String message = generateRemoveNodeMsg(sender, remove);
+        return sendMsg(receiver, message);
+    }
+    
+    public String leave(NodeDTO receiver){
         String message = generateLeaveMsg(node);
         return sendMsg(receiver, message);
     }
@@ -96,7 +101,7 @@ public class MessageHandler {
     Join message format 
     length JOIN sender_ip sender_port
     */
-    private String generateJoinMsg(Node sender){
+    private String generateJoinMsg(NodeDTO sender){
         String msg = " JOIN ";
         msg += sender.getIpAdress() + " " + sender.getPort();
         return "00" + String.valueOf(msg.length() + 5) + msg;  
@@ -104,11 +109,11 @@ public class MessageHandler {
     
     /*
     Update Routes message format 
-    length UPDATE_ROUTES sender_ip sender_port nodes_count node1_ip node1_port ....
+    length UPDATE_ROUTES hop_count sender_ip sender_port nodes_count node1_ip node1_port ....
     */
-    private String generateUpdateRoutesMsg(NodeDTO sender, ArrayList<Node> addi){
+    private String generateUpdateRoutesMsg(NodeDTO sender, ArrayList<Node> addi, int hopCount){
         String msg = " UPDATE_ROUTES ";
-        msg += sender.getIpAdress() + " " + sender.getPort();
+        msg += hopCount + " " + sender.getIpAdress() + " " + sender.getPort();
         
         Node[] neighbours = node.getRoutes();
         int count = 0;
@@ -135,12 +140,23 @@ public class MessageHandler {
     }
     
     /*
+    Remove message format 
+    length REMOVE sender_ip sender_port remove_node_ip remove_node_port
+    */
+    private String generateRemoveNodeMsg(NodeDTO sender, NodeDTO remove){
+        String msg = " REMOVE ";
+        msg += sender.getIpAdress() + " " + sender.getPort();
+        msg += " " + remove.getIpAdress() + " " + remove.getPort();
+        return "00" + String.valueOf(msg.length() + 5) + msg;  
+    }
+    
+    /*
     Leave message format 
     length LEAVE sender_ip sender_port
     */
-    private String generateLeaveMsg(Node sender){
+    private String generateLeaveMsg(NodeDTO sender){
         String msg = " LEAVE ";
-        msg += sender.getIpAdress() + " " + sender.getPort() + " " + sender.getId();
+        msg += sender.getIpAdress() + " " + sender.getPort();
         return "00" + String.valueOf(msg.length() + 5) + msg;  
     }
 }

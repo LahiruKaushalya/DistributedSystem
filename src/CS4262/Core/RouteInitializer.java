@@ -24,7 +24,7 @@ public class RouteInitializer {
         this.msgHandler = MessageHandler.getInstance();
     }
     
-    public Node updateLocalRoutes(NodeDTO neighbour){
+    public Node addAndUpdate(NodeDTO neighbour){
                 
         Node[] routes = node.getRoutes();
         int m = idCreator.getBIN_ID_LENGTH();
@@ -36,25 +36,25 @@ public class RouteInitializer {
         String neighbourID = idCreator.generateNodeID(neighbourIP, neighbourPort);
         int neighbourIntID = idCreator.getComparableID(neighbourID);
         int nodeID = idCreator.getComparableID(node.getId());
-        
-        int lowerbound = nodeID;
+        Node newNode = new Node(neighbourIP, neighbourPort, neighbourID);
+       
         int upperbound;
         Node temp = null;
         
         for (int i = m - 1; i >= 0; i--) {
-            upperbound = (lowerbound + (int) Math.pow(2, i)) % bp;
-            if (!isInRange(lowerbound, upperbound, neighbourIntID, bp)) {
+            upperbound = (nodeID + (int) Math.pow(2, i)) % bp;
+            if(isInRange(nodeID, upperbound, neighbourIntID, bp)) {
                 if (routes[i] == null) {
-                    routes[i] = new Node(neighbourIP, neighbourPort, neighbourID);
+                    routes[i] = newNode;
                 } 
                 else {
                     int curID = idCreator.getComparableID(routes[i].getId());
-                    if (Math.abs(curID - upperbound) > Math.abs(neighbourIntID - upperbound)) {
+                    if (isInRange(curID, upperbound, neighbourIntID, bp)) {
                         temp = routes[i];
-                        routes[i] = new Node(neighbourIP, neighbourPort, neighbourID);
+                        routes[i] = newNode;
                     }
                     else{
-                        temp = new Node(neighbourIP, neighbourPort, neighbourID);
+                        temp = newNode;
                     }
                 }
                 break;
@@ -67,6 +67,24 @@ public class RouteInitializer {
         setNodeSuccessor( );
         
         return temp;
+    }
+    
+    public void removeAndUpdate(NodeDTO neighbour){
+        String id = idCreator.generateNodeID(neighbour.getIpAdress(), neighbour.getPort());
+        Node[] routes = node.getRoutes();
+        
+        for(int i = 0; i < routes.length; i++){
+            if(routes[i] != null){
+                if (routes[i].getId().equals(id)) {
+                    routes[i] = null;
+                }
+            }
+        }
+        //Set new routes
+        node.setRoutes(routes);
+        
+        //Set node successor
+        setNodeSuccessor( );
     }
     
     public void updateRoutesUI(){
@@ -106,13 +124,19 @@ public class RouteInitializer {
         mainController.getMainFrame().updateRoutingTable(displayText);
     }
     
-    private boolean isInRange(int lowerbound, int upperbound, int value, int bp){
-        if(upperbound < lowerbound){
-            return (lowerbound <= value && value < bp) || (0 <= value && value < upperbound);
+    public boolean isInRange(int lowerbound, int upperbound, int value, int bp){
+        if(lowerbound == 0){
+            return upperbound <= value &&  value <= bp;
         }
+        //0 within the range
+        else if(lowerbound < upperbound){
+            return (0 <= value && value < lowerbound) || (upperbound <= value && value < bp);
+        }
+        //0 outside the range
         else{
-            return (value < upperbound &&  lowerbound <= value );
+            return upperbound <= value && value < lowerbound;
         }
+        
     }
     
     private void setNodeSuccessor(){

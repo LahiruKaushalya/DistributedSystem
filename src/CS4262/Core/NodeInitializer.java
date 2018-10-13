@@ -18,24 +18,30 @@ public class NodeInitializer {
     private final MessageHandler msgHandler;
     private final MainController mainController;
     private final RouteInitializer routeInitializer;
-
+    private static int hopCount;
+    
     public NodeInitializer() {
         this.mainController = MainController.getInstance();
         this.node = mainController.getNode();
         this.msgHandler = MessageHandler.getInstance();
         this.routeInitializer = new RouteInitializer();
+        NodeInitializer.hopCount = 5;
+    }
+
+    public static int getHopCount() {
+        return hopCount;
     }
 
     /**
      *
-     * @param neighbours
+     * @param newNodes
      */
-    public void initializeNode(ArrayList<NodeDTO> neighbours) {
+    public void initializeNode(ArrayList<NodeDTO> newNodes) {
         String response;
-        if (neighbours != null) {
-            for(NodeDTO neighbour : neighbours){
+        if (newNodes != null) {
+            for(NodeDTO neighbour : newNodes){
                 response = msgHandler.join(neighbour);
-                routeInitializer.updateLocalRoutes(neighbour);
+                routeInitializer.addAndUpdate(neighbour);
                 /*
                 Handle response here
                 */
@@ -43,12 +49,14 @@ public class NodeInitializer {
             routeInitializer.updateRoutesUI();
         }
         
-        Node successor = node.getSuccessor();
-        if(successor != null){
-            response = msgHandler.updateRoutes(successor, node, null);
-            /*
-            Handle response here
-            */
+        Node[] neighbours = node.getRoutes();
+        for(Node neighbour : neighbours){
+            if(neighbour != null){
+                response = msgHandler.updateRoutes(neighbour, node, null, hopCount);
+                /*
+                Handle response here
+                */
+            }
         }
     }
     

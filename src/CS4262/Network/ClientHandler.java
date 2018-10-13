@@ -1,5 +1,6 @@
 package CS4262.Network;
 
+import CS4262.Core.NodeInitializer;
 import CS4262.Core.RouteInitializer;
 import CS4262.Helpers.IDCreator;
 import CS4262.Models.Node;
@@ -25,7 +26,7 @@ public class ClientHandler extends Thread{
     private final IDCreator idCreator;
     private final DataInputStream inStream;
     private final DataOutputStream outStream;
-    private final MessageHandler messageHandler;
+    private final MessageHandler msgHandler;
     private final RouteInitializer routeInitializer; 
     
     public ClientHandler(Node node, Socket socket, DataInputStream inStream, DataOutputStream outStream){
@@ -34,7 +35,7 @@ public class ClientHandler extends Thread{
         this.inStream = inStream;
         this.outStream = outStream;
         this.idCreator = new IDCreator();
-        this.messageHandler = MessageHandler.getInstance();
+        this.msgHandler = MessageHandler.getInstance();
         this.routeInitializer = new RouteInitializer();
     }
     
@@ -94,37 +95,61 @@ public class ClientHandler extends Thread{
             catch(Exception e){
                 response = "0017 LEAVEOK 9999";
             }
-            response = "0014 LEAVEOKOK 0";
+            response = "0014 LEAVEOK 0";
+        }
+        if(command.equals("REMOVE")){
+            try{
+                removeMsgHandler(st);
+            }
+            catch(Exception e){
+                response = "0018 REMOVEOK 9999";
+            }
+            response = "0015 REMOVEOK 0";
         }
         return response;
     }
     
     private void joinMsgHandler(StringTokenizer st) {
+        //New Node about to join network
         String ip = st.nextToken();
         int port = Integer.parseInt(st.nextToken());
-        routeInitializer.updateLocalRoutes(new NodeDTO(ip, port));
+        NodeDTO newNode = new NodeDTO(ip, port);
+        
+        //Update routes list and UI with new node
+        routeInitializer.addAndUpdate(newNode);
         routeInitializer.updateRoutesUI();
         
-        Node successor = node.getSuccessor();
-        if (successor != null) {
-            messageHandler.updateRoutes(successor, node, null);
+        //Send new update routes message to all neighbours in routing table 
+        Node[] neighbours = node.getRoutes();
+        for(Node neighbour : neighbours){
+            //Routes can have null values
+            if(neighbour != null){
+                msgHandler.updateRoutes(neighbour, node, null, NodeInitializer.getHopCount());
+            }
         }
     }
     
     private void updateRoutesMsgHandler(StringTokenizer st) {
-        String ip = st.nextToken();
-        int port = Integer.parseInt(st.nextToken());
+        //Hop count
+        int hopCount = Integer.parseInt(st.nextToken());
+        hopCount--;
+        //Message sender
+        String senderIP = st.nextToken();
+        int senderPort = Integer.parseInt(st.nextToken());
+        NodeDTO sender = new NodeDTO(senderIP, senderPort);
+        //Number of routes
         int routes = Integer.parseInt(st.nextToken());
         
         NodeDTO temp;
+        //Collect nodes that does not include/replaced by a new node in routing table
         ArrayList<Node> addi = new ArrayList<>();
-        
+        //Update routing table 
         if(routes > 1){
             for(int i = 0; i < routes; i++){
                 temp = new NodeDTO(st.nextToken(), Integer.parseInt(st.nextToken()));
                 Node tempN;
                 if(i != 0){
-                    tempN = routeInitializer.updateLocalRoutes(temp);
+                    tempN = routeInitializer.addAndUpdate(temp);
                     if(tempN != null){
                         addi.add(tempN);
                     }
@@ -134,20 +159,58 @@ public class ClientHandler extends Thread{
         }
         
         String id = node.getId();
-        String senderID = idCreator.generateNodeID(ip, port);
+        String senderID = idCreator.generateNodeID(senderIP, senderPort);
         
-        if(!id.equals(senderID)){
-            Node sucessor = node.getSuccessor();
-            if(sucessor != null){
-                messageHandler.updateRoutes(sucessor, new NodeDTO(ip, port), addi);
+        //Check whether it is own msg and not expire
+        if(!id.equals(senderID) && hopCount != 0){
+            Node[] neighbours = node.getRoutes();
+            //Routes can have null values
+            for(Node neighbour : neighbours){
+                if (neighbour != null) {
+                    //pass update message to all neighbours in routing table 
+                    msgHandler.updateRoutes(neighbour, node, null, hopCount);
+                }
             }
         }
     }
     
     private void leaveMsgHandler(StringTokenizer st) {
-        String ip = st.nextToken();
-        int port = Integer.parseInt(st.nextToken());
-        String id = st.nextToken();
+        //Node to be leave from network.
+        String removeIp = st.nextToken();
+        int removePort = Integer.parseInt(st.nextToken());
+        NodeDTO removeNode = new NodeDTO(removeIp, removePort);
         
+        routeInitializer.removeAndUpdate(removeNode);
+        routeInitializer.updateRoutesUI();
+        
+        Node successor = node.getSuccessor();
+        if (successor != null) {
+            msgHandler.removeNode(successor, node, removeNode);
+        }
     }
+    
+    private void removeMsgHandler(StringTokenizer st) {
+        // Remove msg sender
+        String senderIp = st.nextToken();
+        int senderPort = Integer.parseInt(st.nextToken());
+        String senderID = idCreator.generateNodeID(senderIp, senderPort);
+        NodeDTO sender = new NodeDTO(senderIp, senderPort);
+        
+        //Node to be remove.
+        String removeIp = st.nextToken();
+        int removePort = Integer.parseInt(st.nextToken());
+        NodeDTO removeNode = new NodeDTO(removeIp, removePort);
+        
+        routeInitializer.removeAndUpdate(removeNode);
+        routeInitializer.updateRoutesUI();
+        
+        //Check whether it is own msg
+        if(!senderID.equals(node.getId())){
+            Node successor = node.getSuccessor();
+            if(successor != null){
+                msgHandler.removeNode(successor, sender, removeNode);
+            }
+        }
+    }
+    
 }
