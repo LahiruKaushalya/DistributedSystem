@@ -30,7 +30,7 @@ public class BSConnector {
     private final long TIMEOUT;
     private final String bsipAddress;
     private final MainController mainController;
-    private final MessageHandler msgHandler;
+    private final MessageSender msgSender;
     private final IDCreator idCreator;
     
     private ArrayList<NodeDTO> nodes;
@@ -38,7 +38,7 @@ public class BSConnector {
 
     public BSConnector(String bsipAddress, String ipAddress, int port) {
         
-        this.TIMEOUT = 5000;
+        this.TIMEOUT = 8000;
         this.bsipAddress = bsipAddress;
         this.mainController = MainController.getInstance();
         this.idCreator = new IDCreator();
@@ -50,7 +50,7 @@ public class BSConnector {
         mainController.getMainFrame().updateNodeDetails(node);
         
         //After node initialization
-        this.msgHandler = MessageHandler.getInstance();
+        this.msgSender = MessageSender.getInstance();
     }
     
     public void register() {
@@ -207,9 +207,14 @@ public class BSConnector {
             Thread t = new Thread(){
                 @Override
                 public void run(){
+                    int count = 0;
                     for (Node neighbour : neighbours) {
                         if(neighbour != null){
-                            msgHandler.leave(neighbour);
+                            count++;
+                            msgSender.leave(neighbour, node, NodeInitializer.getHopCount());
+                            if(count == 1){
+                                msgSender.updateRoutes(neighbour, node, null, NodeInitializer.getHopCount());
+                            }
                         }
                     }
                 }

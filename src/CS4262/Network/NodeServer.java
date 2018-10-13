@@ -50,7 +50,7 @@ public class NodeServer implements Runnable {
                     DataOutputStream outStream = new DataOutputStream(socket.getOutputStream());
                     
                     //Create a new ClientHandler thread object 
-                    Thread ch = new ClientHandler(node, socket, inStream, outStream);
+                    Thread ch = new ClientHandler(socket, inStream, outStream);
                     ch.start();
                 }
                 catch(SocketTimeoutException ex){
@@ -68,7 +68,7 @@ public class NodeServer implements Runnable {
             try {
                 server.close();
                 instance = null;
-                System.out.println("Server stopped.");
+                System.out.println("Server stopped...");
             } 
             catch (IOException ex) {
                 Logger.getLogger(NodeServer.class.getName()).log(Level.SEVERE, null, ex);

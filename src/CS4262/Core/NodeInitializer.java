@@ -2,7 +2,7 @@ package CS4262.Core;
 
 import CS4262.MainController;
 import CS4262.Models.Node;
-import CS4262.Network.MessageHandler;
+import CS4262.Network.MessageSender;
 import CS4262.Models.NodeDTO;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class NodeInitializer {
     
     private final Node node;
-    private final MessageHandler msgHandler;
+    private final MessageSender msgHandler;
     private final MainController mainController;
     private final RouteInitializer routeInitializer;
     private static int hopCount;
@@ -23,9 +23,9 @@ public class NodeInitializer {
     public NodeInitializer() {
         this.mainController = MainController.getInstance();
         this.node = mainController.getNode();
-        this.msgHandler = MessageHandler.getInstance();
+        this.msgHandler = MessageSender.getInstance();
         this.routeInitializer = new RouteInitializer();
-        NodeInitializer.hopCount = 5;
+        NodeInitializer.hopCount = 4;
     }
 
     public static int getHopCount() {
@@ -40,7 +40,7 @@ public class NodeInitializer {
         String response;
         if (newNodes != null) {
             for(NodeDTO neighbour : newNodes){
-                response = msgHandler.join(neighbour);
+                response = msgHandler.join(neighbour, node, hopCount);
                 routeInitializer.addAndUpdate(neighbour);
                 /*
                 Handle response here

@@ -16,25 +16,25 @@ import java.util.logging.Logger;
  *
  * @author Lahiru Kaushalya
  */
-public class MessageHandler {
+public class MessageSender {
     
     private final Node node;
     
-    private static MessageHandler instance;
+    private static MessageSender instance;
     private String response;
     
-    public static MessageHandler getInstance() {
+    public static MessageSender getInstance() {
         if(instance == null){
-            instance = new MessageHandler();
+            instance = new MessageSender();
         }
         return instance;
     }
       
-    private MessageHandler(){
+    private MessageSender(){
         this.node = MainController.getInstance().getNode();
     }
     
-    public String sendMsg(NodeDTO receiver, String msg){
+    private String sendMsg(NodeDTO receiver, String msg){
         try {
             Thread t = new Thread() {
                 Socket socket;
@@ -54,7 +54,7 @@ public class MessageHandler {
                         response = inStream.readUTF();
                     } 
                     catch (IOException ex) {
-                        Logger.getLogger(MessageHandler.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     finally{
                         try {
@@ -63,7 +63,7 @@ public class MessageHandler {
                             socket.close();
                         } 
                         catch (IOException ex) {
-                            Logger.getLogger(MessageHandler.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 }
@@ -77,8 +77,8 @@ public class MessageHandler {
         return response;
     }
     
-    public String join(NodeDTO receiver){
-        String message = generateJoinMsg(node);
+    public String join(NodeDTO receiver, NodeDTO joiner, int hopCount){
+        String message = generateJoinMsg(joiner, hopCount);
         return sendMsg(receiver, message);
     }
     
@@ -87,13 +87,8 @@ public class MessageHandler {
         return sendMsg(receiver, message);
     }
     
-    public String removeNode(NodeDTO receiver, NodeDTO sender, NodeDTO remove){
-        String message = generateRemoveNodeMsg(sender, remove);
-        return sendMsg(receiver, message);
-    }
-    
-    public String leave(NodeDTO receiver){
-        String message = generateLeaveMsg(node);
+    public String leave(NodeDTO receiver, NodeDTO remove, int hopCount){
+        String message = generateLeaveMsg(remove, hopCount);
         return sendMsg(receiver, message);
     }
     
@@ -101,9 +96,9 @@ public class MessageHandler {
     Join message format 
     length JOIN sender_ip sender_port
     */
-    private String generateJoinMsg(NodeDTO sender){
+    private String generateJoinMsg(NodeDTO joiner, int hopCount){
         String msg = " JOIN ";
-        msg += sender.getIpAdress() + " " + sender.getPort();
+        msg += hopCount + " " +joiner.getIpAdress() + " " + joiner.getPort();
         return "00" + String.valueOf(msg.length() + 5) + msg;  
     }
     
@@ -140,23 +135,12 @@ public class MessageHandler {
     }
     
     /*
-    Remove message format 
-    length REMOVE sender_ip sender_port remove_node_ip remove_node_port
-    */
-    private String generateRemoveNodeMsg(NodeDTO sender, NodeDTO remove){
-        String msg = " REMOVE ";
-        msg += sender.getIpAdress() + " " + sender.getPort();
-        msg += " " + remove.getIpAdress() + " " + remove.getPort();
-        return "00" + String.valueOf(msg.length() + 5) + msg;  
-    }
-    
-    /*
     Leave message format 
-    length LEAVE sender_ip sender_port
+    length LEAVE hop_count leaver_ip leaver_port
     */
-    private String generateLeaveMsg(NodeDTO sender){
+    private String generateLeaveMsg(NodeDTO leaver, int hopCount){
         String msg = " LEAVE ";
-        msg += sender.getIpAdress() + " " + sender.getPort();
+        msg += hopCount + " " + leaver.getIpAdress() + " " + leaver.getPort();
         return "00" + String.valueOf(msg.length() + 5) + msg;  
     }
 }
