@@ -33,7 +33,7 @@ public class LeaveHandler extends MsgHandler{
         //Send remove node message to all neighbours in routing table 
         Node[] neighbours = node.getRoutes();
         
-        if (hopCount > 1) {
+        if (hopCount > 0) {
             for (Node neighbour : neighbours) {
                 //Routes can have null values
                 if (neighbour != null) {

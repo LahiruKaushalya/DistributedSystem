@@ -269,9 +269,9 @@
                                   <Component id="details_ipLbl" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="details_portLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="details_portDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
+                                  <Component id="details_portLbl" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" attributes="0">
@@ -285,9 +285,9 @@
                                   <Component id="details_succipLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="details_succportLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="details_succportDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
+                                  <Component id="details_succportLbl" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>

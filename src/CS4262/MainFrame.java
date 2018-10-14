@@ -267,9 +267,9 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(details_ipDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(details_ipLbl))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(details_portLbl)
-                            .addComponent(details_portDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(details_portDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(details_portLbl)))
                     .addGroup(detailsPanelLayout.createSequentialGroup()
                         .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(details_succidLbl)
@@ -279,9 +279,9 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(details_succipDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(details_succipLbl))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(details_succportLbl)
-                            .addComponent(details_succportDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(details_succportDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(details_succportLbl))))
                 .addGap(30, 30, 30)
                 .addComponent(details_nodeConentLbl)
                 .addGap(18, 18, 18)
@@ -407,6 +407,10 @@ public class MainFrame extends javax.swing.JFrame {
     
     public void updateRoutingTable(String data){
         routingTextPane.setText(data);
+    }
+    
+    public void updateContent(String content){
+        details_contentTextPane.setText(content);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

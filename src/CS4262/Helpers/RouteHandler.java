@@ -52,7 +52,7 @@ public class RouteHandler extends MsgHandler{
         String id = node.getId();
         String senderID = idCreator.generateNodeID(senderIP, senderPort);
         
-        //Check whether it is own msg and not expire
+        //Check whether it is own msg or expired
         if(!id.equals(senderID) && hopCount > 0){
             Node[] neighbours = node.getRoutes();
             //Routes can have null values

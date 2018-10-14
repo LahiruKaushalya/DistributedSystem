@@ -2,6 +2,7 @@ package CS4262.Models;
 
 import CS4262.Helpers.IDCreator;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -12,14 +13,14 @@ public class Node extends NodeDTO
     private final String id;
     
     private Node successor;
-    private ArrayList<String> content;
+    private List<File> content;
     private Node[] routes;
 
     public Node(String ip, int port, String nodeID)
     { 
         super(ip, port);
         this.id = nodeID;
-        this.content = new ArrayList<String>();
+        this.content = new ArrayList<>();
         this.routes = new Node[new IDCreator().getBIN_ID_LENGTH()];
     }
     
@@ -33,7 +34,7 @@ public class Node extends NodeDTO
     /**
      * @return the content
      */
-    public ArrayList<String> getContent() {
+    public List<File> getContent() {
         return content;
     }
     
@@ -50,7 +51,7 @@ public class Node extends NodeDTO
      * In case of a content update e.g. graceful departure,
      * get content list, update it and set it
      */
-    public void setContent(ArrayList<String> content) {
+    public void setContent(List<File> content) {
         this.content = content;
     }
     
