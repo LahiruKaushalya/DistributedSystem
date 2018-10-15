@@ -4,10 +4,10 @@ import CS4262.MainController;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 public class MessageSender {
     
     private final Node node;
+    private final long MSG_TIMEOUT;
     
     private static MessageSender instance;
     private String response;
@@ -32,49 +33,51 @@ public class MessageSender {
       
     private MessageSender(){
         this.node = MainController.getInstance().getNode();
+        this.MSG_TIMEOUT = 2000;
     }
     
-    private String sendMsg(NodeDTO receiver, String msg){
+    private String sendMsg(NodeDTO receiver, String message){
         try {
             Thread t = new Thread() {
-                Socket socket;
-                DataOutputStream outStream;
-                DataInputStream inStream;
-                
+                DatagramSocket socket;
                 @Override
                 public void run() {
                     try {
-                        socket = new Socket(receiver.getIpAdress(), receiver.getPort());
+                        DatagramPacket dp;
+                        byte[] buf = new byte[1024];
+                        socket = new DatagramSocket();
+                        InetAddress receiverIP = InetAddress.getByName(receiver.getIpAdress());
+                        int receiverPort = receiver.getPort();
                         
-                        // sends message to the socket
-                        outStream = new DataOutputStream(socket.getOutputStream());
-                        outStream.writeUTF(msg);
-                        
-                        inStream = new DataInputStream(socket.getInputStream());
-                        response = inStream.readUTF();
-                    } 
+                        //Create datagrame packet
+                        dp = new DatagramPacket(message.getBytes(), message.length(), receiverIP, receiverPort);
+                        socket.send(dp);
+
+                        dp = new DatagramPacket(buf, 1024);
+                        socket.receive(dp);
+
+                        response = new String(dp.getData(), 0, dp.getLength());
+                    }
                     catch (IOException ex) {
                         Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    finally{
-                        try {
-                            inStream.close();
-                            outStream.close();
-                            socket.close();
-                        } 
-                        catch (IOException ex) {
-                            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                    finally {
+                        socket.close();
                     }
                 }
             };
             t.start();
-            t.join(2000);
+            t.join(MSG_TIMEOUT);
         }
         catch (Exception ex) {
             Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return response;
+        finally{
+            if(response == null){
+                System.out.println("Error while communicating...");
+            }
+            return response;
+        }
     }
     
     public String join(NodeDTO receiver, NodeDTO joiner, int hopCount){

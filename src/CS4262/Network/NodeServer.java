@@ -2,11 +2,9 @@ package CS4262.Network;
 
 import CS4262.Models.Node;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +17,7 @@ public class NodeServer implements Runnable {
     
     private final Node node;
     private final Thread thread;
-    private ServerSocket server;
+    private DatagramSocket server;
     private static NodeServer instance; 
     
     public static NodeServer getInstance(Node node) {
@@ -38,19 +36,16 @@ public class NodeServer implements Runnable {
     public void run(){
         try {
             System.out.println("Server starts on port " + node.getPort());
-            server = new ServerSocket(node.getPort());
+            server = new DatagramSocket(node.getPort());
             server.setSoTimeout(500);
             while(true){
                 try {
-                    //Socket object to receive incoming node requests
-                    Socket socket = server.accept();
-                    
-                    //Obtaining input and out streams 
-                    DataInputStream inStream = new DataInputStream(socket.getInputStream());
-                    DataOutputStream outStream = new DataOutputStream(socket.getOutputStream());
+                    byte[] buff = new byte[65536];
+                    DatagramPacket incoming = new DatagramPacket(buff, buff.length);
+                    server.receive(incoming);
                     
                     //Create a new ClientHandler thread object 
-                    Thread ch = new ClientHandler(socket, inStream, outStream);
+                    Thread ch = new ClientHandler(incoming, server);
                     ch.start();
                 }
                 catch(SocketTimeoutException ex){
@@ -65,14 +60,9 @@ public class NodeServer implements Runnable {
             Logger.getLogger(NodeServer.class.getName()).log(Level.SEVERE, null, ex);
         }
         finally{
-            try {
-                server.close();
-                instance = null;
-                System.out.println("Server stopped...");
-            } 
-            catch (IOException ex) {
-                Logger.getLogger(NodeServer.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            server.close();
+            instance = null;
+            System.out.println("Server stopped...");
         }
     }
     

@@ -4,7 +4,6 @@ import CS4262.Helpers.IDCreator;
 import CS4262.MainController;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
-import CS4262.Network.MessageSender;
 
 /**
  *
@@ -15,13 +14,11 @@ public class RouteInitializer {
     private final Node node;
     private final IDCreator idCreator;
     private final MainController mainController;
-    private final MessageSender msgHandler;
     
     public RouteInitializer(){
         this.mainController = MainController.getInstance();
         this.node = mainController.getNode();
         this.idCreator = new IDCreator();
-        this.msgHandler = MessageSender.getInstance();
     }
     
     public Node addAndUpdate(NodeDTO neighbour){

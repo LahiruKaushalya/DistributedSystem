@@ -32,7 +32,7 @@ public class MainController {
     }
 
     public void setNode(Node node) {
-        this.node = node;
+        MainController.node = node;
     }
     
     public MainFrame getMainFrame() {

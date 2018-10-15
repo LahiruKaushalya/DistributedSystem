@@ -5,10 +5,9 @@ import CS4262.Helpers.LeaveHandler;
 import CS4262.Helpers.MsgHandler;
 import CS4262.Helpers.RouteHandler;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,38 +18,30 @@ import java.util.logging.Logger;
  */
 public class ClientHandler extends Thread{
     
-    private final Socket socket;
-    private final DataInputStream inStream;
-    private final DataOutputStream outStream; 
+    private final DatagramPacket incoming; 
+    private final DatagramSocket server;
     private MsgHandler msgHandler;
     
-    public ClientHandler(Socket socket, DataInputStream inStream, DataOutputStream outStream){
-        this.socket = socket;
-        this.inStream = inStream;
-        this.outStream = outStream;
+    public ClientHandler(DatagramPacket incoming, DatagramSocket server){
+        this.incoming = incoming;
+        this.server = server;
     }
     
     @Override
     public void run(){
         try {
-            String incomingMsg;
-            incomingMsg = inStream.readUTF();
+            byte[] data = incoming.getData();
+            String incomingMsg = new String(data, 0, incoming.getLength());
+            
             //Process incoming message
             String response = createResponse(incomingMsg);
-            outStream.writeUTF(response);
-
-        } catch (IOException ex) {
+            response = String.format("%04d", response.length() + 5) + " " + response;
+        
+            DatagramPacket dpReply = new DatagramPacket(response.getBytes() , response.getBytes().length , incoming.getAddress() , incoming.getPort());
+            server.send(dpReply);
+        } 
+        catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally{
-            try {
-                inStream.close();
-                outStream.close();
-                socket.close();
-            } 
-            catch (IOException ex) {
-                Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
     
@@ -66,10 +57,10 @@ public class ClientHandler extends Thread{
                 try {
                     msgHandler = new JoinHandler();
                     msgHandler.handle(st);
-                    response = "0013 JOINOK 0";
+                    response = "JOINOK 0";
                 } 
                 catch (Exception ex) {
-                    response = "0016 JOINOK 9999";
+                    response = "JOINOK 9999";
                 }
                 finally{
                     return response;
@@ -79,10 +70,10 @@ public class ClientHandler extends Thread{
                 try {
                     msgHandler = new LeaveHandler();
                     msgHandler.handle(st);
-                    response = "0014 LEAVEOK 0";
+                    response = "LEAVEOK 0";
                 } 
                 catch (Exception ex) {
-                    response = "0017 LEAVEOK 9999";
+                    response = "LEAVEOK 9999";
                 }
                 finally{
                     return response;
@@ -92,10 +83,10 @@ public class ClientHandler extends Thread{
                 try {
                     msgHandler = new RouteHandler();
                     msgHandler.handle(st);
-                    response = "0022 UPDATE_ROUTES 0";
+                    response = "UPDATE_ROUTES 0";
                 } 
                 catch (Exception e) {
-                    response = "0025 UPDATE_ROUTES 9999";
+                    response = "UPDATE_ROUTES 9999";
                 }
                 finally{
                     return response;

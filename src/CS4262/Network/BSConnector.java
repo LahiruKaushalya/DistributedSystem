@@ -14,7 +14,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,8 +26,8 @@ public class BSConnector {
     private static Node node;
     private static String response;
     
-    private final long TIMEOUT;
-    private final String bsipAddress;
+    private final long CON_TIMEOUT;
+    private final String bsIPAddress;
     private final MainController mainController;
     private final MessageSender msgSender;
     private final IDCreator idCreator;
@@ -38,8 +37,8 @@ public class BSConnector {
 
     public BSConnector(String bsipAddress, String ipAddress, int port) {
         
-        this.TIMEOUT = 8000;
-        this.bsipAddress = bsipAddress;
+        this.CON_TIMEOUT = 5000;
+        this.bsIPAddress = bsipAddress;
         this.mainController = MainController.getInstance();
         this.idCreator = new IDCreator();
         
@@ -63,7 +62,7 @@ public class BSConnector {
                 }
             };
             t.start();
-            t.join(TIMEOUT);
+            t.join(CON_TIMEOUT);
 
         } 
         catch (InterruptedException ex) {
@@ -90,7 +89,7 @@ public class BSConnector {
                 }
             };
             t.start();
-            t.join(TIMEOUT);
+            t.join(CON_TIMEOUT);
         } 
         catch (InterruptedException ex) {
             Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
@@ -111,7 +110,7 @@ public class BSConnector {
             DatagramPacket dp;
             byte[] buf = new byte[1024];
             DatagramSocket ds = new DatagramSocket();
-            InetAddress ip = InetAddress.getByName(bsipAddress);
+            InetAddress ip = InetAddress.getByName(bsIPAddress);
             
             dp = new DatagramPacket(message.getBytes(), message.length(), ip, 55555);
             ds.send(dp);
@@ -220,7 +219,7 @@ public class BSConnector {
                 }
             };
             t.start();
-            t.join(TIMEOUT);
+            t.join(CON_TIMEOUT);
         } 
         catch (InterruptedException ex) {
             Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
