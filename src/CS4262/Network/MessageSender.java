@@ -38,13 +38,14 @@ public class MessageSender {
     
     private String sendMsg(NodeDTO receiver, String message){
         try {
+            response = null;
             Thread t = new Thread() {
                 DatagramSocket socket;
                 @Override
                 public void run() {
                     try {
                         DatagramPacket dp;
-                        byte[] buf = new byte[1024];
+                        byte[] buf = new byte[65536];
                         socket = new DatagramSocket();
                         InetAddress receiverIP = InetAddress.getByName(receiver.getIpAdress());
                         int receiverPort = receiver.getPort();
@@ -53,7 +54,7 @@ public class MessageSender {
                         dp = new DatagramPacket(message.getBytes(), message.length(), receiverIP, receiverPort);
                         socket.send(dp);
 
-                        dp = new DatagramPacket(buf, 1024);
+                        dp = new DatagramPacket(buf, 65536);
                         socket.receive(dp);
 
                         response = new String(dp.getData(), 0, dp.getLength());
@@ -95,13 +96,23 @@ public class MessageSender {
         return sendMsg(receiver, message);
     }
     
+    public String updateSuccessor(NodeDTO receiver){
+        String message = generateUpdateSuccessorMsg();
+        return sendMsg(receiver, message);
+    }
+    
+    public String updateState(NodeDTO receiver, NodeDTO sender, int hopCount){
+        String message = generateUpdateStateMsg(sender, hopCount);
+        return sendMsg(receiver, message);
+    }
+    
     /*
     Join message format 
     length JOIN sender_ip sender_port
     */
     private String generateJoinMsg(NodeDTO joiner, int hopCount){
         String msg = " JOIN ";
-        msg += hopCount + " " +joiner.getIpAdress() + " " + joiner.getPort();
+        msg += hopCount + " " + joiner.getIpAdress() + " " + joiner.getPort();
         return "00" + String.valueOf(msg.length() + 5) + msg;  
     }
     
@@ -146,4 +157,25 @@ public class MessageSender {
         msg += hopCount + " " + leaver.getIpAdress() + " " + leaver.getPort();
         return "00" + String.valueOf(msg.length() + 5) + msg;  
     }
+    
+    /*
+    Update successor message format 
+    length ISALIVE sender_ip sender_port
+    */
+    private String generateUpdateSuccessorMsg(){
+        String msg = " ISALIVE ";
+        msg += node.getIpAdress() + " " + node.getPort();
+        return "00" + String.valueOf(msg.length() + 5) + msg;  
+    }
+    
+    /*
+    Update state message format 
+    length ISALIVE sender_ip sender_port
+    */
+    private String generateUpdateStateMsg(NodeDTO sender, int hopCount){
+        String msg = " ALIVE ";
+        msg += hopCount + " " + sender.getIpAdress() + " " + sender.getPort();
+        return "00" + String.valueOf(msg.length() + 5) + msg;  
+    }
+    
 }

@@ -400,9 +400,16 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     public void updateSuccessorDetails(Node successor){
-        details_succidDisplayLbl.setText(successor.getId());
-        details_succipDisplayLbl.setText(successor.getIpAdress());
-        details_succportDisplayLbl.setText(String.valueOf(successor.getPort()));
+        if(successor != null){
+            details_succidDisplayLbl.setText(successor.getId());
+            details_succipDisplayLbl.setText(successor.getIpAdress());
+            details_succportDisplayLbl.setText(String.valueOf(successor.getPort()));
+        }
+        else{
+            details_succidDisplayLbl.setText("");
+            details_succipDisplayLbl.setText("");
+            details_succportDisplayLbl.setText("");
+        }
     }
     
     public void updateRoutingTable(String data){

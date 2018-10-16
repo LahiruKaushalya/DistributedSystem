@@ -81,7 +81,7 @@ public class RouteInitializer {
         node.setRoutes(routes);
         
         //Set node successor
-        setNodeSuccessor( );
+        setNodeSuccessor();
     }
     
     public void updateRoutesUI(){
@@ -141,7 +141,7 @@ public class RouteInitializer {
         
         Node[] routes = node.getRoutes();
         int m = idCreator.getBIN_ID_LENGTH();
-        
+        node.setSuccessor(null);
         for(int i = 0; i < m; i++){
             Node temp = routes[i];
             if(temp != null){
@@ -153,6 +153,7 @@ public class RouteInitializer {
                 break;
             }
         }
+        mainController.getMainFrame().updateSuccessorDetails(node.getSuccessor());
     }
     
 }

@@ -4,6 +4,7 @@ import CS4262.Helpers.JoinHandler;
 import CS4262.Helpers.LeaveHandler;
 import CS4262.Helpers.MsgHandler;
 import CS4262.Helpers.RouteHandler;
+import CS4262.Helpers.StateHandler;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -62,9 +63,7 @@ public class ClientHandler extends Thread{
                 catch (Exception ex) {
                     response = "JOINOK 9999";
                 }
-                finally{
-                    return response;
-                }
+                return response;
                 
             case "LEAVE":
                 try {
@@ -75,9 +74,7 @@ public class ClientHandler extends Thread{
                 catch (Exception ex) {
                     response = "LEAVEOK 9999";
                 }
-                finally{
-                    return response;
-                }
+                return response;
                 
             case "UPDATE_ROUTES":
                 try {
@@ -88,10 +85,22 @@ public class ClientHandler extends Thread{
                 catch (Exception e) {
                     response = "UPDATE_ROUTES 9999";
                 }
-                finally{
-                    return response;
+                return response;
+                
+            case "ALIVE":
+                try {
+                    msgHandler = new StateHandler();
+                    msgHandler.handle(st);
+                    response = "ALIVE 0";
+                } 
+                catch (Exception e) {
+                    response = "ALIVE 9999";
                 }
-            
+                return response;
+                
+            case "ISALIVE":
+                response = "ALIVE";
+                
             default:
                 return response;
         }

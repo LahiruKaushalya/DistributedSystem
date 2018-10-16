@@ -197,7 +197,7 @@ public class BSConnector {
         nodeServerThread = NodeServer.getInstance(node);
         nodeServerThread.startServer();
         //Initialize neighbours
-        new NodeInitializer().initializeNode(nodes);
+        NodeInitializer.getInstance().initializeNode(nodes);
     }
     
     private void onUnregSuccess(){
@@ -226,6 +226,7 @@ public class BSConnector {
         }
         finally {
             nodeServerThread.stopServer();
+            NodeInitializer.getInstance().cancelAllScheduledTasks();
         }
     }
 }

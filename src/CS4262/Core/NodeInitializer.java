@@ -9,6 +9,8 @@ import CS4262.Models.NodeDTO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  *
@@ -18,17 +20,33 @@ import java.util.Random;
 public class NodeInitializer {
     
     private final Node node;
-    private final MessageSender msgHandler;
+    private final MessageSender msgSender;
     private final MainController mainController;
     private final RouteInitializer routeInitializer;
-    private static int hopCount;
     
-    public NodeInitializer() {
+    private Timer sendNodeStateTimer;
+    private Timer checkSuccessorTimer;
+    private TimerTask sendNodeStateTask;
+    private TimerTask checkSuccessorTask;
+    private static int hopCount;
+    private int retryCount;
+    
+    private static NodeInitializer instance; 
+    
+    public static NodeInitializer getInstance() {
+        if(instance == null){
+            instance = new NodeInitializer();
+        }
+        return instance;
+    }
+    
+    private NodeInitializer() {
         this.mainController = MainController.getInstance();
         this.node = mainController.getNode();
-        this.msgHandler = MessageSender.getInstance();
+        this.msgSender = MessageSender.getInstance();
         this.routeInitializer = new RouteInitializer();
         NodeInitializer.hopCount = 4;
+        this.retryCount = 0;
     }
 
     public static int getHopCount() {
@@ -47,7 +65,7 @@ public class NodeInitializer {
         String response;
         if (newNodes != null) {
             for(NodeDTO neighbour : newNodes){
-                response = msgHandler.join(neighbour, node, hopCount);
+                response = msgSender.join(neighbour, node, hopCount);
                 routeInitializer.addAndUpdate(neighbour);
                 /*
                 Handle response here
@@ -59,12 +77,83 @@ public class NodeInitializer {
         Node[] neighbours = node.getRoutes();
         for(Node neighbour : neighbours){
             if(neighbour != null){
-                response = msgHandler.updateRoutes(neighbour, node, null, hopCount);
+                response = msgSender.updateRoutes(neighbour, node, null, hopCount);
                 /*
                 Handle response here
                 */
             }
         }
+        //Schedule successor status checker
+        long delay = 10000, Period = 10000;
+        checkSuccessorTask = checkSuccessorState();
+        checkSuccessorTimer = new Timer();
+        checkSuccessorTimer.scheduleAtFixedRate(checkSuccessorTask, delay, Period);
+        
+        delay = 30000; Period = 30000;
+        sendNodeStateTask = sendNodeState();
+        sendNodeStateTimer = new Timer();
+        sendNodeStateTimer.scheduleAtFixedRate(sendNodeState(), delay, Period);
+        
+    }
+    
+    public void cancelAllScheduledTasks(){
+        checkSuccessorTask.cancel();
+        sendNodeStateTask.cancel();
+        sendNodeStateTimer.cancel();
+        checkSuccessorTimer.cancel();
+    }
+    
+    private TimerTask checkSuccessorState() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                MessageSender ms = MessageSender.getInstance();
+                Node successor = node.getSuccessor();
+                if(successor != null){
+                    //Check successor node is alive
+                    String response = ms.updateSuccessor(successor);
+                    if(response == null){
+                        retryCount++;
+                    }
+                    else {
+                        retryCount = 0;
+                    }
+                    
+                    if(retryCount == 2){
+                        routeInitializer.removeAndUpdate(successor);
+                        routeInitializer.updateRoutesUI();
+                        
+                        Node[] neighbours = node.getRoutes();
+                        for (Node neighbour : neighbours) {
+                            if (neighbour != null) {
+                                msgSender.leave(neighbour, successor, hopCount);
+                                msgSender.updateRoutes(neighbour, node, null, hopCount);
+                            }
+                        }
+                        retryCount = 0;
+                    }
+                }
+            }
+        };
+        return task;
+    }
+    
+    private TimerTask sendNodeState() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                MessageSender ms = MessageSender.getInstance();
+                Node successor = node.getSuccessor();
+                if(successor != null){
+                    //Check successor node is alive
+                    String response = ms.updateState(successor, node, 20);
+                }
+                else{
+                    retryCount = 0;
+                }
+            }
+        };
+        return task;
     }
     
     private void createContent(){
