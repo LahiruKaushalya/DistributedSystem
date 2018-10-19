@@ -170,7 +170,7 @@ public class MessageSender {
     
     /*
     Update state message format 
-    length ISALIVE sender_ip sender_port
+    length ALIVE sender_ip sender_port
     */
     private String generateUpdateStateMsg(NodeDTO sender, int hopCount){
         String msg = " ALIVE ";

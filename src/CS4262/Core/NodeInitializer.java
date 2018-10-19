@@ -1,14 +1,11 @@
 package CS4262.Core;
 
 import CS4262.MainController;
-import CS4262.Models.File;
 import CS4262.Models.Node;
 import CS4262.Network.MessageSender;
 import CS4262.Models.NodeDTO;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,6 +20,7 @@ public class NodeInitializer {
     private final MessageSender msgSender;
     private final MainController mainController;
     private final RouteInitializer routeInitializer;
+    private final ContentInitializer fileInitializer;
     
     private Timer sendNodeStateTimer;
     private Timer checkSuccessorTimer;
@@ -44,7 +42,8 @@ public class NodeInitializer {
         this.mainController = MainController.getInstance();
         this.node = mainController.getNode();
         this.msgSender = MessageSender.getInstance();
-        this.routeInitializer = new RouteInitializer();
+        this.fileInitializer = ContentInitializer.getInstance();
+        this.routeInitializer = RouteInitializer.getInstance();
         NodeInitializer.hopCount = 4;
         this.retryCount = 0;
     }
@@ -59,9 +58,7 @@ public class NodeInitializer {
      */
     public void initializeNode(ArrayList<NodeDTO> newNodes) {
         
-        //Create node content
-        createContent();
-        
+        //Join network throgh two random nodes
         String response;
         if (newNodes != null) {
             for(NodeDTO neighbour : newNodes){
@@ -74,6 +71,10 @@ public class NodeInitializer {
             routeInitializer.updateRoutesUI();
         }
         
+        //Create node content
+        fileInitializer.createNodeContent();
+        
+        //Flood routing table 
         Node[] neighbours = node.getRoutes();
         for(Node neighbour : neighbours){
             if(neighbour != null){
@@ -154,59 +155,6 @@ public class NodeInitializer {
             }
         };
         return task;
-    }
-    
-    private void createContent(){
-        
-        String[] availableFileNames = new String[]{
-            "Adventures of Tintin",
-            "Jack and Jill",
-            "Glee",
-            "The Vampire Diarie",
-            "King Arthur",
-            "Windows XP",
-            "Harry Potter",
-            "Kung Fu Panda",
-            "Lady Gaga",
-            "Twilight",
-            "Windows 8",
-            "Mission Impossible",
-            "Turn Up The Music",
-            "Super Mario",
-            "American Pickers",
-            "Microsoft Office 2010",
-            "Happy Feet",
-            "Modern Family",
-            "American Idol",
-            "Hacking for Dummies"
-        };
-        
-        Random ran = new Random();
-        int numOfFiles = 3 + ran.nextInt(3);
-        
-        List<File> content = new ArrayList<>();
-        List<Integer> temp = new ArrayList<>();
-        
-        String text = "File Names\n\n",fileName;
-        
-        //genatate random number of files from available files
-        int x = 0, index;
-        while(x < numOfFiles){
-            index = ran.nextInt(availableFileNames.length - 1);
-            //Avoid file duplications
-            if(!temp.contains(index)){
-                fileName = availableFileNames[index];
-                content.add(new File(fileName));
-                text += fileName + "\n";
-                temp.add(index);
-                x++;
-            }
-        }
-        //set node content
-        node.setContent(content);
-        
-        //update UI
-        mainController.getMainFrame().updateContent(text);
     }
     
 }

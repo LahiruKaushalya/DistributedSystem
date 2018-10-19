@@ -21,7 +21,7 @@ public abstract class MsgHandler {
     public MsgHandler(){
         this.mainController = MainController.getInstance();
         this.node = mainController.getNode();
-        this.routeInitializer = new RouteInitializer();
+        this.routeInitializer = RouteInitializer.getInstance();
         this.msgSender = MessageSender.getInstance();
         this.idCreator = new IDCreator();
     }

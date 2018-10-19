@@ -14,8 +14,15 @@ public class RouteInitializer {
     private final Node node;
     private final IDCreator idCreator;
     private final MainController mainController;
+    private static RouteInitializer instance;
     
-    public RouteInitializer(){
+    public static RouteInitializer getInstance(){
+        if(instance == null){
+            instance = new RouteInitializer();
+        }
+        return instance;
+    }
+    private RouteInitializer(){
         this.mainController = MainController.getInstance();
         this.node = mainController.getNode();
         this.idCreator = new IDCreator();
