@@ -1,6 +1,7 @@
 package CS4262.Network;
 
 import CS4262.MainController;
+import CS4262.Models.File;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
 
@@ -9,6 +10,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -91,6 +93,15 @@ public class MessageSender {
         return sendMsg(receiver, message);
     }
     
+    public String updateFileIndex(NodeDTO receiver, NodeDTO sender, int hopCount){
+        String message = generateUpdateFileIndexMsg(sender, hopCount);
+        return sendMsg(receiver, message);
+    }
+    
+    public String passFileIndex(NodeDTO receiver, String message){
+        return sendMsg(receiver, message);
+    }
+    
     public String leave(NodeDTO receiver, NodeDTO remove, int hopCount){
         String message = generateLeaveMsg(remove, hopCount);
         return sendMsg(receiver, message);
@@ -113,7 +124,7 @@ public class MessageSender {
     private String generateJoinMsg(NodeDTO joiner, int hopCount){
         String msg = " JOIN ";
         msg += hopCount + " " + joiner.getIpAdress() + " " + joiner.getPort();
-        return "00" + String.valueOf(msg.length() + 5) + msg;  
+        return String.format("%04d", msg.length() + 5) + " " + msg;   
     }
     
     /*
@@ -136,7 +147,7 @@ public class MessageSender {
         }
         
         if (addi != null) {
-            if (addi.size() != 0) {
+            if (!addi.isEmpty()) {
                 count += addi.size();
                 for (Node neighbour : addi) {
                     tempStr += " " + neighbour.getIpAdress() + " " + neighbour.getPort();
@@ -145,7 +156,24 @@ public class MessageSender {
         }
         
         msg += " " + count + tempStr;
-        return "00" + String.valueOf(msg.length() + 5) + msg;  
+        return String.format("%04d", msg.length() + 5) + " " + msg;   
+    }
+    
+    /*
+    Update File Index message format 
+    length UPDATE_INDEX hop_count sender_ip sender_port file_cound file_id_1 file_id_2 ....
+    */
+    private String generateUpdateFileIndexMsg(NodeDTO sender, int hopCount){
+        String msg = " UPDATE_INDEX ";
+        msg += hopCount + " " + sender.getIpAdress() + " " + sender.getPort();
+        
+        List<File> files = node.getContent();
+        msg += " " + files.size();
+        
+        for(File file : files){
+            msg += " " + file.getId();
+        }
+        return String.format("%04d", msg.length() + 5) + " " + msg;  
     }
     
     /*
@@ -155,7 +183,7 @@ public class MessageSender {
     private String generateLeaveMsg(NodeDTO leaver, int hopCount){
         String msg = " LEAVE ";
         msg += hopCount + " " + leaver.getIpAdress() + " " + leaver.getPort();
-        return "00" + String.valueOf(msg.length() + 5) + msg;  
+        return String.format("%04d", msg.length() + 5) + " " + msg;   
     }
     
     /*
@@ -165,7 +193,7 @@ public class MessageSender {
     private String generateUpdateSuccessorMsg(){
         String msg = " ISALIVE ";
         msg += node.getIpAdress() + " " + node.getPort();
-        return "00" + String.valueOf(msg.length() + 5) + msg;  
+        return String.format("%04d", msg.length() + 5) + " " + msg;   
     }
     
     /*
@@ -175,7 +203,7 @@ public class MessageSender {
     private String generateUpdateStateMsg(NodeDTO sender, int hopCount){
         String msg = " ALIVE ";
         msg += hopCount + " " + sender.getIpAdress() + " " + sender.getPort();
-        return "00" + String.valueOf(msg.length() + 5) + msg;  
+        return String.format("%04d", msg.length() + 5) + " " + msg;   
     }
     
 }

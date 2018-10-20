@@ -129,7 +129,7 @@ public class RouteInitializer {
         mainController.getMainFrame().updateRoutingTable(displayText);
     }
     
-    public boolean isInRange(int lowerbound, int upperbound, int value, int bp){
+    private boolean isInRange(int lowerbound, int upperbound, int value, int bp){
         if(lowerbound == 0){
             return upperbound <= value &&  value <= bp;
         }

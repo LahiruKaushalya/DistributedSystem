@@ -2,7 +2,9 @@ package CS4262.Models;
 
 import CS4262.Helpers.IDCreator;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -13,13 +15,16 @@ public class Node extends NodeDTO
     private final String id;
     
     private Node successor;
+    private Map<String, List<NodeDTO>> fileIndex;
     private List<File> content;
+    //Routes has fixed length -> m 
     private Node[] routes;
 
     public Node(String ip, int port, String nodeID)
     { 
         super(ip, port);
         this.id = nodeID;
+        this.fileIndex = new HashMap<>();
         this.content = new ArrayList<>();
         this.routes = new Node[new IDCreator().getBIN_ID_LENGTH()];
     }
@@ -66,5 +71,14 @@ public class Node extends NodeDTO
     public void setSuccessor(Node successor) {
         this.successor = successor;
     }
+    
+    public Map<String, List<NodeDTO>> getFileIndex() {
+        return fileIndex;
+    }
+
+    public void setFileIndex(Map<String, List<NodeDTO>> fileIndex) {
+        this.fileIndex = fileIndex;
+    }
+    
 }
 

@@ -44,7 +44,7 @@ public class NodeInitializer {
         this.msgSender = MessageSender.getInstance();
         this.fileInitializer = ContentInitializer.getInstance();
         this.routeInitializer = RouteInitializer.getInstance();
-        NodeInitializer.hopCount = 4;
+        NodeInitializer.hopCount = 3;
         this.retryCount = 0;
     }
 
@@ -84,6 +84,17 @@ public class NodeInitializer {
                 */
             }
         }
+        
+        //Flood content 
+        for(Node neighbour : neighbours){
+            if(neighbour != null){
+                response = msgSender.updateFileIndex(neighbour, node, hopCount);
+                /*
+                Handle response here
+                */
+            }
+        }
+        
         //Schedule successor status checker
         long delay = 10000, Period = 10000;
         checkSuccessorTask = checkSuccessorState();

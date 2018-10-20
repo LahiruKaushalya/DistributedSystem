@@ -1,5 +1,6 @@
 package CS4262.Network;
 
+import CS4262.Helpers.FileIndexHandler;
 import CS4262.Helpers.JoinHandler;
 import CS4262.Helpers.LeaveHandler;
 import CS4262.Helpers.MsgHandler;
@@ -84,6 +85,17 @@ public class ClientHandler extends Thread{
                 } 
                 catch (Exception e) {
                     response = "UPDATE_ROUTES 9999";
+                }
+                return response;
+                
+            case "UPDATE_INDEX":
+                try {
+                    msgHandler = new FileIndexHandler(incomingMsg);
+                    msgHandler.handle(st);
+                    response = "UPDATE_INDEX 0";
+                } 
+                catch (Exception e) {
+                    response = "UPDATE_INDEX 9999";
                 }
                 return response;
                 
