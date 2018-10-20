@@ -2,6 +2,7 @@ package CS4262.Helpers;
 
 import CS4262.Core.ContentInitializer;
 import CS4262.Core.RouteInitializer;
+import CS4262.Core.SearchInitializer;
 import CS4262.MainController;
 import CS4262.Models.Node;
 import CS4262.Network.MessageSender;
@@ -17,6 +18,7 @@ public abstract class MsgHandler {
     protected final MainController mainController;
     protected final RouteInitializer routeInitializer;
     protected final ContentInitializer contentInitializer;
+    protected final SearchInitializer searchInitializer;
     protected final MessageSender msgSender;
     protected final IDCreator idCreator;
     
@@ -25,6 +27,7 @@ public abstract class MsgHandler {
         this.node = mainController.getNode();
         this.routeInitializer = RouteInitializer.getInstance();
         this.contentInitializer = ContentInitializer.getInstance();
+        this.searchInitializer = SearchInitializer.getInstance();
         this.msgSender = MessageSender.getInstance();
         this.idCreator = new IDCreator();
     }

@@ -1,6 +1,7 @@
 package CS4262.Core;
 
 import CS4262.Helpers.IDCreator;
+import CS4262.Helpers.RangeChecker;
 import CS4262.MainController;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
@@ -13,6 +14,7 @@ public class RouteInitializer {
     
     private final Node node;
     private final IDCreator idCreator;
+    private final RangeChecker rangeChecker;
     private final MainController mainController;
     private static RouteInitializer instance;
     
@@ -26,6 +28,7 @@ public class RouteInitializer {
         this.mainController = MainController.getInstance();
         this.node = mainController.getNode();
         this.idCreator = new IDCreator();
+        this.rangeChecker = new RangeChecker();
     }
     
     public Node addAndUpdate(NodeDTO neighbour){
@@ -47,13 +50,13 @@ public class RouteInitializer {
         
         for (int i = m - 1; i >= 0; i--) {
             upperbound = (nodeID + (int) Math.pow(2, i)) % bp;
-            if(isInRange(nodeID, upperbound, neighbourIntID, bp)) {
+            if(rangeChecker.isInRange(nodeID, upperbound, neighbourIntID)) {
                 if (routes[i] == null) {
                     routes[i] = newNode;
                 } 
                 else {
                     int curID = idCreator.getComparableID(routes[i].getId());
-                    if (isInRange(curID, upperbound, neighbourIntID, bp)) {
+                    if (rangeChecker.isInRange(curID, upperbound, neighbourIntID)) {
                         temp = routes[i];
                         routes[i] = newNode;
                     }
@@ -127,21 +130,6 @@ public class RouteInitializer {
         }
         mainController.getMainFrame().updateSuccessorDetails(node.getSuccessor());
         mainController.getMainFrame().updateRoutingTable(displayText);
-    }
-    
-    private boolean isInRange(int lowerbound, int upperbound, int value, int bp){
-        if(lowerbound == 0){
-            return upperbound <= value &&  value <= bp;
-        }
-        //0 within the range
-        else if(lowerbound < upperbound){
-            return (0 <= value && value < lowerbound) || (upperbound <= value && value < bp);
-        }
-        //0 outside the range
-        else{
-            return upperbound <= value && value < lowerbound;
-        }
-        
     }
     
     private void setNodeSuccessor(){

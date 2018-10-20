@@ -1,5 +1,6 @@
 package CS4262;
 
+import CS4262.Core.SearchInitializer;
 import CS4262.Models.Node;
 import CS4262.Network.BSConnector;
 
@@ -82,6 +83,7 @@ public class MainFrame extends javax.swing.JFrame {
         fileNameTextField = new javax.swing.JTextField();
         searchScrollPane = new javax.swing.JScrollPane();
         searchTextPane = new javax.swing.JTextPane();
+        searchBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -347,6 +349,13 @@ public class MainFrame extends javax.swing.JFrame {
         searchTextPane.setEditable(false);
         searchScrollPane.setViewportView(searchTextPane);
 
+        searchBtn.setText("SEARCH");
+        searchBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout searchPanelLayout = new javax.swing.GroupLayout(searchPanel);
         searchPanel.setLayout(searchPanelLayout);
         searchPanelLayout.setHorizontalGroup(
@@ -358,8 +367,11 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGap(180, 180, 180)
                         .addComponent(downloadBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
                     .addComponent(fileNameLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(fileNameTextField)
-                    .addComponent(searchScrollPane))
+                    .addComponent(searchScrollPane)
+                    .addGroup(searchPanelLayout.createSequentialGroup()
+                        .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(searchBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         searchPanelLayout.setVerticalGroup(
@@ -368,12 +380,14 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(fileNameLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(searchBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(fileNameTextField))
                 .addGap(18, 18, 18)
                 .addComponent(searchScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(downloadBtn)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         jTabbedPane.addTab("Search", searchPanel);
@@ -411,6 +425,16 @@ public class MainFrame extends javax.swing.JFrame {
     private void unregBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unregBtnActionPerformed
         bsConnector.unregister();
     }//GEN-LAST:event_unregBtnActionPerformed
+
+    private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
+        String fileName = fileNameTextField.getText();
+        if(!fileName.equals("")){
+            SearchInitializer.getInstance().serachFile(null, fileName);
+        }
+        else{
+            JOptionPane.showMessageDialog(this,"Incomplete information");
+        }
+    }//GEN-LAST:event_searchBtnActionPerformed
 
     public void updateConnctionResponce(String responce){
         connectTextPane.setText(responce);
@@ -490,6 +514,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane routingScrollPane1;
     private javax.swing.JPanel routingTablePanel;
     private javax.swing.JTextPane routingTextPane;
+    private javax.swing.JButton searchBtn;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JScrollPane searchScrollPane;
     private javax.swing.JTextPane searchTextPane;

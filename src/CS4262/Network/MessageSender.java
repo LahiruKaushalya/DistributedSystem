@@ -117,6 +117,16 @@ public class MessageSender {
         return sendMsg(receiver, message);
     }
     
+    public String search(NodeDTO receiver, NodeDTO sender, String fileName){
+        String message = generateSearchMsg(sender, fileName);
+        return sendMsg(receiver, message);
+    }
+    
+    public String searchOK(NodeDTO receiver, List<NodeDTO> fileHolders){
+        String message = generateSearchOKMsg(fileHolders);
+        return sendMsg(receiver, message);
+    }
+    
     /*
     Join message format 
     length JOIN sender_ip sender_port
@@ -204,6 +214,28 @@ public class MessageSender {
         String msg = " ALIVE ";
         msg += hopCount + " " + sender.getIpAdress() + " " + sender.getPort();
         return String.format("%04d", msg.length() + 5) + " " + msg;   
+    }
+    
+    /*
+    Search message format 
+    length SER sender_ip sender_port file_name
+    */
+    private String generateSearchMsg(NodeDTO sender, String fileName){
+        String msg = " SER ";
+        msg += sender.getIpAdress() + " " + sender.getPort() + " " + fileName;
+        return String.format("%04d", msg.length() + 5) + " " + msg;  
+    }
+    
+    /*
+    SearchOK message format 
+    length SEROK no_of_files holder1_ip holder1_port ....
+    */
+    private String generateSearchOKMsg(List<NodeDTO> fileHolders){
+        String msg = " SEROK " + fileHolders.size();
+        for(NodeDTO holder : fileHolders){
+            msg += " " + holder.getIpAdress() + " " + holder.getPort();
+        }
+        return String.format("%04d", msg.length() + 5) + " " + msg;  
     }
     
 }

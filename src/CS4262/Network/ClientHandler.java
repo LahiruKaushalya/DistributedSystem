@@ -5,6 +5,8 @@ import CS4262.Helpers.JoinHandler;
 import CS4262.Helpers.LeaveHandler;
 import CS4262.Helpers.MsgHandler;
 import CS4262.Helpers.RouteHandler;
+import CS4262.Helpers.SearchRequestHandler;
+import CS4262.Helpers.SearchResultsHandler;
 import CS4262.Helpers.StateHandler;
 
 import java.io.IOException;
@@ -97,6 +99,22 @@ public class ClientHandler extends Thread{
                 catch (Exception e) {
                     response = "UPDATE_INDEX 9999";
                 }
+                return response;
+                
+            case "SER":
+                try {
+                    msgHandler = new SearchRequestHandler();
+                    msgHandler.handle(st);
+                } 
+                catch (Exception e) {}
+                return response;
+                
+            case "SEROK":
+                try {
+                    msgHandler = new SearchResultsHandler();
+                    msgHandler.handle(st);
+                } 
+                catch (Exception e) {}
                 return response;
                 
             case "ALIVE":
