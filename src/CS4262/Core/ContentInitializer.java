@@ -67,7 +67,7 @@ public class ContentInitializer {
         List<File> content = new ArrayList<>();
         List<Integer> temp = new ArrayList<>();
         
-        String text = "ID\tName\n\n",fileName;
+        String text = "File ID\tFile Name\n\n",fileName;
         
         //genatate random number of files from available files
         int x = 0, index;

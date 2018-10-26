@@ -5,6 +5,7 @@ import CS4262.Helpers.RangeChecker;
 import CS4262.MainController;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
+import CS4262.Network.MessageSender;
 
 /**
  *
@@ -16,6 +17,7 @@ public class RouteInitializer {
     private final IDCreator idCreator;
     private final RangeChecker rangeChecker;
     private final MainController mainController;
+    private final MessageSender msgSender;
     private static RouteInitializer instance;
     
     public static RouteInitializer getInstance(){
@@ -29,6 +31,7 @@ public class RouteInitializer {
         this.node = mainController.getNode();
         this.idCreator = new IDCreator();
         this.rangeChecker = new RangeChecker();
+        this.msgSender = MessageSender.getInstance();
     }
     
     public Node addAndUpdate(NodeDTO neighbour){
@@ -148,6 +151,7 @@ public class RouteInitializer {
                 break;
             }
         }
+        msgSender.updatePredecessor(node.getSuccessor());
         mainController.getMainFrame().updateSuccessorDetails(node.getSuccessor());
     }
     

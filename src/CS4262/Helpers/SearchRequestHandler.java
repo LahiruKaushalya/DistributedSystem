@@ -20,9 +20,15 @@ public class SearchRequestHandler extends MsgHandler{
         int senderPort = Integer.parseInt(st.nextToken());
         NodeDTO sender = new NodeDTO(senderIP, senderPort);
         
-        String searchFile = st.nextToken();
+        String searchFile = "";
+        while(st.hasMoreTokens()){
+            searchFile += st.nextToken() + " ";
+        }
         
-        searchInitializer.serachFile(sender, searchFile);
+        String SenderID = idCreator.generateNodeID(senderIP, senderPort);
+        if(!SenderID.equals(node.getId())){
+            searchInitializer.globalSearch(sender, searchFile.trim());
+        }
     }
     
 }

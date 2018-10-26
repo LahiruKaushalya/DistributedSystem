@@ -4,6 +4,7 @@ import CS4262.Helpers.FileIndexHandler;
 import CS4262.Helpers.JoinHandler;
 import CS4262.Helpers.LeaveHandler;
 import CS4262.Helpers.MsgHandler;
+import CS4262.Helpers.PredecessorHandler;
 import CS4262.Helpers.RouteHandler;
 import CS4262.Helpers.SearchRequestHandler;
 import CS4262.Helpers.SearchResultsHandler;
@@ -105,14 +106,18 @@ public class ClientHandler extends Thread{
                 try {
                     msgHandler = new SearchRequestHandler();
                     msgHandler.handle(st);
+                    response = "SEROK 0";
                 } 
-                catch (Exception e) {}
+                catch (Exception e) {
+                    response = "SEROK 9999";
+                }
                 return response;
                 
             case "SEROK":
                 try {
                     msgHandler = new SearchResultsHandler();
                     msgHandler.handle(st);
+                    response = "OK";
                 } 
                 catch (Exception e) {}
                 return response;
@@ -125,6 +130,17 @@ public class ClientHandler extends Thread{
                 } 
                 catch (Exception e) {
                     response = "ALIVE 9999";
+                }
+                return response;
+                
+            case "PRE":
+                try {
+                    msgHandler = new PredecessorHandler();
+                    msgHandler.handle(st);
+                    response = "PRE 0";
+                } 
+                catch (Exception e) {
+                    response = "PRE 9999";
                 }
                 return response;
                 

@@ -15,6 +15,8 @@ public class Node extends NodeDTO
     private final String id;
     
     private Node successor;
+    private Node predecessor;
+    
     private Map<String, List<NodeDTO>> fileIndex;
     private List<File> content;
     //Routes has fixed length -> m 
@@ -49,6 +51,13 @@ public class Node extends NodeDTO
     public Node getSuccessor() {
         return successor;
     }
+    
+    /**
+     * @return the predecessor
+     */
+    public Node getPredecessor() {
+        return predecessor;
+    }
 
     /**
      * @param content the content to set
@@ -70,6 +79,10 @@ public class Node extends NodeDTO
     
     public void setSuccessor(Node successor) {
         this.successor = successor;
+    }
+    
+    public void setPredecessor(Node predecessor) {
+        this.predecessor = predecessor;
     }
     
     public Map<String, List<NodeDTO>> getFileIndex() {

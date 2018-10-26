@@ -112,6 +112,11 @@ public class MessageSender {
         return sendMsg(receiver, message);
     }
     
+    public String updatePredecessor(NodeDTO receiver){
+        String message = generateUpdatePredecessorMsg();
+        return sendMsg(receiver, message);
+    }
+    
     public String updateState(NodeDTO receiver, NodeDTO sender, int hopCount){
         String message = generateUpdateStateMsg(sender, hopCount);
         return sendMsg(receiver, message);
@@ -202,6 +207,16 @@ public class MessageSender {
     */
     private String generateUpdateSuccessorMsg(){
         String msg = " ISALIVE ";
+        msg += node.getIpAdress() + " " + node.getPort();
+        return String.format("%04d", msg.length() + 5) + " " + msg;   
+    }
+    
+    /*
+    Update successor message format 
+    length PRE sender_ip sender_port
+    */
+    private String generateUpdatePredecessorMsg(){
+        String msg = " PRE ";
         msg += node.getIpAdress() + " " + node.getPort();
         return String.format("%04d", msg.length() + 5) + " " + msg;   
     }
