@@ -5,6 +5,8 @@ import CS4262.MainController;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
 import CS4262.Core.NodeInitializer;
+import CS4262.Helpers.Messages.Leave;
+import CS4262.Helpers.Messages.UpdateRoutes;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -29,7 +31,6 @@ public class BSConnector {
     private final long CON_TIMEOUT;
     private final String bsIPAddress;
     private final MainController mainController;
-    private final MessageSender msgSender;
     private final IDCreator idCreator;
     
     private ArrayList<NodeDTO> nodes;
@@ -48,8 +49,6 @@ public class BSConnector {
         mainController.setNode(node);
         mainController.getMainFrame().updateNodeDetails(node);
         
-        //After node initialization
-        this.msgSender = MessageSender.getInstance();
     }
     
     public void register() {
@@ -210,9 +209,9 @@ public class BSConnector {
                     for (Node neighbour : neighbours) {
                         if(neighbour != null){
                             count++;
-                            msgSender.leave(neighbour, node, NodeInitializer.getHopCount());
+                            new Leave().send(neighbour, node, NodeInitializer.getHopCount());
                             if(count == 1){
-                                msgSender.updateRoutes(neighbour, node, null, NodeInitializer.getHopCount());
+                                new UpdateRoutes().send(neighbour, node, null, NodeInitializer.getHopCount());
                             }
                         }
                     }

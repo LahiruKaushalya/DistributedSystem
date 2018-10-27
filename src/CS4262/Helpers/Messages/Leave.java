@@ -1,4 +1,4 @@
-package CS4262.Helpers;
+package CS4262.Helpers.Messages;
 
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
@@ -8,10 +8,27 @@ import java.util.StringTokenizer;
  *
  * @author Lahiru Kaushalya
  */
-public class LeaveHandler extends MsgHandler{
+public class Leave implements Message{
     
-    public LeaveHandler(){
-        super();
+    private NodeDTO leaveNode;
+    private int hopCount;
+    
+    public String send(NodeDTO receiver, NodeDTO leaveNode, int hopCount){
+        this.leaveNode = leaveNode;
+        this.hopCount = hopCount;
+        String message = createMsg();
+        return msgSender.sendMsg(receiver, message);
+    }
+    
+    /*
+    Leave message format 
+    length LEAVE hop_count leaver_ip leaver_port
+    */
+    @Override
+    public String createMsg() {
+        String msg = " LEAVE ";
+        msg += hopCount + " " + leaveNode.getIpAdress() + " " + leaveNode.getPort();
+        return String.format("%04d", msg.length() + 5) + " " + msg; 
     }
     
     @Override
@@ -36,7 +53,7 @@ public class LeaveHandler extends MsgHandler{
             for (Node neighbour : neighbours) {
                 //Routes can have null values
                 if (neighbour != null) {
-                    msgSender.leave(neighbour, leaver, hopCount);
+                    send(neighbour, leaver, hopCount);
                 }
             }
         }
@@ -45,9 +62,9 @@ public class LeaveHandler extends MsgHandler{
         for(Node neighbour : neighbours){
             if (neighbour != null) {
                 //pass update message to all neighbours in routing table 
-                msgSender.updateRoutes(neighbour, node, null, hopCount);
+                new UpdateRoutes().send(neighbour, node, null, hopCount);
             }
         }
     }
-    
+
 }

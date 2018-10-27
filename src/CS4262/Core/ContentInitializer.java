@@ -1,7 +1,6 @@
 package CS4262.Core;
 
-import CS4262.Helpers.IDCreator;
-import CS4262.MainController;
+import CS4262.Helpers.Messages.SingleFileIndex;
 import CS4262.Models.File;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
@@ -9,18 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.StringTokenizer;
 
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class ContentInitializer {
+public class ContentInitializer implements Initializer {
     
     private final String[] availableFiles;
-    private final IDCreator idCreator;
-    private final Node node;
-    private final MainController mainController;
     
     private static ContentInitializer instance;
     
@@ -54,9 +49,6 @@ public class ContentInitializer {
             "American Idol",
             "Hacking for Dummies"
         };
-        this.idCreator = new IDCreator();
-        this.mainController = MainController.getInstance();
-        this.node = mainController.getNode();
     }
     
     public void createNodeContent(){
@@ -87,69 +79,56 @@ public class ContentInitializer {
         node.setContent(content);
         //update UI
         mainController.getMainFrame().updateContent(text);
+        
+        Map<String, List<NodeDTO>> tempList = node.getFileIndex();
+        for(File file : content){
+            NodeDTO receiver = getReceiver(file.getId());
+            if(receiver != null){
+                new SingleFileIndex().send(receiver, node, file.getId());
+            }
+            else{
+                List<NodeDTO> t = new ArrayList<NodeDTO>();
+                t.add(node);
+                tempList.put(file.getId(), t);
+            }
+        }
+        node.setFileIndex(tempList);
+        updateFileIndexUI();
     }
     
-    public boolean updateFileIndex(NodeDTO sender, StringTokenizer st) {
-        boolean same = false;
-        int noOfFiles = Integer.parseInt(st.nextToken());
-        String nodeID = node.getId();
+    public NodeDTO getReceiver(String fileID){
+        NodeDTO receiver = null;
+        int fileIntID = idCreator.getComparableID(fileID);
+        int nodeIntID = idCreator.getComparableID(node.getId());
+        Node[] neighbours = node.getRoutes();
         
-        Node successor = node.getSuccessor();
-        Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
-        
-        int nodeIntID = idCreator.getComparableID(nodeID);
-        int succIntID = idCreator.getComparableID(successor.getId());
-            
-        for (int i = 0; i < noOfFiles; i++) {
-            String fileID = st.nextToken();
-            int fileIntID = idCreator.getComparableID(fileID);
-            
-            List<NodeDTO> index;
-            if (isInRange(succIntID, nodeIntID, fileIntID)) {
-                if (fileIndex.containsKey(fileID)) {
-                    index = fileIndex.get(fileID);
-                    String senderID = idCreator.generateNodeID(sender.getIpAdress(), sender.getPort());
-                    boolean exists = false;
-                    for(NodeDTO _node : index){
-                        String _nodeID = idCreator.generateNodeID(_node.getIpAdress(), _node.getPort());
-                        if(senderID.equals(_nodeID)){
-                            exists = true;
-                            same = true;
-                            break;
-                        }
-                    }
-                    if(!exists){
-                        index.add(sender);
-                        fileIndex.put(fileID, index);
-                        same = false;
-                    }
-                } 
-                else {
-                    index = new ArrayList<>();
-                    index.add(sender);
-                    fileIndex.put(fileID, index);
-                    same = false;
+        for(Node neighbour : neighbours){
+            if(neighbour != null){
+                int neiIntID = idCreator.getComparableID(neighbour.getId());
+                if(rangeChecker.isInRange(nodeIntID, neiIntID, fileIntID)){
+                    receiver = neighbour;
                 }
+                else{break;}
             }
         }
-        
-        for(String fileID : fileIndex.keySet()){
-            int fileIntID = idCreator.getComparableID(fileID);
-            if(!isInRange(succIntID, nodeIntID, fileIntID)){
-                fileIndex.remove(fileID);
-                same = false;
-            }
-        }
-        if(!same){
-            //Update node file index
-            node.setFileIndex(fileIndex);
-            //Update file index UI
-            updateFileIndexUI();
-        }
-        return same;
+        return receiver;
     }
     
-    private void updateFileIndexUI(){
+    public void createFileIndex(NodeDTO sender, String fileID){
+        updateIndex(sender, fileID);
+    }
+    
+    public void updateFileIndex(NodeDTO sender, String fileID){
+        int nodeID = idCreator.getComparableID(node.getId());
+        String senderID = idCreator.generateNodeID(sender.getIpAdress(), sender.getPort());
+        int senderIntID = idCreator.getComparableID(senderID);
+        
+        if(rangeChecker.isInRange(senderIntID, nodeID, idCreator.getComparableID(fileID))){
+            updateIndex(sender, fileID);
+        }
+    }
+    
+    public void updateFileIndexUI(){
         String displayText = "File ID\t\t\tNode\n\t\tIP Address\t\tPort\n\n";
         Map<String, List<NodeDTO>> indices = node.getFileIndex();
         
@@ -165,27 +144,34 @@ public class ContentInitializer {
             }
             displayText += "\n";
         }
-        
         mainController.getMainFrame().updateFileIndex(displayText);
     }
     
-    private boolean isInRange(int lowerbound, int upperbound, int value){
-        
-        int m = idCreator.getBIN_ID_LENGTH();
-        int bp = (int)Math.pow(2, m);
-        
-        if(lowerbound == 0){
-            return upperbound <= value &&  value <= bp;
+    private void updateIndex(NodeDTO sender, String fileID) {
+        String senderID = idCreator.generateNodeID(sender.getIpAdress(), sender.getPort());
+
+        Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
+        List<NodeDTO> temp = fileIndex.get(fileID);
+        if (temp == null) {
+            temp = new ArrayList<>();
+            temp.add(sender);
+            fileIndex.put(fileID, temp);
+        } 
+        else {
+            boolean exists = false;
+            for (NodeDTO nodeT : temp) {
+                String nodeTID = idCreator.generateNodeID(nodeT.getIpAdress(), nodeT.getPort());
+                if (nodeTID.equals(senderID)) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                temp.add(sender);
+                fileIndex.put(fileID, temp);
+                node.setFileIndex(fileIndex);
+            }
         }
-        //0 within the range
-        else if(lowerbound < upperbound){
-            return (0 <= value && value < lowerbound) || (upperbound <= value && value < bp);
-        }
-        //0 outside the range
-        else{
-            return upperbound <= value && value < lowerbound;
-        }
-        
     }
 
 }

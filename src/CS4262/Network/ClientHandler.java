@@ -1,14 +1,6 @@
 package CS4262.Network;
 
-import CS4262.Helpers.FileIndexHandler;
-import CS4262.Helpers.JoinHandler;
-import CS4262.Helpers.LeaveHandler;
-import CS4262.Helpers.MsgHandler;
-import CS4262.Helpers.PredecessorHandler;
-import CS4262.Helpers.RouteHandler;
-import CS4262.Helpers.SearchRequestHandler;
-import CS4262.Helpers.SearchResultsHandler;
-import CS4262.Helpers.StateHandler;
+import CS4262.Helpers.Messages.*;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -25,7 +17,7 @@ public class ClientHandler extends Thread{
     
     private final DatagramPacket incoming; 
     private final DatagramSocket server;
-    private MsgHandler msgHandler;
+    private Message msgHandler;
     
     public ClientHandler(DatagramPacket incoming, DatagramSocket server){
         this.incoming = incoming;
@@ -60,7 +52,7 @@ public class ClientHandler extends Thread{
         switch(command){
             case "JOIN":
                 try {
-                    msgHandler = new JoinHandler();
+                    msgHandler = new JoinMsg();
                     msgHandler.handle(st);
                     response = "JOINOK 0";
                 } 
@@ -71,7 +63,7 @@ public class ClientHandler extends Thread{
                 
             case "LEAVE":
                 try {
-                    msgHandler = new LeaveHandler();
+                    msgHandler = new Leave();
                     msgHandler.handle(st);
                     response = "LEAVEOK 0";
                 } 
@@ -82,7 +74,7 @@ public class ClientHandler extends Thread{
                 
             case "UPDATE_ROUTES":
                 try {
-                    msgHandler = new RouteHandler();
+                    msgHandler = new UpdateRoutes();
                     msgHandler.handle(st);
                     response = "UPDATE_ROUTES 0";
                 } 
@@ -91,20 +83,31 @@ public class ClientHandler extends Thread{
                 }
                 return response;
                 
-            case "UPDATE_INDEX":
+            case "UPDATE_FILE_INDEX":
                 try {
-                    msgHandler = new FileIndexHandler(incomingMsg);
+                    msgHandler = new SingleFileIndex();
                     msgHandler.handle(st);
-                    response = "UPDATE_INDEX 0";
+                    response = "UPDATE_FILE_INDEX 0";
                 } 
                 catch (Exception e) {
-                    response = "UPDATE_INDEX 9999";
+                    response = "UPDATE_FILE_INDEX 9999";
                 }
                 return response;
-                
+            
+            case "SEND_FILE_INDEX":
+                try {
+                    msgHandler = new SendFileIndex();
+                    msgHandler.handle(st);
+                    response = "SEND_FILE_INDEX 0";
+                } 
+                catch (Exception e) {
+                    response = "SEND_FILE_INDEX 9999";
+                }
+                return response;
+            
             case "SER":
                 try {
-                    msgHandler = new SearchRequestHandler();
+                    msgHandler = new SearchRequest();
                     msgHandler.handle(st);
                     response = "SEROK 0";
                 } 
@@ -115,7 +118,7 @@ public class ClientHandler extends Thread{
                 
             case "SEROK":
                 try {
-                    msgHandler = new SearchResultsHandler();
+                    msgHandler = new SearchResults();
                     msgHandler.handle(st);
                     response = "OK";
                 } 
@@ -124,7 +127,7 @@ public class ClientHandler extends Thread{
                 
             case "ALIVE":
                 try {
-                    msgHandler = new StateHandler();
+                    msgHandler = new Active();
                     msgHandler.handle(st);
                     response = "ALIVE 0";
                 } 
@@ -135,7 +138,7 @@ public class ClientHandler extends Thread{
                 
             case "PRE":
                 try {
-                    msgHandler = new PredecessorHandler();
+                    msgHandler = new UpdatePredecessor();
                     msgHandler.handle(st);
                     response = "PRE 0";
                 } 

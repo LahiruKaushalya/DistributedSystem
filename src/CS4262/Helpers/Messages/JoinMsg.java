@@ -1,4 +1,4 @@
-package CS4262.Helpers;
+package CS4262.Helpers.Messages;
 
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
@@ -8,12 +8,29 @@ import java.util.StringTokenizer;
  *
  * @author Lahiru Kaushalya
  */
-public class JoinHandler extends MsgHandler{
+public class JoinMsg implements Message{
     
-    public JoinHandler(){
-        super();
+    private NodeDTO joinedNode;
+    private int hopCount;
+    
+    public String send(NodeDTO receiver, NodeDTO joinedNode, int hopCount){
+        this.joinedNode = joinedNode;
+        this.hopCount = hopCount;
+        String message = createMsg();
+        return msgSender.sendMsg(receiver, message);
     }
-
+    
+    /*
+    Join message format 
+    length JOIN sender_ip sender_port
+    */
+    @Override
+    public String createMsg() {
+        String msg = " JOIN ";
+        msg += hopCount + " " + joinedNode.getIpAdress() + " " + joinedNode.getPort();
+        return String.format("%04d", msg.length() + 5) + " " + msg; 
+    }
+    
     @Override
     public void handle(StringTokenizer st) {
         //Hop count
@@ -36,7 +53,7 @@ public class JoinHandler extends MsgHandler{
             for (Node neighbour : neighbours) {
                 //Routes can have null values
                 if (neighbour != null) {
-                    msgSender.join(neighbour, newNode, hopCount);
+                    send(neighbour, newNode, hopCount);
                 }
             }
         }
@@ -44,9 +61,10 @@ public class JoinHandler extends MsgHandler{
         //Routes can have null values
         for(Node neighbour : neighbours){
             if (neighbour != null) {
-            //pass update message to all neighbours in routing table 
-            msgSender.updateRoutes(neighbour, node, null, hopCount);
+                //pass update message to all neighbours in routing table 
+                new UpdateRoutes().send(neighbour, node, null, hopCount);
             }
         }
     }
+    
 }

@@ -1,23 +1,19 @@
 package CS4262.Core;
 
-import CS4262.Helpers.IDCreator;
-import CS4262.Helpers.RangeChecker;
-import CS4262.MainController;
+import CS4262.Helpers.Messages.SendFileIndex;
+import CS4262.Helpers.Messages.UpdatePredecessor;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
-import CS4262.Network.MessageSender;
 
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class RouteInitializer {
+public class RouteInitializer implements Initializer{
     
-    private final Node node;
-    private final IDCreator idCreator;
-    private final RangeChecker rangeChecker;
-    private final MainController mainController;
-    private final MessageSender msgSender;
+    private final SendFileIndex sendFileIndex;
+    private final UpdatePredecessor updatePredecessor;
+    
     private static RouteInitializer instance;
     
     public static RouteInitializer getInstance(){
@@ -26,12 +22,10 @@ public class RouteInitializer {
         }
         return instance;
     }
+    
     private RouteInitializer(){
-        this.mainController = MainController.getInstance();
-        this.node = mainController.getNode();
-        this.idCreator = new IDCreator();
-        this.rangeChecker = new RangeChecker();
-        this.msgSender = MessageSender.getInstance();
+        this.updatePredecessor = new UpdatePredecessor();
+        this.sendFileIndex = new SendFileIndex();
     }
     
     public Node addAndUpdate(NodeDTO neighbour){
@@ -136,7 +130,7 @@ public class RouteInitializer {
     }
     
     private void setNodeSuccessor(){
-        
+        Node preSucc = node.getSuccessor();
         Node[] routes = node.getRoutes();
         int m = idCreator.getBIN_ID_LENGTH();
         node.setSuccessor(null);
@@ -151,8 +145,19 @@ public class RouteInitializer {
                 break;
             }
         }
-        msgSender.updatePredecessor(node.getSuccessor());
-        mainController.getMainFrame().updateSuccessorDetails(node.getSuccessor());
+        Node newSucc = node.getSuccessor();
+        if(preSucc == null && newSucc != null){
+            updatePredecessor.send(newSucc);
+            sendFileIndex.send(newSucc);
+            mainController.getMainFrame().updateSuccessorDetails(newSucc);
+        }
+        else if(preSucc != null && newSucc != null){
+            if(!preSucc.getId().equals(newSucc.getId())){
+                updatePredecessor.send(newSucc);
+                sendFileIndex.send(newSucc);
+                mainController.getMainFrame().updateSuccessorDetails(newSucc);
+            }
+        }
     }
     
 }

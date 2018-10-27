@@ -1,18 +1,61 @@
-package CS4262.Helpers;
+package CS4262.Helpers.Messages;
 
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class RouteHandler extends MsgHandler{
+public class UpdateRoutes implements Message{
     
-    public RouteHandler(){
-        super();
+    private NodeDTO sender;
+    private List<Node> addi;
+    private int hopCount;
+    
+    public String send(NodeDTO receiver, NodeDTO sender, ArrayList<Node> addi, int hopCount){
+        this.sender = sender;
+        this.addi = addi;
+        this.hopCount = hopCount;
+        String message = createMsg();
+        return msgSender.sendMsg(receiver, message);
+    }
+    
+    /*
+    Update Routes message format 
+    length UPDATE_ROUTES hop_count sender_ip sender_port nodes_count node1_ip node1_port ....
+    */
+    @Override
+    public String createMsg() {
+        String msg = " UPDATE_ROUTES ";
+        msg += hopCount + " " + sender.getIpAdress() + " " + sender.getPort();
+        
+        Node[] neighbours = node.getRoutes();
+        int count = 0;
+        String tempStr = "";
+        
+        for(Node neighbour : neighbours){
+            if(neighbour != null){
+                count++;
+                tempStr += " " + neighbour.getIpAdress() + " " + neighbour.getPort();
+            }
+        }
+        
+        if (addi != null) {
+            if (!addi.isEmpty()) {
+                count += addi.size();
+                for (Node neighbour : addi) {
+                    tempStr += " " + neighbour.getIpAdress() + " " + neighbour.getPort();
+                }
+            }
+        }
+        
+        msg += " " + count + tempStr;
+        return String.format("%04d", msg.length() + 5) + " " + msg;   
+    
     }
     
     @Override
@@ -59,10 +102,10 @@ public class RouteHandler extends MsgHandler{
             for(Node neighbour : neighbours){
                 if (neighbour != null) {
                     //pass update message to all neighbours in routing table 
-                    msgSender.updateRoutes(neighbour, sender, addi, hopCount);
+                    send(neighbour, sender, addi, hopCount);
                 }
             }
         }
     }
-    
+
 }

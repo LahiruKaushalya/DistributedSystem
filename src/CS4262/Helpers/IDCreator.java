@@ -39,7 +39,7 @@ public class IDCreator {
         try {
             //Generate SHA-1 hash
             MessageDigest md = MessageDigest.getInstance("SHA-1");
-            md.update(data.getBytes());
+            md.update(data.trim().toLowerCase().getBytes());
             byte[] bytes = md.digest();
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < bytes.length; i++) {

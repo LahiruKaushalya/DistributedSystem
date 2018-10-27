@@ -1,6 +1,5 @@
-package CS4262.Helpers;
+package CS4262.Helpers.Messages;
 
-import CS4262.Core.NodeInitializer;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
 import java.util.StringTokenizer;
@@ -9,10 +8,27 @@ import java.util.StringTokenizer;
  *
  * @author Lahiru Kaushalya
  */
-public class StateHandler extends MsgHandler{
+public class Active implements Message{
     
-    public StateHandler(){
-        super();
+    private NodeDTO sender;
+    private int hopCount;
+    
+    public String send(NodeDTO receiver, NodeDTO sender, int hopCount){
+        this.sender = sender;
+        this.hopCount = hopCount;
+        String message = createMsg();
+        return msgSender.sendMsg(receiver, message);
+    }
+    
+    /*
+    Update state message format 
+    length ALIVE sender_ip sender_port
+    */
+    @Override
+    public String createMsg() {
+        String msg = " ALIVE ";
+        msg += hopCount + " " + sender.getIpAdress() + " " + sender.getPort();
+        return String.format("%04d", msg.length() + 5) + " " + msg; 
     }
     
     @Override
@@ -34,10 +50,10 @@ public class StateHandler extends MsgHandler{
         if(!senderID.equals(node.getId()) && hopCount > 0){
             Node successor = node.getSuccessor();
             if(successor != null){
-                msgSender.updateState(successor, sender, hopCount);
+                send(successor, sender, hopCount);
             }
         }
         
     }
-    
+
 }

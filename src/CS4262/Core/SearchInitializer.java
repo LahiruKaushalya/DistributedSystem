@@ -1,12 +1,10 @@
 package CS4262.Core;
 
-import CS4262.Helpers.IDCreator;
-import CS4262.Helpers.RangeChecker;
-import CS4262.MainController;
+import CS4262.Helpers.Messages.SearchRequest;
+import CS4262.Helpers.Messages.SearchResults;
 import CS4262.Models.File;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
-import CS4262.Network.MessageSender;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +13,7 @@ import java.util.Map;
  *
  * @author Lahiru Kaushalya
  */
-public class SearchInitializer {
-
-    private final MainController mainController;
-    private final Node node;
-    private final IDCreator idCreator;
-    private final RangeChecker rangeChecker;
-    private final MessageSender msgSender;
+public class SearchInitializer implements Initializer{
 
     private static SearchInitializer instance;
 
@@ -33,29 +25,28 @@ public class SearchInitializer {
     }
 
     private SearchInitializer() {
-        this.mainController = MainController.getInstance();
-        this.node = mainController.getNode();
-        this.idCreator = new IDCreator();
-        this.rangeChecker = new RangeChecker();
-        this.msgSender = MessageSender.getInstance();
+        
     }
     
     public void localSearch(String fileName){
         if(node != null){
             //Filter user input
+            fileName = fileName.trim().toLowerCase();
             fileName = filterFileName(fileName);
             
-            String searchingFileID = idCreator.generateFileID(fileName);
+            String searchingFileID = idCreator.generateFileID(fileName.trim().toLowerCase());
             //Check in local files
             boolean isAvailble = isFileAvailable(searchingFileID);
             if (isAvailble) {
                 //File locally available
+                mainController.getMainFrame().displayError("File Available Locally");
             }
             else{
                 //Check in file index
                 List<NodeDTO> fileHolders = getFileHolders(searchingFileID);
                 if(fileHolders != null){
                     //request file from file Holders
+                    mainController.getMainFrame().displayError("File Available " + fileHolders.get(0).getIpAdress());
                 }
                 else{
                     //File or File index not available locally. Start global search..
@@ -86,7 +77,7 @@ public class SearchInitializer {
             }
             //Check at least one file holder has been found
             if (fileHolders != null) {
-                msgSender.searchOK(sender, fileHolders);
+                new SearchResults().send(sender, fileHolders);
             } 
             //File holder not found. 
             else {
@@ -148,7 +139,7 @@ public class SearchInitializer {
                 }
             }
             if(redirector != null){
-                msgSender.search(redirector, sender, fileName);
+                new SearchRequest().send(redirector, sender, fileName);
             }
             else{
                 //File not found

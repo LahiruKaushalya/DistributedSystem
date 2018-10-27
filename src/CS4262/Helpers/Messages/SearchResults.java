@@ -1,4 +1,4 @@
-package CS4262.Helpers;
+package CS4262.Helpers.Messages;
 
 import CS4262.Models.NodeDTO;
 import java.util.ArrayList;
@@ -9,22 +9,35 @@ import java.util.StringTokenizer;
  *
  * @author Lahiru Kaushalya
  */
-public class SearchResultsHandler extends MsgHandler{
+public class SearchResults implements Message{
     
     private List<NodeDTO> fileHolders;
     
-    public SearchResultsHandler() {
-        super();
+    public SearchResults() {
         this.fileHolders = new ArrayList<>();
     }
-
+    
+    public String send(NodeDTO receiver, List<NodeDTO> fileHolders){
+        this.fileHolders = fileHolders;
+        String message = createMsg();
+        return msgSender.sendMsg(receiver, message);
+    }
+    
+    @Override
+    public String createMsg() {
+        String msg = " SEROK " + fileHolders.size();
+        for(NodeDTO holder : fileHolders){
+            msg += " " + holder.getIpAdress() + " " + holder.getPort();
+        }
+        return String.format("%04d", msg.length() + 5) + " " + msg; 
+    }
+    
     @Override
     public void handle(StringTokenizer st) {
         int filesFound = Integer.parseInt(st.nextToken());
         for(int i = 0; i < filesFound; i++){
             fileHolders.add(new NodeDTO(st.nextToken(), Integer.parseInt(st.nextToken())));
         }
-        
         updateResultsUI();
     }
     
@@ -38,4 +51,5 @@ public class SearchResultsHandler extends MsgHandler{
         }
         mainController.getMainFrame().updateSearchResponse(dataText);
     }
+
 }

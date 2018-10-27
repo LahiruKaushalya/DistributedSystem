@@ -1,8 +1,11 @@
 package CS4262.Core;
 
-import CS4262.MainController;
+import CS4262.Helpers.Messages.Active;
+import CS4262.Helpers.Messages.JoinMsg;
+import CS4262.Helpers.Messages.Leave;
+import CS4262.Helpers.Messages.UpdateRoutes;
+import CS4262.Helpers.Messages.UpdateSuccessor;
 import CS4262.Models.Node;
-import CS4262.Network.MessageSender;
 import CS4262.Models.NodeDTO;
 
 import java.util.ArrayList;
@@ -14,11 +17,8 @@ import java.util.TimerTask;
  * @author Lahiru Kaushalya
  */
 //This will recieve 2 random nodes in the bootstrap server
-public class NodeInitializer {
+public class NodeInitializer implements Initializer{
     
-    private final Node node;
-    private final MessageSender msgSender;
-    private final MainController mainController;
     private final RouteInitializer routeInitializer;
     private final ContentInitializer fileInitializer;
     
@@ -26,6 +26,7 @@ public class NodeInitializer {
     private Timer checkSuccessorTimer;
     private TimerTask sendNodeStateTask;
     private TimerTask checkSuccessorTask;
+    
     private static int hopCount;
     private int retryCount;
     
@@ -39,9 +40,6 @@ public class NodeInitializer {
     }
     
     private NodeInitializer() {
-        this.mainController = MainController.getInstance();
-        this.node = mainController.getNode();
-        this.msgSender = MessageSender.getInstance();
         this.fileInitializer = ContentInitializer.getInstance();
         this.routeInitializer = RouteInitializer.getInstance();
         NodeInitializer.hopCount = 3;
@@ -62,7 +60,7 @@ public class NodeInitializer {
         String response;
         if (newNodes != null) {
             for(NodeDTO neighbour : newNodes){
-                response = msgSender.join(neighbour, node, hopCount);
+                response = new JoinMsg().send(neighbour, node, hopCount);
                 routeInitializer.addAndUpdate(neighbour);
                 /*
                 Handle response here
@@ -78,17 +76,7 @@ public class NodeInitializer {
         Node[] neighbours = node.getRoutes();
         for(Node neighbour : neighbours){
             if(neighbour != null){
-                response = msgSender.updateRoutes(neighbour, node, null, hopCount);
-                /*
-                Handle response here
-                */
-            }
-        }
-        
-        //Flood content 
-        for(Node neighbour : neighbours){
-            if(neighbour != null){
-                response = msgSender.updateFileIndex(neighbour, node, hopCount);
+                response = new UpdateRoutes().send(neighbour, node, null, hopCount);
                 /*
                 Handle response here
                 */
@@ -119,11 +107,10 @@ public class NodeInitializer {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                MessageSender ms = MessageSender.getInstance();
                 Node successor = node.getSuccessor();
                 if(successor != null){
                     //Check successor node is alive
-                    String response = ms.updateSuccessor(successor);
+                    String response = new UpdateSuccessor().send(successor);
                     if(response == null){
                         retryCount++;
                     }
@@ -138,8 +125,8 @@ public class NodeInitializer {
                         Node[] neighbours = node.getRoutes();
                         for (Node neighbour : neighbours) {
                             if (neighbour != null) {
-                                msgSender.leave(neighbour, successor, hopCount);
-                                msgSender.updateRoutes(neighbour, node, null, hopCount);
+                                new Leave().send(neighbour, successor, hopCount);
+                                new UpdateRoutes().send(neighbour, node, null, hopCount);
                             }
                         }
                         retryCount = 0;
@@ -154,11 +141,10 @@ public class NodeInitializer {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                MessageSender ms = MessageSender.getInstance();
                 Node successor = node.getSuccessor();
                 if(successor != null){
                     //Check successor node is alive
-                    String response = ms.updateState(successor, node, 20);
+                    String response = new Active().send(successor, node, 20);
                 }
                 else{
                     retryCount = 0;
