@@ -36,7 +36,7 @@ public class SingleFileIndex implements Message{
         int senderPort = Integer.parseInt(st.nextToken());
         NodeDTO sender = new NodeDTO(senderIP, senderPort);
         
-        contentInitializer.updateFileIndex(sender, st.nextToken());
+        contentInitializer.updateSingleFileIndex(sender, st.nextToken());
         contentInitializer.updateFileIndexUI();
     }
 

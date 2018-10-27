@@ -44,9 +44,9 @@ public class SearchResults implements Message{
     private void updateResultsUI(){
         String dataText = "Node ID\tNode IP Adress\tUDP Port\tTCP Port\n\n";
         for(NodeDTO fileHolder : fileHolders){
-            dataText += idCreator.generateNodeID(fileHolder.getIpAdress(), fileHolder.getPort()) + " "
-                     + fileHolder.getIpAdress() + " "
-                     + fileHolder.getPort() + " "
+            dataText += idCreator.generateNodeID(fileHolder.getIpAdress(), fileHolder.getPort()) + "\t"
+                     + fileHolder.getIpAdress() + "\t\t"
+                     + fileHolder.getPort() + "\t"
                      + " - " + "\n";
         }
         mainController.getMainFrame().updateSearchResponse(dataText);

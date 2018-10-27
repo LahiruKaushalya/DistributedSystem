@@ -13,7 +13,7 @@ public class RouteInitializer implements Initializer{
     
     private final SendFileIndex sendFileIndex;
     private final UpdatePredecessor updatePredecessor;
-    
+    private final ContentInitializer contentInitializer;
     private static RouteInitializer instance;
     
     public static RouteInitializer getInstance(){
@@ -26,6 +26,7 @@ public class RouteInitializer implements Initializer{
     private RouteInitializer(){
         this.updatePredecessor = new UpdatePredecessor();
         this.sendFileIndex = new SendFileIndex();
+        this.contentInitializer = ContentInitializer.getInstance();
     }
     
     public Node addAndUpdate(NodeDTO neighbour){
@@ -146,17 +147,22 @@ public class RouteInitializer implements Initializer{
             }
         }
         Node newSucc = node.getSuccessor();
-        if(preSucc == null && newSucc != null){
+        boolean updated = false;
+        if(newSucc != null){
+            if(preSucc == null){
+                updated = true;
+            }
+            else {
+                if (!preSucc.getId().equals(newSucc.getId())) {
+                    updated = true;
+                }
+            }
+        }
+        if(updated){
             updatePredecessor.send(newSucc);
             sendFileIndex.send(newSucc);
+            contentInitializer.updateFileIndex();
             mainController.getMainFrame().updateSuccessorDetails(newSucc);
-        }
-        else if(preSucc != null && newSucc != null){
-            if(!preSucc.getId().equals(newSucc.getId())){
-                updatePredecessor.send(newSucc);
-                sendFileIndex.send(newSucc);
-                mainController.getMainFrame().updateSuccessorDetails(newSucc);
-            }
         }
     }
     

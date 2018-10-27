@@ -46,7 +46,7 @@ public class SearchInitializer implements Initializer{
                 List<NodeDTO> fileHolders = getFileHolders(searchingFileID);
                 if(fileHolders != null){
                     //request file from file Holders
-                    mainController.getMainFrame().displayError("File Available " + fileHolders.get(0).getIpAdress());
+                    mainController.getMainFrame().displayError("File Available " + fileHolders.get(0).getPort());
                 }
                 else{
                     //File or File index not available locally. Start global search..
@@ -67,12 +67,22 @@ public class SearchInitializer implements Initializer{
             boolean isAvailble = isFileAvailable(searchingFileID);
             if (isAvailble) {
                 //File locally available
-                NodeDTO thisNode = new NodeDTO(node.getIpAdress(), node.getPort());
-                if (fileHolders != null) {
-                    fileHolders.add(thisNode);
-                } else {
+                boolean exists = false;
+                if(fileHolders != null){
+                    for(NodeDTO fileHolder : fileHolders){
+                        String fhID = idCreator.generateNodeID(fileHolder.getIpAdress(), fileHolder.getPort());
+                        if(fhID.equals(node.getId())){
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if(!exists){
+                        fileHolders.add(new NodeDTO(node.getIpAdress(), node.getPort()));
+                    }
+                }
+                else {
                     fileHolders = new ArrayList<>();
-                    fileHolders.add(thisNode);
+                    fileHolders.add(new NodeDTO(node.getIpAdress(), node.getPort()));
                 }
             }
             //Check at least one file holder has been found

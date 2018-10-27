@@ -5,6 +5,7 @@ import CS4262.Models.File;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -115,17 +116,42 @@ public class ContentInitializer implements Initializer {
     }
     
     public void createFileIndex(NodeDTO sender, String fileID){
-        updateIndex(sender, fileID);
+        updateFileIndex(sender, fileID);
     }
     
-    public void updateFileIndex(NodeDTO sender, String fileID){
-        int nodeID = idCreator.getComparableID(node.getId());
-        String senderID = idCreator.generateNodeID(sender.getIpAdress(), sender.getPort());
-        int senderIntID = idCreator.getComparableID(senderID);
-        
-        if(rangeChecker.isInRange(senderIntID, nodeID, idCreator.getComparableID(fileID))){
-            updateIndex(sender, fileID);
+    //Update when new file come
+    public void updateSingleFileIndex(NodeDTO sender, String fileID){
+        NodeDTO receiver = getReceiver(fileID);
+        if (receiver != null) {
+            new SingleFileIndex().send(receiver, sender, fileID);
+        } 
+        else {
+            updateFileIndex(sender, fileID);
         }
+    }
+    
+    //Update when successor changed
+    public void updateFileIndex(){
+        Node successor = node.getSuccessor();
+        Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
+        
+        int nodeID = idCreator.getComparableID(node.getId());
+        int succID = idCreator.getComparableID(successor.getId());
+        int fileIntID;
+        
+        Iterator<Map.Entry<String, List<NodeDTO>>> iterator = fileIndex.entrySet().iterator();
+        
+        while (iterator.hasNext()) {
+            Map.Entry<String, List<NodeDTO>> entry = iterator.next();
+            String fileID = entry.getKey();
+            fileIntID = idCreator.getComparableID(fileID);
+            
+            if(rangeChecker.isInRange(nodeID, succID, fileIntID)){
+                iterator.remove();
+            }
+        }
+        node.setFileIndex(fileIndex);
+        updateFileIndexUI();
     }
     
     public void updateFileIndexUI(){
@@ -147,7 +173,7 @@ public class ContentInitializer implements Initializer {
         mainController.getMainFrame().updateFileIndex(displayText);
     }
     
-    private void updateIndex(NodeDTO sender, String fileID) {
+    private void updateFileIndex(NodeDTO sender, String fileID) {
         String senderID = idCreator.generateNodeID(sender.getIpAdress(), sender.getPort());
 
         Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
@@ -156,6 +182,7 @@ public class ContentInitializer implements Initializer {
             temp = new ArrayList<>();
             temp.add(sender);
             fileIndex.put(fileID, temp);
+            node.setFileIndex(fileIndex);
         } 
         else {
             boolean exists = false;

@@ -50,6 +50,7 @@ public class SendFileIndex implements Message{
             }
             fileCount--;
         }
+        contentInitializer.updateFileIndex();
         contentInitializer.updateFileIndexUI();
     }
     
