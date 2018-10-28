@@ -1,6 +1,8 @@
 package CS4262.Core;
 
+import static CS4262.Core.Initializer.node;
 import CS4262.Helpers.Messages.Active;
+import CS4262.Helpers.Messages.BackupFileIndex;
 import CS4262.Helpers.Messages.JoinMsg;
 import CS4262.Helpers.Messages.Leave;
 import CS4262.Helpers.Messages.UpdateRoutes;
@@ -9,6 +11,8 @@ import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -66,7 +70,7 @@ public class NodeInitializer implements Initializer{
                 Handle response here
                 */
             }
-            routeInitializer.updateRoutesUI();
+            uiCreator.updateRoutesUI();
         }
         
         //Create node content
@@ -119,9 +123,11 @@ public class NodeInitializer implements Initializer{
                     }
                     
                     if(retryCount == 2){
+                        //Remove dead node from routing table
                         routeInitializer.removeAndUpdate(successor);
-                        routeInitializer.updateRoutesUI();
+                        uiCreator.updateRoutesUI();
                         
+                        //Inform neighbours 
                         Node[] neighbours = node.getRoutes();
                         for (Node neighbour : neighbours) {
                             if (neighbour != null) {
@@ -129,6 +135,23 @@ public class NodeInitializer implements Initializer{
                                 new UpdateRoutes().send(neighbour, node, null, hopCount);
                             }
                         }
+                        
+                        //Activate file index backup
+                        Map<String, List<NodeDTO>> fileIndexBackup = node.getFileIndexBackup();
+                        Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
+                        
+                        for(String fileID : fileIndexBackup.keySet()){
+                            fileIndex.put(fileID, fileIndexBackup.get(fileID));
+                        }
+                        fileIndexBackup.clear();
+                        node.setFileIndexBackup(fileIndexBackup);
+                        node.setFileIndex(fileIndex);
+                        
+                        //update UI
+                        uiCreator.updateFileIndexUI();
+                        
+                        new BackupFileIndex().send(node.getPredecessor());
+                        
                         retryCount = 0;
                     }
                 }

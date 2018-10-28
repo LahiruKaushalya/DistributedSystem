@@ -35,6 +35,9 @@ public class UpdatePredecessor implements Message{
         Node predecessor = new Node(preIP, prePort, preID);
         node.setPredecessor(predecessor);
         mainController.getMainFrame().updatePredecessorDetails(predecessor);
+        
+        //Send file index backup to new predecessor
+        new BackupFileIndex().send(predecessor);
     }
-
+    
 }

@@ -89,7 +89,7 @@ public class UpdateRoutes implements Message{
                     }
                 }
             }
-            routeInitializer.updateRoutesUI();
+            uiCreator.updateRoutesUI();
         }
         
         String id = node.getId();

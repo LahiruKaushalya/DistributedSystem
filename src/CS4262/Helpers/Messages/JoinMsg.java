@@ -44,7 +44,7 @@ public class JoinMsg implements Message{
         
         //Update routes list and UI with new node
         routeInitializer.addAndUpdate(newNode);
-        routeInitializer.updateRoutesUI();
+        uiCreator.updateRoutesUI();
         
         //Send new update routes message to all neighbours in routing table 
         Node[] neighbours = node.getRoutes();

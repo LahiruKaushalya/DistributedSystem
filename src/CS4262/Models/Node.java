@@ -18,6 +18,8 @@ public class Node extends NodeDTO
     private Node predecessor;
     
     private Map<String, List<NodeDTO>> fileIndex;
+    private Map<String, List<NodeDTO>> fileIndexBackup;
+
     private List<File> content;
     //Routes has fixed length -> m 
     private Node[] routes;
@@ -46,6 +48,13 @@ public class Node extends NodeDTO
     }
     
     /**
+     * @return the routes
+     */
+    public Node[] getRoutes() {
+        return routes;
+    }
+    
+    /**
      * @return the successor
      */
     public Node getSuccessor() {
@@ -59,6 +68,14 @@ public class Node extends NodeDTO
         return predecessor;
     }
 
+    public Map<String, List<NodeDTO>> getFileIndex() {
+        return fileIndex;
+    }
+    
+    public Map<String, List<NodeDTO>> getFileIndexBackup() {
+        return fileIndexBackup;
+    }
+
     /**
      * @param content the content to set
      * 
@@ -69,10 +86,6 @@ public class Node extends NodeDTO
         this.content = content;
     }
     
-    public Node[] getRoutes() {
-        return routes;
-    }
-
     public void setRoutes(Node[] routes) {
         this.routes = routes;
     }
@@ -85,12 +98,12 @@ public class Node extends NodeDTO
         this.predecessor = predecessor;
     }
     
-    public Map<String, List<NodeDTO>> getFileIndex() {
-        return fileIndex;
-    }
-
     public void setFileIndex(Map<String, List<NodeDTO>> fileIndex) {
         this.fileIndex = fileIndex;
+    }
+    
+    public void setFileIndexBackup(Map<String, List<NodeDTO>> fileIndexBackup) {
+        this.fileIndexBackup = fileIndexBackup;
     }
     
 }

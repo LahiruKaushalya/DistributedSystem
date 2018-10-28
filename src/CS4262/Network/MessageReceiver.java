@@ -115,7 +115,18 @@ public class MessageReceiver extends Thread{
                     response = "SEND_FILE_INDEX 9999";
                 }
                 return response;
-            
+              
+            case "BACKUP_FILE_INDEX":
+                try {
+                    msgHandler = new BackupFileIndex();
+                    msgHandler.handle(st);
+                    response = "BACKUP_FILE_INDEX 0";
+                } 
+                catch (Exception e) {
+                    response = "BACKUP_FILE_INDEX 9999";
+                }
+                return response;
+                
             case "SER":
                 try {
                     msgHandler = new SearchRequest();

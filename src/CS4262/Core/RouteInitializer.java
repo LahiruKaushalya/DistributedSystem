@@ -92,44 +92,6 @@ public class RouteInitializer implements Initializer{
         setNodeSuccessor();
     }
     
-    public void updateRoutesUI(){
-        String displayText = "Index\tRange\tNode ID\tIP Address\tPort\n\n";
-        
-        Node[] routes = node.getRoutes();
-        int nodeID = idCreator.getComparableID(node.getId());
-        int m = idCreator.getBIN_ID_LENGTH();
-        int bp = (int)Math.pow(2, m);
-        
-        String ip = "-", id = "-";
-        int port = 0, rend, lbound = 0;
-        NodeDTO tempNode;
-        
-        for(int i = 0; i < m; i++){
-            tempNode = routes[i];
-            if(tempNode != null){
-                ip = tempNode.getIpAdress();
-                port = tempNode.getPort();
-                id = idCreator.generateNodeID(ip, port);
-                
-                for(int k = lbound; k <= i; k++){
-                    rend = (nodeID + (int)Math.pow(2, k)) % bp;
-                    displayText += k + "\t" +rend + "\t" + id + "\t" + ip + "\t" + port + "\n";
-                }
-                lbound = i + 1;
-            }
-            else{
-                if(i == m - 1){
-                    for (int k = lbound; k <= i; k++) {
-                        rend = (nodeID + (int)Math.pow(2, k)) % bp;
-                        displayText += k + "\t" + rend + "\t-\t-\t-\n";
-                    }
-                }
-            }
-        }
-        mainController.getMainFrame().updateSuccessorDetails(node.getSuccessor());
-        mainController.getMainFrame().updateRoutingTable(displayText);
-    }
-    
     private void setNodeSuccessor(){
         Node preSucc = node.getSuccessor();
         Node[] routes = node.getRoutes();

@@ -44,7 +44,7 @@ public class Leave implements Message{
         
         //Update routes list and UI with new node
         routeInitializer.removeAndUpdate(leaver);
-        routeInitializer.updateRoutesUI();
+        uiCreator.updateRoutesUI();
         
         //Send remove node message to all neighbours in routing table 
         Node[] neighbours = node.getRoutes();

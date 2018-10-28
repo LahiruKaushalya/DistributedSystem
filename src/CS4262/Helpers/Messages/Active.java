@@ -45,7 +45,7 @@ public class Active implements Message{
         
         //Update routes list and UI with new node
         routeInitializer.addAndUpdate(sender);
-        routeInitializer.updateRoutesUI();
+        uiCreator.updateRoutesUI();
         
         if(!senderID.equals(node.getId()) && hopCount > 0){
             Node successor = node.getSuccessor();
