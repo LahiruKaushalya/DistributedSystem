@@ -1,25 +1,19 @@
 package CS4262.Core;
 
-import static CS4262.Core.Initializer.idCreator;
-import static CS4262.Core.Initializer.mainController;
-import static CS4262.Core.Initializer.node;
-import static CS4262.Core.Initializer.rangeChecker;
-import CS4262.Helpers.Messages.AddSingleFileIndex;
-import CS4262.Helpers.Messages.RemoveSingleFileIndex;
-import CS4262.Helpers.Messages.SendFileIndex;
-import CS4262.Models.File;
-import CS4262.Models.Node;
-import CS4262.Models.NodeDTO;
+import CS4262.Message.FileIndex.*;
+import CS4262.Interfaces.IInitializerFileIndex;
+import CS4262.Models.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class FileIndexInitializer implements Initializer{
+public class FileIndexInitializer implements IInitializerFileIndex{
     
     private static FileIndexInitializer instance;
     
@@ -39,7 +33,7 @@ public class FileIndexInitializer implements Initializer{
         for(File file : content){
             NodeDTO receiver = getReceiver(file.getId());
             if(receiver != null){
-                new AddSingleFileIndex().send(receiver, node, file.getId());
+                new AddSingleFileIndex().send(new MessageDTO(receiver, node, file.getId()));
             }
             else{
                 List<NodeDTO> t = new ArrayList<NodeDTO>();
@@ -76,7 +70,7 @@ public class FileIndexInitializer implements Initializer{
         for(File file : files){
             NodeDTO receiver = getReceiver(file.getId());
             if(receiver != null){
-                new RemoveSingleFileIndex().send(receiver, node, file.getId());
+                new RemoveSingleFileIndex().send(new MessageDTO(receiver, node, file.getId()));
             }
         }
     }
@@ -104,7 +98,7 @@ public class FileIndexInitializer implements Initializer{
             }
         }
         node.setFileIndex(fileIndex);
-        new SendFileIndex().send(node.getPredecessor(), node);
+        new SendFileIndex().send(new MessageDTO(node.getPredecessor()));
         
         //Reset file index
         fileIndex.clear();
@@ -116,7 +110,7 @@ public class FileIndexInitializer implements Initializer{
     public void insert(NodeDTO sender, String fileID){
         NodeDTO receiver = getReceiver(fileID);
         if (receiver != null) {
-            new AddSingleFileIndex().send(receiver, sender, fileID);
+            new AddSingleFileIndex().send(new MessageDTO(receiver, sender, fileID));
         } 
         else {
             localAdd(sender, fileID);
@@ -127,7 +121,7 @@ public class FileIndexInitializer implements Initializer{
     public void remove(NodeDTO sender, String fileID){
         NodeDTO receiver = getReceiver(fileID);
         if (receiver != null) {
-            new RemoveSingleFileIndex().send(receiver, sender, fileID);
+            new RemoveSingleFileIndex().send(new MessageDTO(receiver, sender, fileID));
         } 
         else {
             Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();

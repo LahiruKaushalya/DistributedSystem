@@ -1,12 +1,10 @@
 package CS4262.Core;
 
-import static CS4262.Core.Initializer.node;
-import CS4262.Helpers.Messages.Active;
-import CS4262.Helpers.Messages.BackupFileIndex;
-import CS4262.Helpers.Messages.JoinMsg;
-import CS4262.Helpers.Messages.Leave;
-import CS4262.Helpers.Messages.UpdateRoutes;
-import CS4262.Helpers.Messages.UpdateSuccessor;
+import CS4262.Interfaces.IInitializerContent;
+import CS4262.Interfaces.IInitializerRoute;
+import CS4262.Message.Route.*;
+import CS4262.Message.FileIndex.BackupFileIndex;
+import CS4262.Models.MessageDTO;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
 
@@ -16,15 +14,15 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 /**
  *
  * @author Lahiru Kaushalya
  */
+
 //This will recieve 2 random nodes in the bootstrap server
-public class NodeInitializer implements Initializer{
-    
-    private final RouteInitializer routeInitializer;
-    private final ContentInitializer fileInitializer;
+
+public class NodeInitializer implements IInitializerRoute, IInitializerContent{
     
     private Timer sendNodeStateTimer;
     private Timer checkSuccessorTimer;
@@ -44,8 +42,6 @@ public class NodeInitializer implements Initializer{
     }
     
     private NodeInitializer() {
-        this.fileInitializer = ContentInitializer.getInstance();
-        this.routeInitializer = RouteInitializer.getInstance();
         NodeInitializer.hopCount = 3;
         this.retryCount = 0;
     }
@@ -64,7 +60,7 @@ public class NodeInitializer implements Initializer{
         String response;
         if (newNodes != null) {
             for(NodeDTO neighbour : newNodes){
-                response = new JoinMsg().send(neighbour, node, hopCount);
+                response = new Join().send(new MessageDTO(neighbour, node, hopCount));
                 routeInitializer.addAndUpdate(neighbour);
                 /*
                 Handle response here
@@ -74,13 +70,13 @@ public class NodeInitializer implements Initializer{
         }
         
         //Create node content
-        fileInitializer.createNodeContent();
+        contentInitializer.createNodeContent();
         
         //Flood routing table 
         Node[] neighbours = node.getRoutes();
         for(Node neighbour : neighbours){
             if(neighbour != null){
-                response = new UpdateRoutes().send(neighbour, node, null, hopCount);
+                response = new UpdateRoutes().send(new MessageDTO(neighbour, node, hopCount, null));
                 /*
                 Handle response here
                 */
@@ -114,7 +110,7 @@ public class NodeInitializer implements Initializer{
                 Node successor = node.getSuccessor();
                 if(successor != null){
                     //Check successor node is alive
-                    String response = new UpdateSuccessor().send(successor);
+                    String response = new UpdateSuccessor().send(new MessageDTO(successor));
                     if(response == null){
                         retryCount++;
                     }
@@ -131,8 +127,8 @@ public class NodeInitializer implements Initializer{
                         Node[] neighbours = node.getRoutes();
                         for (Node neighbour : neighbours) {
                             if (neighbour != null) {
-                                new Leave().send(neighbour, successor, hopCount);
-                                new UpdateRoutes().send(neighbour, node, null, hopCount);
+                                new Leave().send(new MessageDTO(neighbour, successor, hopCount));
+                                new UpdateRoutes().send(new MessageDTO(neighbour, node, hopCount, null));
                             }
                         }
                         
@@ -150,7 +146,7 @@ public class NodeInitializer implements Initializer{
                         //update UI
                         uiCreator.updateFileIndexUI();
                         
-                        new BackupFileIndex().send(node.getPredecessor());
+                        new BackupFileIndex().send(new MessageDTO(node.getPredecessor()));
                         
                         retryCount = 0;
                     }
@@ -167,7 +163,7 @@ public class NodeInitializer implements Initializer{
                 Node successor = node.getSuccessor();
                 if(successor != null){
                     //Check successor node is alive
-                    String response = new Active().send(successor, node, 20);
+                    String response = new Active().send(new MessageDTO(successor, node, 20));
                 }
                 else{
                     retryCount = 0;

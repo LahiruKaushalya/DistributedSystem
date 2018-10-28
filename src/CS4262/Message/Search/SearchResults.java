@@ -1,15 +1,17 @@
-package CS4262.Helpers.Messages;
+package CS4262.Message.Search;
 
 import CS4262.Models.NodeDTO;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
+import CS4262.Interfaces.IMessage;
+import CS4262.Models.MessageDTO;
+import java.util.List;
 
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class SearchResults implements Message{
+public class SearchResults implements IMessage{
     
     private List<NodeDTO> fileHolders;
     
@@ -17,10 +19,11 @@ public class SearchResults implements Message{
         this.fileHolders = new ArrayList<>();
     }
     
-    public String send(NodeDTO receiver, List<NodeDTO> fileHolders){
-        this.fileHolders = fileHolders;
+    @Override
+    public String send(MessageDTO msgDTO){
+        this.fileHolders = msgDTO.getFileHolders();
         String message = createMsg();
-        return msgSender.sendMsg(receiver, message);
+        return msgSender.sendMsg(msgDTO.getReceiver(), message);
     }
     
     @Override

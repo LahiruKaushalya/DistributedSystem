@@ -1,23 +1,23 @@
-package CS4262.Helpers.Messages;
+package CS4262.Message.FileIndex;
 
-import CS4262.Models.Node;
+import CS4262.Interfaces.IInitializerFileIndex;
 import CS4262.Models.NodeDTO;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import CS4262.Interfaces.IMessage;
+import CS4262.Models.MessageDTO;
 
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class SendFileIndex implements Message{
+public class SendFileIndex implements IMessage, IInitializerFileIndex{
     
-    private NodeDTO sender;
-    
-    public String send(NodeDTO receiver, NodeDTO sender){
-        this.sender = sender;
+    @Override
+    public String send(MessageDTO msgDTO){
         String message = createMsg();
-        return msgSender.sendMsg(receiver, message);
+        return msgSender.sendMsg(msgDTO.getReceiver(), message);
     }
     
     /*

@@ -1,23 +1,25 @@
-package CS4262.Helpers.Messages;
+package CS4262.Message.Route;
 
+import CS4262.Interfaces.IInitializerRoute;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
+import CS4262.Interfaces.IMessage;
+import CS4262.Models.MessageDTO;
 import java.util.StringTokenizer;
 
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class Active implements Message{
+public class Active implements IMessage, IInitializerRoute{
     
-    private NodeDTO sender;
-    private int hopCount;
+    private MessageDTO msgDTO;
     
-    public String send(NodeDTO receiver, NodeDTO sender, int hopCount){
-        this.sender = sender;
-        this.hopCount = hopCount;
+    @Override
+    public String send(MessageDTO msgDTO){
+        this.msgDTO = msgDTO;
         String message = createMsg();
-        return msgSender.sendMsg(receiver, message);
+        return msgSender.sendMsg(msgDTO.getReceiver(), message);
     }
     
     /*
@@ -27,7 +29,7 @@ public class Active implements Message{
     @Override
     public String createMsg() {
         String msg = " ALIVE ";
-        msg += hopCount + " " + sender.getIpAdress() + " " + sender.getPort();
+        msg += msgDTO.getHopCount() + " " + msgDTO.getSender().getIpAdress() + " " + msgDTO.getSender().getPort();
         return String.format("%04d", msg.length() + 5) + " " + msg; 
     }
     
@@ -50,7 +52,7 @@ public class Active implements Message{
         if(!senderID.equals(node.getId()) && hopCount > 0){
             Node successor = node.getSuccessor();
             if(successor != null){
-                send(successor, sender, hopCount);
+                send(new MessageDTO(successor, sender, hopCount));
             }
         }
         

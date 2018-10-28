@@ -1,19 +1,21 @@
 package CS4262.Core;
 
-import CS4262.Helpers.Messages.SendFileIndex;
-import CS4262.Helpers.Messages.UpdatePredecessor;
+import CS4262.Interfaces.IInitializerFileIndex;
+import CS4262.Message.FileIndex.SendFileIndex;
+import CS4262.Message.Route.UpdatePredecessor;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
+import CS4262.Interfaces.IInitializerRoute;
+import CS4262.Models.MessageDTO;
 
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class RouteInitializer implements Initializer{
+public class RouteInitializer implements IInitializerRoute, IInitializerFileIndex{
     
     private final SendFileIndex sendFileIndex;
     private final UpdatePredecessor updatePredecessor;
-    private final FileIndexInitializer fileIndexInitializer;
     private static RouteInitializer instance;
     
     public static RouteInitializer getInstance(){
@@ -26,7 +28,6 @@ public class RouteInitializer implements Initializer{
     private RouteInitializer(){
         this.updatePredecessor = new UpdatePredecessor();
         this.sendFileIndex = new SendFileIndex();
-        this.fileIndexInitializer = FileIndexInitializer.getInstance();
     }
     
     public Node addAndUpdate(NodeDTO neighbour){
@@ -121,8 +122,8 @@ public class RouteInitializer implements Initializer{
             }
         }
         if(updated){
-            updatePredecessor.send(newSucc);
-            sendFileIndex.send(newSucc, node);
+            updatePredecessor.send(new MessageDTO(newSucc));
+            sendFileIndex.send(new MessageDTO(newSucc));
             fileIndexInitializer.updateForSuccessor();
             mainController.getMainFrame().updateSuccessorDetails(newSucc);
         }

@@ -1,22 +1,16 @@
 package CS4262.Core;
 
-import CS4262.Helpers.Messages.AddSingleFileIndex;
-import CS4262.Helpers.Messages.RemoveSingleFileIndex;
-import CS4262.Helpers.Messages.SendFileIndex;
 import CS4262.Models.File;
-import CS4262.Models.Node;
-import CS4262.Models.NodeDTO;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
+import CS4262.Interfaces.IInitializerContent;
 
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class ContentInitializer implements Initializer {
+public class ContentInitializer implements IInitializerContent {
     
     private final String[] availableFiles;
     

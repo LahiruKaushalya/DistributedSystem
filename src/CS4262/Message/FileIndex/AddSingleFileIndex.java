@@ -1,5 +1,8 @@
-package CS4262.Helpers.Messages;
+package CS4262.Message.FileIndex;
 
+import CS4262.Interfaces.IInitializerFileIndex;
+import CS4262.Interfaces.IMessage;
+import CS4262.Models.MessageDTO;
 import CS4262.Models.NodeDTO;
 import java.util.StringTokenizer;
 
@@ -7,16 +10,15 @@ import java.util.StringTokenizer;
  *
  * @author Lahiru Kaushalya
  */
-public class AddSingleFileIndex implements Message{
+public class AddSingleFileIndex implements IMessage, IInitializerFileIndex{
     
-    private NodeDTO sender;
-    private String fileID;
+    private MessageDTO msgDTO;
     
-    public String send(NodeDTO receiver, NodeDTO sender, String fileID){
-        this.sender = sender;
-        this.fileID = fileID;
+    @Override
+    public String send(MessageDTO msgDTO){
+        this.msgDTO = msgDTO;
         String message = createMsg();
-        return msgSender.sendMsg(receiver, message);
+        return msgSender.sendMsg(msgDTO.getReceiver(), message);
     }
     
     /*
@@ -25,6 +27,9 @@ public class AddSingleFileIndex implements Message{
     */
     @Override
     public String createMsg() {
+        NodeDTO sender = msgDTO.getSender();
+        String fileID = msgDTO.getFileNameOrID();
+        
         String msg = " ADD_FILE_INDEX ";
         msg += sender.getIpAdress() + " " + sender.getPort() + " " + fileID;
         return String.format("%04d", msg.length() + 5) + " " + msg; 

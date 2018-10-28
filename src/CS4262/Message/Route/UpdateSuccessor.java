@@ -1,17 +1,19 @@
-package CS4262.Helpers.Messages;
+package CS4262.Message.Route;
 
-import CS4262.Models.NodeDTO;
 import java.util.StringTokenizer;
+import CS4262.Interfaces.IMessage;
+import CS4262.Models.MessageDTO;
 
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class UpdateSuccessor implements Message{
+public class UpdateSuccessor implements IMessage{
     
-    public String send(NodeDTO receiver){
+    @Override
+    public String send(MessageDTO msgDTO){
         String message = createMsg();
-        return msgSender.sendMsg(receiver, message);
+        return msgSender.sendMsg(msgDTO.getReceiver(), message);
     }
     
     /*

@@ -1,6 +1,8 @@
 package CS4262.Network;
 
-import CS4262.Helpers.Messages.*;
+import CS4262.Message.Route.*;
+import CS4262.Message.Search.*;
+import CS4262.Message.FileIndex.*;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -8,6 +10,7 @@ import java.net.DatagramSocket;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import CS4262.Interfaces.IMessage;
 
 /**
  *
@@ -17,7 +20,7 @@ public class MessageReceiver extends Thread{
     
     private final DatagramPacket incoming; 
     private final DatagramSocket server;
-    private Message msgHandler;
+    private IMessage msgHandler;
     
     public MessageReceiver(DatagramPacket incoming, DatagramSocket server){
         this.incoming = incoming;
@@ -52,7 +55,7 @@ public class MessageReceiver extends Thread{
         switch(command){
             case "JOIN":
                 try {
-                    msgHandler = new JoinMsg();
+                    msgHandler = new Join();
                     msgHandler.handle(st);
                     response = "JOINOK 0";
                 } 

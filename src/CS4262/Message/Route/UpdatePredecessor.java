@@ -1,18 +1,23 @@
-package CS4262.Helpers.Messages;
+package CS4262.Message.Route;
 
+import CS4262.Message.FileIndex.BackupFileIndex;
 import CS4262.Models.Node;
-import CS4262.Models.NodeDTO;
+import CS4262.Interfaces.IMessage;
+import CS4262.Models.MessageDTO;
 import java.util.StringTokenizer;
 
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class UpdatePredecessor implements Message{
+public class UpdatePredecessor implements IMessage{
     
-    public String send(NodeDTO receiver){
+    MessageDTO msgDTO;
+    
+    public String send(MessageDTO msgDTO){
+        this.msgDTO = msgDTO;
         String message = createMsg();
-        return msgSender.sendMsg(receiver, message);
+        return msgSender.sendMsg(msgDTO.getReceiver(), message);
     }
     
     /*
@@ -37,7 +42,7 @@ public class UpdatePredecessor implements Message{
         mainController.getMainFrame().updatePredecessorDetails(predecessor);
         
         //Send file index backup to new predecessor
-        new BackupFileIndex().send(predecessor);
+        new BackupFileIndex().send(new MessageDTO(predecessor));
     }
     
 }

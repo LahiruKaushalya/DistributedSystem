@@ -1,8 +1,6 @@
 package CS4262.Helpers;
 
-import static CS4262.Core.Initializer.idCreator;
-import static CS4262.Core.Initializer.mainController;
-import static CS4262.Core.Initializer.node;
+import CS4262.Interfaces.IMain;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
 import java.util.List;
@@ -12,7 +10,7 @@ import java.util.Map;
  *
  * @author Lahiru Kaushalya
  */
-public class UICreator {
+public class UICreator implements IMain{
     
     public void updateFileIndexUI(){
         String displayText = "File ID\t\t\tNode\n\t\tIP Address\t\tPort\n\n";

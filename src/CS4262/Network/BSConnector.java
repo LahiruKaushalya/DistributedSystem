@@ -7,8 +7,9 @@ import CS4262.MainController;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
 import CS4262.Core.NodeInitializer;
-import CS4262.Helpers.Messages.Leave;
-import CS4262.Helpers.Messages.UpdateRoutes;
+import CS4262.Message.Route.Leave;
+import CS4262.Message.Route.UpdateRoutes;
+import CS4262.Models.MessageDTO;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -216,9 +217,9 @@ public class BSConnector {
                     for (Node neighbour : neighbours) {
                         if(neighbour != null){
                             count++;
-                            new Leave().send(neighbour, node, NodeInitializer.getHopCount());
+                            new Leave().send(new MessageDTO(neighbour, node, NodeInitializer.getHopCount()));
                             if(count == 1){
-                                new UpdateRoutes().send(neighbour, node, null, NodeInitializer.getHopCount());
+                                new UpdateRoutes().send(new MessageDTO(neighbour, node, NodeInitializer.getHopCount(), null));
                             }
                         }
                     }

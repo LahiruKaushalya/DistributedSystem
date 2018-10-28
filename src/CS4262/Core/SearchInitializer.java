@@ -1,19 +1,18 @@
 package CS4262.Core;
 
-import CS4262.Helpers.Messages.SearchRequest;
-import CS4262.Helpers.Messages.SearchResults;
-import CS4262.Models.File;
-import CS4262.Models.Node;
-import CS4262.Models.NodeDTO;
+import CS4262.Message.Search.*;
+import CS4262.Models.*;
+import CS4262.Interfaces.IInitializerSearch;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class SearchInitializer implements Initializer{
+public class SearchInitializer implements IInitializerSearch{
 
     private static SearchInitializer instance;
 
@@ -87,7 +86,7 @@ public class SearchInitializer implements Initializer{
             }
             //Check at least one file holder has been found
             if (fileHolders != null) {
-                new SearchResults().send(sender, fileHolders);
+                new SearchResults().send(new MessageDTO(sender, fileHolders));
             } 
             //File holder not found. 
             else {
@@ -149,7 +148,7 @@ public class SearchInitializer implements Initializer{
                 }
             }
             if(redirector != null){
-                new SearchRequest().send(redirector, sender, fileName);
+                new SearchRequest().send(new MessageDTO(redirector, sender, fileName));
             }
             else{
                 //File not found

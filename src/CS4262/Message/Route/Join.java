@@ -1,33 +1,34 @@
-package CS4262.Helpers.Messages;
+package CS4262.Message.Route;
 
+import CS4262.Interfaces.IInitializerRoute;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
+import CS4262.Interfaces.IMessage;
+import CS4262.Models.MessageDTO;
 import java.util.StringTokenizer;
 
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class Leave implements Message{
+public class Join implements IMessage, IInitializerRoute{
     
-    private NodeDTO leaveNode;
-    private int hopCount;
+    MessageDTO msgDTO;
     
-    public String send(NodeDTO receiver, NodeDTO leaveNode, int hopCount){
-        this.leaveNode = leaveNode;
-        this.hopCount = hopCount;
+    public String send(MessageDTO msgDTO){
+        this.msgDTO = msgDTO;
         String message = createMsg();
-        return msgSender.sendMsg(receiver, message);
+        return msgSender.sendMsg(msgDTO.getReceiver(), message);
     }
     
     /*
-    Leave message format 
-    length LEAVE hop_count leaver_ip leaver_port
+    Join message format 
+    length JOIN sender_ip sender_port
     */
     @Override
     public String createMsg() {
-        String msg = " LEAVE ";
-        msg += hopCount + " " + leaveNode.getIpAdress() + " " + leaveNode.getPort();
+        String msg = " JOIN ";
+        msg += msgDTO.getHopCount() + " " + msgDTO.getSender().getIpAdress() + " " + msgDTO.getSender().getPort();
         return String.format("%04d", msg.length() + 5) + " " + msg; 
     }
     
@@ -37,23 +38,23 @@ public class Leave implements Message{
         int hopCount = Integer.parseInt(st.nextToken());
         hopCount--;
         
-        //Node to be leave from network.
-        String leaverIp = st.nextToken();
-        int leaverPort = Integer.parseInt(st.nextToken());
-        NodeDTO leaver = new NodeDTO(leaverIp, leaverPort);
+        //New Node about to join network
+        String ip = st.nextToken();
+        int port = Integer.parseInt(st.nextToken());
+        NodeDTO newNode = new NodeDTO(ip, port);
         
         //Update routes list and UI with new node
-        routeInitializer.removeAndUpdate(leaver);
+        routeInitializer.addAndUpdate(newNode);
         uiCreator.updateRoutesUI();
         
-        //Send remove node message to all neighbours in routing table 
+        //Send new update routes message to all neighbours in routing table 
         Node[] neighbours = node.getRoutes();
         
-        if (hopCount > 0) {
+        if(hopCount > 0){
             for (Node neighbour : neighbours) {
                 //Routes can have null values
                 if (neighbour != null) {
-                    send(neighbour, leaver, hopCount);
+                    send(new MessageDTO(neighbour, newNode, hopCount));
                 }
             }
         }
@@ -62,9 +63,9 @@ public class Leave implements Message{
         for(Node neighbour : neighbours){
             if (neighbour != null) {
                 //pass update message to all neighbours in routing table 
-                new UpdateRoutes().send(neighbour, node, null, hopCount);
+                new UpdateRoutes().send(new MessageDTO(neighbour, node, hopCount, null));
             }
         }
     }
-
+    
 }

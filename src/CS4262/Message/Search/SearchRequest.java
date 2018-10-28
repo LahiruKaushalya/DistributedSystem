@@ -1,22 +1,24 @@
-package CS4262.Helpers.Messages;
+package CS4262.Message.Search;
 
+import CS4262.Interfaces.IInitializerSearch;
 import CS4262.Models.NodeDTO;
+import CS4262.Interfaces.IMessage;
+import CS4262.Models.MessageDTO;
 import java.util.StringTokenizer;
 
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class SearchRequest implements Message{
+public class SearchRequest implements IMessage, IInitializerSearch{
     
-    private NodeDTO sender;
-    private String fileName;
+    private MessageDTO msgDTO;
     
-    public String send(NodeDTO receiver, NodeDTO sender, String fileName){
-        this.sender = sender;
-        this.fileName = fileName;
+    @Override
+    public String send(MessageDTO msgDTO){
+        this.msgDTO = msgDTO;
         String message = createMsg();
-        return msgSender.sendMsg(receiver, message);
+        return msgSender.sendMsg(msgDTO.getReceiver(), message);
     }
     
     /*
@@ -25,6 +27,8 @@ public class SearchRequest implements Message{
     */
     @Override
     public String createMsg() {
+        NodeDTO sender = msgDTO.getSender();
+        String fileName = msgDTO.getFileNameOrID();
         String msg = " SER ";
         msg += sender.getIpAdress() + " " + sender.getPort() + " " + fileName;
         return String.format("%04d", msg.length() + 5) + " " + msg;

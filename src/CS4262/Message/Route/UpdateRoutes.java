@@ -1,7 +1,10 @@
-package CS4262.Helpers.Messages;
+package CS4262.Message.Route;
 
+import CS4262.Interfaces.IInitializerRoute;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
+import CS4262.Interfaces.IMessage;
+import CS4262.Models.MessageDTO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -10,18 +13,14 @@ import java.util.StringTokenizer;
  *
  * @author Lahiru Kaushalya
  */
-public class UpdateRoutes implements Message{
+public class UpdateRoutes implements IMessage, IInitializerRoute{
     
-    private NodeDTO sender;
-    private List<Node> addi;
-    private int hopCount;
+    MessageDTO msgDTO;
     
-    public String send(NodeDTO receiver, NodeDTO sender, ArrayList<Node> addi, int hopCount){
-        this.sender = sender;
-        this.addi = addi;
-        this.hopCount = hopCount;
+    public String send(MessageDTO msgDTO){
+        this.msgDTO = msgDTO;
         String message = createMsg();
-        return msgSender.sendMsg(receiver, message);
+        return msgSender.sendMsg(msgDTO.getReceiver(), message);
     }
     
     /*
@@ -30,6 +29,11 @@ public class UpdateRoutes implements Message{
     */
     @Override
     public String createMsg() {
+        
+        int hopCount = msgDTO.getHopCount();
+        NodeDTO sender = msgDTO.getSender();
+        List<NodeDTO> addi = msgDTO.getAdditional();
+        
         String msg = " UPDATE_ROUTES ";
         msg += hopCount + " " + sender.getIpAdress() + " " + sender.getPort();
         
@@ -47,7 +51,7 @@ public class UpdateRoutes implements Message{
         if (addi != null) {
             if (!addi.isEmpty()) {
                 count += addi.size();
-                for (Node neighbour : addi) {
+                for (NodeDTO neighbour : addi) {
                     tempStr += " " + neighbour.getIpAdress() + " " + neighbour.getPort();
                 }
             }
@@ -74,7 +78,7 @@ public class UpdateRoutes implements Message{
         int routes = Integer.parseInt(st.nextToken());
         
         //Collect nodes that does not include/replaced by a new node in routing table
-        ArrayList<Node> addi = new ArrayList<>();
+        ArrayList<NodeDTO> addi = new ArrayList<>();
         NodeDTO temp;
         
         //Update routing table 
@@ -102,7 +106,7 @@ public class UpdateRoutes implements Message{
             for(Node neighbour : neighbours){
                 if (neighbour != null) {
                     //pass update message to all neighbours in routing table 
-                    send(neighbour, sender, addi, hopCount);
+                    send(new MessageDTO(neighbour, sender, hopCount, addi));
                 }
             }
         }
