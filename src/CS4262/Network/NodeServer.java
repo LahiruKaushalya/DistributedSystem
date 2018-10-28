@@ -45,7 +45,7 @@ public class NodeServer implements Runnable {
                     server.receive(incoming);
                     
                     //Create a new ClientHandler thread object 
-                    Thread ch = new ClientHandler(incoming, server);
+                    Thread ch = new MessageReceiver(incoming, server);
                     ch.start();
                 }
                 catch(SocketTimeoutException ex){

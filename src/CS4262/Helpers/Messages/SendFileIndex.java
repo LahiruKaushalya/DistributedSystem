@@ -1,5 +1,6 @@
 package CS4262.Helpers.Messages;
 
+import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +11,11 @@ import java.util.StringTokenizer;
  * @author Lahiru Kaushalya
  */
 public class SendFileIndex implements Message{
-
-    public String send(NodeDTO receiver){
+    
+    private NodeDTO sender;
+    
+    public String send(NodeDTO receiver, NodeDTO sender){
+        this.sender = sender;
         String message = createMsg();
         return msgSender.sendMsg(receiver, message);
     }
@@ -38,20 +42,22 @@ public class SendFileIndex implements Message{
     
     @Override
     public void handle(StringTokenizer st) {
+        
         int fileCount = Integer.parseInt(st.nextToken());
         
-        while(fileCount > 0){
+        while (fileCount > 0) {
             int nodeCount = Integer.parseInt(st.nextToken());
             String fileID = st.nextToken();
-            while(nodeCount > 0){
+            while (nodeCount > 0) {
                 NodeDTO fileHolder = new NodeDTO(st.nextToken(), Integer.parseInt(st.nextToken()));
-                contentInitializer.createFileIndex(fileHolder, fileID);
+                fileIndexInitializer.insertFromPredecessor(fileHolder, fileID);
                 nodeCount--;
             }
             fileCount--;
         }
-        contentInitializer.updateFileIndex();
-        contentInitializer.updateFileIndexUI();
+
+        fileIndexInitializer.updateForSuccessor();
+        uiCreator.updateFileIndexUI();
     }
     
 }

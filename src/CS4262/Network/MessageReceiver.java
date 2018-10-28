@@ -13,13 +13,13 @@ import java.util.logging.Logger;
  *
  * @author Lahiru Kaushalya
  */
-public class ClientHandler extends Thread{
+public class MessageReceiver extends Thread{
     
     private final DatagramPacket incoming; 
     private final DatagramSocket server;
     private Message msgHandler;
     
-    public ClientHandler(DatagramPacket incoming, DatagramSocket server){
+    public MessageReceiver(DatagramPacket incoming, DatagramSocket server){
         this.incoming = incoming;
         this.server = server;
     }
@@ -38,7 +38,7 @@ public class ClientHandler extends Thread{
             server.send(dpReply);
         } 
         catch (IOException ex) {
-            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MessageReceiver.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -83,14 +83,25 @@ public class ClientHandler extends Thread{
                 }
                 return response;
                 
-            case "UPDATE_FILE_INDEX":
+            case "ADD_FILE_INDEX":
                 try {
-                    msgHandler = new SingleFileIndex();
+                    msgHandler = new AddSingleFileIndex();
                     msgHandler.handle(st);
-                    response = "UPDATE_FILE_INDEX 0";
+                    response = "ADD_FILE_INDEX 0";
                 } 
                 catch (Exception e) {
-                    response = "UPDATE_FILE_INDEX 9999";
+                    response = "ADD_FILE_INDEX 9999";
+                }
+                return response;
+            
+            case "REMOVE_FILE_INDEX":
+                try {
+                    msgHandler = new RemoveSingleFileIndex();
+                    msgHandler.handle(st);
+                    response = "REMOVE_FILE_INDEX 0";
+                } 
+                catch (Exception e) {
+                    response = "REMOVE_FILE_INDEX 9999";
                 }
                 return response;
             

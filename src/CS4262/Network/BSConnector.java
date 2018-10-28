@@ -1,5 +1,7 @@
 package CS4262.Network;
 
+import CS4262.Core.ContentInitializer;
+import CS4262.Core.FileIndexInitializer;
 import CS4262.Helpers.IDCreator;
 import CS4262.MainController;
 import CS4262.Models.Node;
@@ -205,6 +207,11 @@ public class BSConnector {
             Thread t = new Thread(){
                 @Override
                 public void run(){
+                    FileIndexInitializer fileIndexInit = FileIndexInitializer.getInstance();
+                    
+                    //Send message to remove file indices
+                    fileIndexInit.sendRemoveMsg();
+                    
                     int count = 0;
                     for (Node neighbour : neighbours) {
                         if(neighbour != null){
@@ -215,6 +222,12 @@ public class BSConnector {
                             }
                         }
                     }
+                    //Send local file Index to predecessor and remove
+                    fileIndexInit.removeFileIndex();
+                    //Clear files
+                    ContentInitializer.getInstance().removeContent();
+                    node.setSuccessor(null);
+                    node.setPredecessor(null);
                 }
             };
             t.start();

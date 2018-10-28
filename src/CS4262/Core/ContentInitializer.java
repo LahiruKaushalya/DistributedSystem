@@ -1,6 +1,8 @@
 package CS4262.Core;
 
-import CS4262.Helpers.Messages.SingleFileIndex;
+import CS4262.Helpers.Messages.AddSingleFileIndex;
+import CS4262.Helpers.Messages.RemoveSingleFileIndex;
+import CS4262.Helpers.Messages.SendFileIndex;
 import CS4262.Models.File;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
@@ -52,6 +54,7 @@ public class ContentInitializer implements Initializer {
         };
     }
     
+    //Create content
     public void createNodeContent(){
         
         Random ran = new Random();
@@ -81,124 +84,20 @@ public class ContentInitializer implements Initializer {
         //update UI
         mainController.getMainFrame().updateContent(text);
         
-        Map<String, List<NodeDTO>> tempList = node.getFileIndex();
-        for(File file : content){
-            NodeDTO receiver = getReceiver(file.getId());
-            if(receiver != null){
-                new SingleFileIndex().send(receiver, node, file.getId());
-            }
-            else{
-                List<NodeDTO> t = new ArrayList<NodeDTO>();
-                t.add(node);
-                tempList.put(file.getId(), t);
-            }
-        }
-        node.setFileIndex(tempList);
-        updateFileIndexUI();
-    }
-    
-    public NodeDTO getReceiver(String fileID){
-        NodeDTO receiver = null;
-        int fileIntID = idCreator.getComparableID(fileID);
-        int nodeIntID = idCreator.getComparableID(node.getId());
-        Node[] neighbours = node.getRoutes();
+        //Create file index
+        FileIndexInitializer.getInstance().createLocalFileIndex();
         
-        for(Node neighbour : neighbours){
-            if(neighbour != null){
-                int neiIntID = idCreator.getComparableID(neighbour.getId());
-                if(rangeChecker.isInRange(nodeIntID, neiIntID, fileIntID)){
-                    receiver = neighbour;
-                }
-                else{break;}
-            }
-        }
-        return receiver;
     }
     
-    public void createFileIndex(NodeDTO sender, String fileID){
-        updateFileIndex(sender, fileID);
-    }
-    
-    //Update when new file come
-    public void updateSingleFileIndex(NodeDTO sender, String fileID){
-        NodeDTO receiver = getReceiver(fileID);
-        if (receiver != null) {
-            new SingleFileIndex().send(receiver, sender, fileID);
-        } 
-        else {
-            updateFileIndex(sender, fileID);
-        }
-    }
-    
-    //Update when successor changed
-    public void updateFileIndex(){
-        Node successor = node.getSuccessor();
-        Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
+    //Delete content
+    public void removeContent(){
+        List<File> content = node.getContent();
+        content.clear();
+        node.setContent(content);
         
-        int nodeID = idCreator.getComparableID(node.getId());
-        int succID = idCreator.getComparableID(successor.getId());
-        int fileIntID;
-        
-        Iterator<Map.Entry<String, List<NodeDTO>>> iterator = fileIndex.entrySet().iterator();
-        
-        while (iterator.hasNext()) {
-            Map.Entry<String, List<NodeDTO>> entry = iterator.next();
-            String fileID = entry.getKey();
-            fileIntID = idCreator.getComparableID(fileID);
-            
-            if(rangeChecker.isInRange(nodeID, succID, fileIntID)){
-                iterator.remove();
-            }
-        }
-        node.setFileIndex(fileIndex);
-        updateFileIndexUI();
+        //update UI
+        String text = "File ID\tFile Name\n\n";
+        mainController.getMainFrame().updateContent(text);
     }
     
-    public void updateFileIndexUI(){
-        String displayText = "File ID\t\t\tNode\n\t\tIP Address\t\tPort\n\n";
-        Map<String, List<NodeDTO>> indices = node.getFileIndex();
-        
-        for(String fileID : indices.keySet()) {
-            displayText += fileID + "\t\t";
-            int count = 0;
-            for(NodeDTO _node : indices.get(fileID)){
-                count++;
-                if(count > 1){
-                    displayText += "\t\t";
-                }
-                displayText += _node.getIpAdress() + "\t\t" + _node.getPort() + "\n";
-            }
-            displayText += "\n";
-        }
-        mainController.getMainFrame().updateFileIndex(displayText);
-    }
-    
-    private void updateFileIndex(NodeDTO sender, String fileID) {
-        String senderID = idCreator.generateNodeID(sender.getIpAdress(), sender.getPort());
-
-        Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
-        List<NodeDTO> temp = fileIndex.get(fileID);
-        if (temp == null) {
-            temp = new ArrayList<>();
-            temp.add(sender);
-            fileIndex.put(fileID, temp);
-            node.setFileIndex(fileIndex);
-        } 
-        else {
-            boolean exists = false;
-            for (NodeDTO nodeT : temp) {
-                String nodeTID = idCreator.generateNodeID(nodeT.getIpAdress(), nodeT.getPort());
-                if (nodeTID.equals(senderID)) {
-                    exists = true;
-                    break;
-                }
-            }
-            if (!exists) {
-                temp.add(sender);
-                fileIndex.put(fileID, temp);
-                node.setFileIndex(fileIndex);
-            }
-        }
-    }
-
 }
