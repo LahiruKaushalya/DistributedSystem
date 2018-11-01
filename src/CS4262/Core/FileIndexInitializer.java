@@ -2,6 +2,7 @@ package CS4262.Core;
 
 import CS4262.Message.FileIndex.*;
 import CS4262.Interfaces.IInitializerFileIndex;
+import CS4262.Interfaces.IInitializerWordIndex;
 import CS4262.Models.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,7 +14,7 @@ import java.util.Map;
  *
  * @author Lahiru Kaushalya
  */
-public class FileIndexInitializer implements IInitializerFileIndex{
+public class FileIndexInitializer implements IInitializerFileIndex, IInitializerWordIndex{
     
     private static FileIndexInitializer instance;
     
@@ -31,46 +32,29 @@ public class FileIndexInitializer implements IInitializerFileIndex{
         List<File> content = node.getContent();
         Map<String, List<NodeDTO>> tempList = node.getFileIndex();
         for(File file : content){
-            NodeDTO receiver = getReceiver(file.getId());
+            NodeDTO receiver = findReceiver.search(file.getId());
             if(receiver != null){
                 new AddSingleFileIndex().send(new MessageDTO(receiver, node, file.getId()));
             }
             else{
-                List<NodeDTO> t = new ArrayList<NodeDTO>();
+                List<NodeDTO> t = new ArrayList<>();
                 t.add(node);
                 tempList.put(file.getId(), t);
             }
+            wordIndexInitializer.createLocalWordIndex(file);
         }
         node.setFileIndex(tempList);
         uiCreator.updateFileIndexUI();
-    }
-    
-    //Find relevent node to index content files
-    public NodeDTO getReceiver(String fileID){
-        NodeDTO receiver = null;
-        int fileIntID = idCreator.getComparableID(fileID);
-        int nodeIntID = idCreator.getComparableID(node.getId());
-        Node[] neighbours = node.getRoutes();
-        
-        for(Node neighbour : neighbours){
-            if(neighbour != null){
-                int neiIntID = idCreator.getComparableID(neighbour.getId());
-                if(rangeChecker.isInRange(nodeIntID, neiIntID, fileIntID)){
-                    receiver = neighbour;
-                }
-                else{break;}
-            }
-        }
-        return receiver;
     }
     
     //Notify nodes to remove file indices when leave (outgoing msg)
     public void sendRemoveMsg(){
         List<File> files = node.getContent();
         for(File file : files){
-            NodeDTO receiver = getReceiver(file.getId());
+            NodeDTO receiver = findReceiver.search(file.getId());
             if(receiver != null){
-                new RemoveSingleFileIndex().send(new MessageDTO(receiver, node, file.getId()));
+                MessageDTO msg = new MessageDTO(receiver, node, file.getId());
+                new RemoveSingleFileIndex().send(msg);
             }
         }
     }
@@ -108,7 +92,7 @@ public class FileIndexInitializer implements IInitializerFileIndex{
     
     //Add new file to index (incoming msg)
     public void insert(NodeDTO sender, String fileID){
-        NodeDTO receiver = getReceiver(fileID);
+        NodeDTO receiver = findReceiver.search(fileID);
         if (receiver != null) {
             new AddSingleFileIndex().send(new MessageDTO(receiver, sender, fileID));
         } 
@@ -117,9 +101,9 @@ public class FileIndexInitializer implements IInitializerFileIndex{
         }
     }
     
-    //Remove file index (incoming msg)
+    //Remove file from index (incoming msg)
     public void remove(NodeDTO sender, String fileID){
-        NodeDTO receiver = getReceiver(fileID);
+        NodeDTO receiver = findReceiver.search(fileID);
         if (receiver != null) {
             new RemoveSingleFileIndex().send(new MessageDTO(receiver, sender, fileID));
         } 

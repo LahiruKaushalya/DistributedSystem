@@ -31,6 +31,20 @@ public class UICreator implements IMain{
         mainController.getMainFrame().updateFileIndex(displayText);
     }
     
+    public void updateWordIndexUI(){
+        String displayText = "Word ID\tWord\tFile IDs\n\n";
+        Map<String, List<String>> indices = node.getWordIndex();
+        
+        for(String wordName : indices.keySet()) {
+            displayText += idCreator.generateWordID(wordName) + "\t" + wordName + "\t";
+            for(String fileID : indices.get(wordName)){
+                displayText += fileID + "\t";
+            }
+            displayText += "\n";
+        }
+        mainController.getMainFrame().updateWordIndex(displayText);
+    }
+    
     public void updateRoutesUI(){
         String displayText = "Index\tRange\tNode ID\tIP Address\tPort\n\n";
         

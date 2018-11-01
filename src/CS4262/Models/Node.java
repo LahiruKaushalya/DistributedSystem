@@ -19,6 +19,9 @@ public class Node extends NodeDTO
     
     private Map<String, List<NodeDTO>> fileIndex;
     private Map<String, List<NodeDTO>> fileIndexBackup;
+    
+    private Map<String, List<String>> wordIndex;
+    private Map<String, List<String>> wordIndexBackup;
 
     private List<File> content;
     //Routes has fixed length -> m 
@@ -28,9 +31,12 @@ public class Node extends NodeDTO
     { 
         super(ip, port);
         this.id = nodeID;
-        this.fileIndex = new HashMap<>();
         this.content = new ArrayList<>();
         this.routes = new Node[new IDCreator().getBIN_ID_LENGTH()];
+        this.fileIndex = new HashMap<>();
+        this.wordIndex = new HashMap<>();
+        this.fileIndexBackup = new HashMap<>();
+        this.wordIndexBackup = new HashMap<>();
     }
     
     /**
@@ -75,6 +81,14 @@ public class Node extends NodeDTO
     public Map<String, List<NodeDTO>> getFileIndexBackup() {
         return fileIndexBackup;
     }
+    
+    public Map<String, List<String>> getWordIndex() {
+        return wordIndex;
+    }
+    
+    public Map<String, List<String>> getWordIndexBackup() {
+        return wordIndexBackup;
+    }
 
     /**
      * @param content the content to set
@@ -106,5 +120,13 @@ public class Node extends NodeDTO
         this.fileIndexBackup = fileIndexBackup;
     }
     
+    public void setWordIndex(Map<String, List<String>> wordIndex) {
+        this.wordIndex = wordIndex;
+    }
+    
+    public void setWordIndexBackup(Map<String, List<String>> wordIndexBackup) {
+        this.wordIndexBackup = wordIndexBackup;
+    }
+
 }
 

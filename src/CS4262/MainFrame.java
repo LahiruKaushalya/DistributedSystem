@@ -473,6 +473,7 @@ public class MainFrame extends javax.swing.JFrame {
         routingTextPane.setText("Index\tRange\tNode ID\tIP Address\tPort\n\n");
         searchTextPane.setText("Node ID\tNode IP Adress\tUDP Port\tTCP Port\n\n");
         fileIndexTextPane.setText("File ID\t\t\tNode\n\t\tIP Address\t\tPort\n\n");
+        wordIndexTextPane.setText("Word ID\tFile IDs\n\n");
     }
     
     public void updateConnctionResponce(String responce){
@@ -521,6 +522,10 @@ public class MainFrame extends javax.swing.JFrame {
     
     public void updateFileIndex(String data){
         fileIndexTextPane.setText(data);
+    }
+    
+    public void updateWordIndex(String data){
+        wordIndexTextPane.setText(data);
     }
     
     public void updateContent(String content){

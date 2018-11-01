@@ -3,6 +3,7 @@ package CS4262.Network;
 import CS4262.Message.Route.*;
 import CS4262.Message.Search.*;
 import CS4262.Message.FileIndex.*;
+import CS4262.Message.WordIndex.*;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -11,6 +12,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import CS4262.Interfaces.IMessage;
+
 
 /**
  *
@@ -127,6 +129,28 @@ public class MessageReceiver extends Thread{
                 } 
                 catch (Exception e) {
                     response = "BACKUP_FILE_INDEX 9999";
+                }
+                return response;
+                
+            case "ADD_WORD_INDEX":
+                try {
+                    msgHandler = new AddSingleWordIndex();
+                    msgHandler.handle(st);
+                    response = "ADD_WORD_INDEX 0";
+                } 
+                catch (Exception e) {
+                    response = "ADD_WORD_INDEX 9999";
+                }
+                return response;
+                
+            case "SEND_WORD_INDEX":
+                try {
+                    msgHandler = new SendWordIndex();
+                    msgHandler.handle(st);
+                    response = "SEND_WORD_INDEX 0";
+                } 
+                catch (Exception e) {
+                    response = "SEND_WORD_INDEX 9999";
                 }
                 return response;
                 

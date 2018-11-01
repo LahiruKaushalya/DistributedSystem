@@ -27,7 +27,11 @@ public class IDCreator {
     }
     
     public String generateFileID(String fileName) {
-        return "F" + String.valueOf(generateID(fileName));
+        return "F" + String.valueOf(generateID(fileName.trim().toLowerCase()));
+    }
+    
+    public String generateWordID(String wordName) {
+        return "W" + String.valueOf(generateID(wordName.trim().toLowerCase()));
     }
     
     public int getComparableID(String stringID) {

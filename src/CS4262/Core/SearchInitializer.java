@@ -30,7 +30,6 @@ public class SearchInitializer implements IInitializerSearch{
     public void localSearch(String fileName){
         if(node != null){
             //Filter user input
-            fileName = fileName.trim().toLowerCase();
             fileName = filterFileName(fileName);
             
             String searchingFileID = idCreator.generateFileID(fileName.trim().toLowerCase());

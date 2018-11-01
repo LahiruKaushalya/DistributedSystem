@@ -13,6 +13,7 @@ public class MessageDTO {
     private NodeDTO receiver;
     private int hopCount = 0;
     private String fileNameOrID;
+    private Word word;
     private List<NodeDTO> additional = new ArrayList<>();
     private List<NodeDTO> fileHolders = new ArrayList<>();
     
@@ -20,9 +21,20 @@ public class MessageDTO {
         this.receiver = receiver;
     }
     
+    public MessageDTO(NodeDTO receiver, Word word){
+        this.receiver = receiver;
+        this.word = word;
+    }
+    
     public MessageDTO(NodeDTO receiver, List<NodeDTO> fileHolders){
         this.receiver = receiver;
         this.fileHolders = fileHolders;
+    }
+    
+    public MessageDTO(NodeDTO receiver, Word word, String fileNameOrID){
+        this.receiver = receiver;
+        this.fileNameOrID = fileNameOrID;
+        this.word = word;
     }
     
     public MessageDTO(NodeDTO receiver, NodeDTO sender){
@@ -64,6 +76,10 @@ public class MessageDTO {
     
     public String getFileNameOrID() {
         return fileNameOrID;
+    }
+    
+    public Word getWord() {
+        return word;
     }
 
     public List<NodeDTO> getAdditional() {

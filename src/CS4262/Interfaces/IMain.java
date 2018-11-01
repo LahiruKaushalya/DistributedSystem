@@ -2,6 +2,7 @@ package CS4262.Interfaces;
 
 import CS4262.Helpers.IDCreator;
 import CS4262.Helpers.RangeChecker;
+import CS4262.Helpers.FindReceiver;
 import CS4262.Helpers.UICreator;
 import CS4262.MainController;
 import CS4262.Models.Node;
@@ -18,6 +19,6 @@ public interface IMain {
     public IDCreator idCreator = new IDCreator();
     public UICreator uiCreator = new UICreator();
     public RangeChecker rangeChecker = new RangeChecker();
-    
+    public FindReceiver findReceiver = new FindReceiver();
     
 }
