@@ -4,6 +4,7 @@ import CS4262.Interfaces.IInitializerContent;
 import CS4262.Interfaces.IInitializerRoute;
 import CS4262.Message.Route.*;
 import CS4262.Message.FileIndex.BackupFileIndex;
+import CS4262.Message.WordIndex.BackupWordIndex;
 import CS4262.Models.MessageDTO;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
@@ -133,20 +134,10 @@ public class NodeInitializer implements IInitializerRoute, IInitializerContent{
                         }
                         
                         //Activate file index backup
-                        Map<String, List<NodeDTO>> fileIndexBackup = node.getFileIndexBackup();
-                        Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
+                        activateFileIndexBackup();
                         
-                        for(String fileID : fileIndexBackup.keySet()){
-                            fileIndex.put(fileID, fileIndexBackup.get(fileID));
-                        }
-                        fileIndexBackup.clear();
-                        node.setFileIndexBackup(fileIndexBackup);
-                        node.setFileIndex(fileIndex);
-                        
-                        //update UI
-                        uiCreator.updateFileIndexUI();
-                        
-                        new BackupFileIndex().send(new MessageDTO(node.getPredecessor()));
+                        //Activate word index backup
+                        activateWordIndexBackup();
                         
                         retryCount = 0;
                     }
@@ -171,6 +162,40 @@ public class NodeInitializer implements IInitializerRoute, IInitializerContent{
             }
         };
         return task;
+    }
+    
+    private void activateFileIndexBackup(){
+        Map<String, List<NodeDTO>> fileIndexBackup = node.getFileIndexBackup();
+                        Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
+                        
+                        for(String fileID : fileIndexBackup.keySet()){
+                            fileIndex.put(fileID, fileIndexBackup.get(fileID));
+                        }
+                        fileIndexBackup.clear();
+                        node.setFileIndexBackup(fileIndexBackup);
+                        node.setFileIndex(fileIndex);
+                        
+                        //update UI
+                        uiCreator.updateFileIndexUI();
+                        
+                        new BackupFileIndex().send(new MessageDTO(node.getPredecessor()));
+    }
+    
+    private void activateWordIndexBackup() {
+        Map<String, List<String>> wordIndexBackup = node.getWordIndexBackup();
+        Map<String, List<String>> wordIndex = node.getWordIndex();
+
+        for (String wordName : wordIndexBackup.keySet()) {
+            wordIndex.put(wordName, wordIndexBackup.get(wordName));
+        }
+        wordIndexBackup.clear();
+        node.setWordIndexBackup(wordIndexBackup);
+        node.setWordIndex(wordIndex);
+
+        //update UI
+        uiCreator.updateWordIndexUI();
+
+        new BackupWordIndex().send(new MessageDTO(node.getPredecessor()));
     }
     
 }

@@ -24,14 +24,14 @@ public class AddSingleWordIndex implements IMessage, IInitializerWordIndex{
     
     /*
     Add File Index message format 
-    length ADD_WORD_INDEX word_name word_id file_id
+    length ADD_WI word_name word_id file_id
     */
     @Override
     public String createMsg() {
         Word word = msgDTO.getWord();
         String fileID = msgDTO.getFileNameOrID();
         
-        String msg = " ADD_WORD_INDEX ";
+        String msg = " ADD_WI ";
         msg += word.getName() + " " + word.getId() + " " + fileID;
         return String.format("%04d", msg.length() + 5) + " " + msg; 
     }

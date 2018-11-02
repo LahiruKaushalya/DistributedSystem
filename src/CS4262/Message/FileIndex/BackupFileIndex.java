@@ -23,11 +23,11 @@ public class BackupFileIndex implements IMessage{
     
     /*
     Update File Index message format 
-    length BACKUP_FILE_INDEX file_cound file_id_1 ip port file_id_2 ip port ....
+    length BACKUP_FI file_cound file_id_1 ip port file_id_2 ip port ....
     */
     @Override
     public String createMsg() {
-        String msg = " BACKUP_FILE_INDEX ";
+        String msg = " BACKUP_FI ";
         Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
         msg += fileIndex.size();
         
@@ -35,7 +35,9 @@ public class BackupFileIndex implements IMessage{
             List<NodeDTO> tempNodes = fileIndex.get(fileID);
             msg += " " + tempNodes.size() + " " + fileID;
             for(NodeDTO tempNode : tempNodes){
-                msg += " " + tempNode.getIpAdress() + " " + tempNode.getPort();
+                if(!node.getId().equals(idCreator.generateNodeID(tempNode.getIpAdress(), tempNode.getPort()))){
+                    msg += " " + tempNode.getIpAdress() + " " + tempNode.getPort();
+                }
             }
         }
         return String.format("%04d", msg.length() + 5) + " " + msg;

@@ -22,11 +22,11 @@ public class SendFileIndex implements IMessage, IInitializerFileIndex{
     
     /*
     Update File Index message format 
-    length SEND_FILE_INDEX file_cound file_id_1 ip port file_id_2 ip port ....
+    length SEND_FI file_cound file_id_1 ip port file_id_2 ip port ....
     */
     @Override
     public String createMsg() {
-        String msg = " SEND_FILE_INDEX ";
+        String msg = " SEND_FI ";
         Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
         msg += fileIndex.size();
         

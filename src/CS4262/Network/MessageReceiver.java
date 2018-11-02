@@ -22,7 +22,6 @@ public class MessageReceiver extends Thread{
     
     private final DatagramPacket incoming; 
     private final DatagramSocket server;
-    private IMessage msgHandler;
     
     public MessageReceiver(DatagramPacket incoming, DatagramSocket server){
         this.incoming = incoming;
@@ -56,152 +55,79 @@ public class MessageReceiver extends Thread{
         String response = "";
         switch(command){
             case "JOIN":
-                try {
-                    msgHandler = new Join();
-                    msgHandler.handle(st);
-                    response = "JOINOK 0";
-                } 
-                catch (Exception ex) {
-                    response = "JOINOK 9999";
-                }
+                response = processMsg(new Join(), command, st);
                 return response;
                 
             case "LEAVE":
-                try {
-                    msgHandler = new Leave();
-                    msgHandler.handle(st);
-                    response = "LEAVEOK 0";
-                } 
-                catch (Exception ex) {
-                    response = "LEAVEOK 9999";
-                }
+                response = processMsg(new Leave(), command, st);
                 return response;
                 
             case "UPDATE_ROUTES":
-                try {
-                    msgHandler = new UpdateRoutes();
-                    msgHandler.handle(st);
-                    response = "UPDATE_ROUTES 0";
-                } 
-                catch (Exception e) {
-                    response = "UPDATE_ROUTES 9999";
-                }
+                response = processMsg(new UpdateRoutes(), command, st);
                 return response;
                 
-            case "ADD_FILE_INDEX":
-                try {
-                    msgHandler = new AddSingleFileIndex();
-                    msgHandler.handle(st);
-                    response = "ADD_FILE_INDEX 0";
-                } 
-                catch (Exception e) {
-                    response = "ADD_FILE_INDEX 9999";
-                }
+            case "ADD_FI":
+                response = processMsg(new AddSingleFileIndex(), command, st);
+                return response;
+                
+            case "REMOVE_FI":
+                response = processMsg(new RemoveSingleFileIndex(), command, st);
                 return response;
             
-            case "REMOVE_FILE_INDEX":
-                try {
-                    msgHandler = new RemoveSingleFileIndex();
-                    msgHandler.handle(st);
-                    response = "REMOVE_FILE_INDEX 0";
-                } 
-                catch (Exception e) {
-                    response = "REMOVE_FILE_INDEX 9999";
-                }
-                return response;
-            
-            case "SEND_FILE_INDEX":
-                try {
-                    msgHandler = new SendFileIndex();
-                    msgHandler.handle(st);
-                    response = "SEND_FILE_INDEX 0";
-                } 
-                catch (Exception e) {
-                    response = "SEND_FILE_INDEX 9999";
-                }
+            case "SEND_FI":
+                response = processMsg(new SendFileIndex(), command, st);
                 return response;
               
-            case "BACKUP_FILE_INDEX":
-                try {
-                    msgHandler = new BackupFileIndex();
-                    msgHandler.handle(st);
-                    response = "BACKUP_FILE_INDEX 0";
-                } 
-                catch (Exception e) {
-                    response = "BACKUP_FILE_INDEX 9999";
-                }
+            case "BACKUP_FI":
+                response = processMsg(new BackupFileIndex(), command, st);
                 return response;
                 
-            case "ADD_WORD_INDEX":
-                try {
-                    msgHandler = new AddSingleWordIndex();
-                    msgHandler.handle(st);
-                    response = "ADD_WORD_INDEX 0";
-                } 
-                catch (Exception e) {
-                    response = "ADD_WORD_INDEX 9999";
-                }
+            case "ADD_WI":
+                response = processMsg( new AddSingleWordIndex(), command, st);
                 return response;
                 
-            case "SEND_WORD_INDEX":
-                try {
-                    msgHandler = new SendWordIndex();
-                    msgHandler.handle(st);
-                    response = "SEND_WORD_INDEX 0";
-                } 
-                catch (Exception e) {
-                    response = "SEND_WORD_INDEX 9999";
-                }
+            case "SEND_WI":
+                response = processMsg(new SendWordIndex(), command, st);
+                return response;
+                
+            case "BACKUP_WI":
+                response = processMsg(new BackupWordIndex(), command, st);
                 return response;
                 
             case "SER":
-                try {
-                    msgHandler = new SearchRequest();
-                    msgHandler.handle(st);
-                    response = "SEROK 0";
-                } 
-                catch (Exception e) {
-                    response = "SEROK 9999";
-                }
+                response = processMsg(new SearchRequest(), command, st);
                 return response;
                 
             case "SEROK":
-                try {
-                    msgHandler = new SearchResults();
-                    msgHandler.handle(st);
-                    response = "OK";
-                } 
-                catch (Exception e) {}
+                response = processMsg(new SearchResults(), command, st);
                 return response;
                 
             case "ALIVE":
-                try {
-                    msgHandler = new Active();
-                    msgHandler.handle(st);
-                    response = "ALIVE 0";
-                } 
-                catch (Exception e) {
-                    response = "ALIVE 9999";
-                }
+                response = processMsg(new Active(), command, st);
                 return response;
                 
             case "PRE":
-                try {
-                    msgHandler = new UpdatePredecessor();
-                    msgHandler.handle(st);
-                    response = "PRE 0";
-                } 
-                catch (Exception e) {
-                    response = "PRE 9999";
-                }
+                response = processMsg(new UpdatePredecessor(), command, st);
                 return response;
                 
             case "ISALIVE":
                 response = "ALIVE";
+                return response;
                 
             default:
                 return response;
         }
+    }
+    
+    private String processMsg(IMessage msgHandler, String code, StringTokenizer st){
+        try {
+            msgHandler.handle(st);
+            return code + " 0"; 
+        } 
+        catch (Exception e) {
+            return code + " 9999";
+        }
+
     }
   
 }

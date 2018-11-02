@@ -105,7 +105,7 @@ public class WordIndexInitializer implements IInitializerWordIndex{
     private void localAdd(Word word, String fileID) {
         
         Map<String, List<String>> wordIndex = node.getWordIndex();
-        List<String> temp = wordIndex.get(word.getId());
+        List<String> temp = wordIndex.get(word.getName());
         if (temp == null) {
             temp = new ArrayList<>();
             temp.add(fileID);

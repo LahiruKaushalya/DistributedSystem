@@ -23,14 +23,14 @@ public class RemoveSingleFileIndex implements IMessage, IInitializerFileIndex{
     
     /*
     Remove File Index message format 
-    length REMOVE_FILE_INDEX sender_ip sender_port file_id
+    length REMOVE_FI sender_ip sender_port file_id
     */
     @Override
     public String createMsg() {
         NodeDTO sender = msgDTO.getSender();
         String fileID = msgDTO.getFileNameOrID();
         
-        String msg = " REMOVE_FILE_INDEX ";
+        String msg = " REMOVE_FI ";
         msg += sender.getIpAdress() + " " + sender.getPort() + " " + fileID;
         return String.format("%04d", msg.length() + 5) + " " + msg; 
     }

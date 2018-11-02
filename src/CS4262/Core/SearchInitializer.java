@@ -32,7 +32,7 @@ public class SearchInitializer implements IInitializerSearch{
             //Filter user input
             fileName = filterFileName(fileName);
             
-            String searchingFileID = idCreator.generateFileID(fileName.trim().toLowerCase());
+            String searchingFileID = idCreator.generateFileID(fileName);
             //Check in local files
             boolean isAvailble = isFileAvailable(searchingFileID);
             if (isAvailble) {
