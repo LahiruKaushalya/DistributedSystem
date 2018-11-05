@@ -4,6 +4,7 @@ import CS4262.Interfaces.IInitializerFileIndex;
 import CS4262.Models.NodeDTO;
 import java.util.StringTokenizer;
 import CS4262.Interfaces.IMessage;
+import CS4262.Models.File;
 import CS4262.Models.MessageDTO;
 
 /**
@@ -23,25 +24,25 @@ public class RemoveSingleFileIndex implements IMessage, IInitializerFileIndex{
     
     /*
     Remove File Index message format 
-    length REMOVE_FI sender_ip sender_port file_id
+    length REMOVE_FI sender_ip sender_port file_name file_id
     */
     @Override
     public String createMsg() {
         NodeDTO sender = msgDTO.getSender();
-        String fileID = msgDTO.getFileNameOrID();
+        File file = msgDTO.getFile();
         
         String msg = " REMOVE_FI ";
-        msg += sender.getIpAdress() + " " + sender.getPort() + " " + fileID;
+        msg += sender.getIpAdress() + " " + sender.getPort() + " " + file.getName() + " " + file.getId();
         return String.format("%04d", msg.length() + 5) + " " + msg; 
     }
     
     public void handle(StringTokenizer st) {
         //Message sender
-        String senderIP = st.nextToken();
-        int senderPort = Integer.parseInt(st.nextToken());
-        NodeDTO sender = new NodeDTO(senderIP, senderPort);
+        NodeDTO sender = new NodeDTO(st.nextToken(), Integer.parseInt(st.nextToken()));
+        //File
+        File file = new File(st.nextToken(), st.nextToken());
         
-        fileIndexInitializer.remove(sender, st.nextToken());
+        fileIndexInitializer.remove(sender, file);
         uiCreator.updateFileIndexUI();
     }
 

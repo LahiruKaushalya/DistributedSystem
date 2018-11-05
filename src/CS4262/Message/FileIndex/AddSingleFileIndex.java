@@ -2,6 +2,7 @@ package CS4262.Message.FileIndex;
 
 import CS4262.Interfaces.IInitializerFileIndex;
 import CS4262.Interfaces.IMessage;
+import CS4262.Models.File;
 import CS4262.Models.MessageDTO;
 import CS4262.Models.NodeDTO;
 import java.util.StringTokenizer;
@@ -23,25 +24,25 @@ public class AddSingleFileIndex implements IMessage, IInitializerFileIndex{
     
     /*
     Add File Index message format 
-    length ADD_FI sender_ip sender_port file_id
+    length ADD_FI sender_ip sender_port file_name file_id
     */
     @Override
     public String createMsg() {
         NodeDTO sender = msgDTO.getSender();
-        String fileID = msgDTO.getFileNameOrID();
+        File file = msgDTO.getFile();
         
         String msg = " ADD_FI ";
-        msg += sender.getIpAdress() + " " + sender.getPort() + " " + fileID;
+        msg += sender.getIpAdress() + " " + sender.getPort() + " " + file.getName() + " " + file.getId();
         return String.format("%04d", msg.length() + 5) + " " + msg; 
     }
     
     public void handle(StringTokenizer st) {
         //Message sender
-        String senderIP = st.nextToken();
-        int senderPort = Integer.parseInt(st.nextToken());
-        NodeDTO sender = new NodeDTO(senderIP, senderPort);
+        NodeDTO sender = new NodeDTO(st.nextToken(), Integer.parseInt(st.nextToken()));
+        //File
+        File file = new File(st.nextToken(), st.nextToken());
         
-        fileIndexInitializer.insert(sender, st.nextToken());
+        fileIndexInitializer.insert(sender, file);
         uiCreator.updateFileIndexUI();
     }
 

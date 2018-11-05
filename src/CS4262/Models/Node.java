@@ -20,8 +20,8 @@ public class Node extends NodeDTO
     private Map<String, List<NodeDTO>> fileIndex;
     private Map<String, List<NodeDTO>> fileIndexBackup;
     
-    private Map<String, List<String>> wordIndex;
-    private Map<String, List<String>> wordIndexBackup;
+    private Map<String, List<File>> wordIndex;
+    private Map<String, List<File>> wordIndexBackup;
 
     private List<File> content;
     //Routes has fixed length -> m 
@@ -82,11 +82,11 @@ public class Node extends NodeDTO
         return fileIndexBackup;
     }
     
-    public Map<String, List<String>> getWordIndex() {
+    public Map<String, List<File>> getWordIndex() {
         return wordIndex;
     }
     
-    public Map<String, List<String>> getWordIndexBackup() {
+    public Map<String, List<File>> getWordIndexBackup() {
         return wordIndexBackup;
     }
 
@@ -120,11 +120,11 @@ public class Node extends NodeDTO
         this.fileIndexBackup = fileIndexBackup;
     }
     
-    public void setWordIndex(Map<String, List<String>> wordIndex) {
+    public void setWordIndex(Map<String, List<File>> wordIndex) {
         this.wordIndex = wordIndex;
     }
     
-    public void setWordIndexBackup(Map<String, List<String>> wordIndexBackup) {
+    public void setWordIndexBackup(Map<String, List<File>> wordIndexBackup) {
         this.wordIndexBackup = wordIndexBackup;
     }
 

@@ -2,6 +2,7 @@ package CS4262.Message.WordIndex;
 
 import CS4262.Interfaces.IInitializerWordIndex;
 import CS4262.Interfaces.IMessage;
+import CS4262.Models.File;
 import CS4262.Models.MessageDTO;
 import CS4262.Models.NodeDTO;
 import CS4262.Models.Word;
@@ -23,24 +24,23 @@ public class AddSingleWordIndex implements IMessage, IInitializerWordIndex{
     }
     
     /*
-    Add File Index message format 
-    length ADD_WI word_name word_id file_id
+    Add Word Index message format 
+    length ADD_WI word_name word_id file_name file_id
     */
     @Override
     public String createMsg() {
         Word word = msgDTO.getWord();
-        String fileID = msgDTO.getFileNameOrID();
+        File file = msgDTO.getFile();
         
         String msg = " ADD_WI ";
-        msg += word.getName() + " " + word.getId() + " " + fileID;
+        msg += word.getName() + " " + word.getId() + " " + file.getName() + " " + file.getId();
         return String.format("%04d", msg.length() + 5) + " " + msg; 
     }
     
     public void handle(StringTokenizer st) {
-        String name = st.nextToken();
-        String id = st.nextToken();
-        String fileID = st.nextToken();
-        wordIndexInitializer.insert(new Word(name, id), fileID);
+        Word word = new Word(st.nextToken(), st.nextToken());
+        File file = new File(st.nextToken(), st.nextToken());
+        wordIndexInitializer.insert(word, file);
         uiCreator.updateFileIndexUI();
     }
 

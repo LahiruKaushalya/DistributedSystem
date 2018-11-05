@@ -57,7 +57,7 @@ public class ContentInitializer implements IInitializerContent {
         List<File> content = new ArrayList<>();
         List<Integer> temp = new ArrayList<>();
         
-        String text = "File ID\tFile Name\n\n",fileName;
+        String displayText = "File ID\tFile Name\n\n",fileName;
         
         //genatate random number of files from available files
         int x = 0, index;
@@ -65,10 +65,10 @@ public class ContentInitializer implements IInitializerContent {
             index = ran.nextInt(availableFiles.length - 1);
             //Avoid file duplications
             if(!temp.contains(index)){
-                fileName = availableFiles[index];
+                fileName = availableFiles[index].replace(' ', '_');
                 String fileID = idCreator.generateFileID(fileName);
                 content.add(new File(fileName, fileID));
-                text += fileID + "\t" + fileName + "\n";
+                displayText += fileID + "\t" + fileName.replace('_', ' ') + "\n";
                 temp.add(index);
                 x++;
             }
@@ -76,7 +76,7 @@ public class ContentInitializer implements IInitializerContent {
         //set node content
         node.setContent(content);
         //update UI
-        mainController.getMainFrame().updateContent(text);
+        mainController.getMainFrame().updateContent(displayText);
         
         //Create file index
         FileIndexInitializer.getInstance().createLocalFileIndex();

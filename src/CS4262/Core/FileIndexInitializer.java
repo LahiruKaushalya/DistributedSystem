@@ -34,7 +34,7 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
         for(File file : content){
             NodeDTO receiver = findReceiver.search(file.getId());
             if(receiver != null){
-                new AddSingleFileIndex().send(new MessageDTO(receiver, node, file.getId()));
+                new AddSingleFileIndex().send(new MessageDTO(receiver, node, file));
             }
             else{
                 List<NodeDTO> t = new ArrayList<>();
@@ -53,7 +53,7 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
         for(File file : files){
             NodeDTO receiver = findReceiver.search(file.getId());
             if(receiver != null){
-                MessageDTO msg = new MessageDTO(receiver, node, file.getId());
+                MessageDTO msg = new MessageDTO(receiver, node, file);
                 new RemoveSingleFileIndex().send(msg);
             }
         }
@@ -91,29 +91,29 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
     }
     
     //Add new file to index (incoming msg)
-    public void insert(NodeDTO sender, String fileID){
-        NodeDTO receiver = findReceiver.search(fileID);
+    public void insert(NodeDTO sender, File file){
+        NodeDTO receiver = findReceiver.search(file.getId());
         if (receiver != null) {
-            new AddSingleFileIndex().send(new MessageDTO(receiver, sender, fileID));
+            new AddSingleFileIndex().send(new MessageDTO(receiver, sender, file));
         } 
         else {
-            localAdd(sender, fileID);
+            localAdd(sender, file.getId());
         }
     }
     
     //Remove file from index (incoming msg)
-    public void remove(NodeDTO sender, String fileID){
-        NodeDTO receiver = findReceiver.search(fileID);
+    public void remove(NodeDTO sender, File file){
+        NodeDTO receiver = findReceiver.search(file.getId());
         if (receiver != null) {
-            new RemoveSingleFileIndex().send(new MessageDTO(receiver, sender, fileID));
+            new RemoveSingleFileIndex().send(new MessageDTO(receiver, sender, file));
         } 
         else {
             Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
 
-            if (fileIndex.containsKey(fileID)) {
-                List<NodeDTO> fileHolders = fileIndex.get(fileID);
+            if (fileIndex.containsKey(file)) {
+                List<NodeDTO> fileHolders = fileIndex.get(file);
                 if (fileHolders.size() == 1) {
-                    fileIndex.remove(fileID);
+                    fileIndex.remove(file);
                 } 
                 else {
                     for (NodeDTO fileHolder : fileHolders) {
@@ -124,7 +124,7 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
                             break;
                         }
                     }
-                    fileIndex.put(fileID, fileHolders);
+                    fileIndex.put(file.getId(), fileHolders);
                 }
                 node.setFileIndex(fileIndex);
             }

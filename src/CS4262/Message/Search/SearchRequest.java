@@ -3,6 +3,7 @@ package CS4262.Message.Search;
 import CS4262.Interfaces.IInitializerSearch;
 import CS4262.Models.NodeDTO;
 import CS4262.Interfaces.IMessage;
+import CS4262.Models.File;
 import CS4262.Models.MessageDTO;
 import java.util.StringTokenizer;
 
@@ -28,9 +29,9 @@ public class SearchRequest implements IMessage, IInitializerSearch{
     @Override
     public String createMsg() {
         NodeDTO sender = msgDTO.getSender();
-        String fileName = msgDTO.getFileNameOrID();
+        File file = msgDTO.getFile();
         String msg = " SER ";
-        msg += sender.getIpAdress() + " " + sender.getPort() + " " + fileName;
+        msg += sender.getIpAdress() + " " + sender.getPort() + " " + file.getName();
         return String.format("%04d", msg.length() + 5) + " " + msg;
     }
     
@@ -41,14 +42,12 @@ public class SearchRequest implements IMessage, IInitializerSearch{
         int senderPort = Integer.parseInt(st.nextToken());
         NodeDTO sender = new NodeDTO(senderIP, senderPort);
         
-        String searchFile = "";
-        while(st.hasMoreTokens()){
-            searchFile += st.nextToken() + " ";
-        }
+        String fileName = st.nextToken();
         
         String SenderID = idCreator.generateNodeID(senderIP, senderPort);
         if(!SenderID.equals(node.getId())){
-            searchInitializer.globalSearch(sender, searchFile.trim());
+            File file = new File(fileName, idCreator.generateFileID(fileName));
+            searchInitializer.globalSearch(sender, file);
         }
     }
 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import CS4262.Interfaces.IMessage;
+import CS4262.Models.File;
 import CS4262.Models.MessageDTO;
 
 /**
@@ -23,19 +24,19 @@ public class BackupWordIndex implements IMessage{
     
     /*
     Backup word Index message format 
-    length BACKUP_WI word_cound file_count1 word_name file_id1 file_id2 ....
+    length BACKUP_WI word_cound file_count1 word_name file_name1 file_id1 ....
     */
     @Override
     public String createMsg() {
         String msg = " BACKUP_WI ";
-        Map<String, List<String>> wordIndex = node.getWordIndex();
+        Map<String, List<File>> wordIndex = node.getWordIndex();
         msg += wordIndex.size();
         
         for(String wordName : wordIndex.keySet()){
-            List<String> fileIds = wordIndex.get(wordName);
-            msg += " " + fileIds.size() + " " + wordName;
-            for(String fileId : fileIds){
-                msg += " " + fileId;
+            List<File> files = wordIndex.get(wordName);
+            msg += " " + files.size() + " " + wordName;
+            for(File file : files){
+                msg += " " + file.getName() + " " + file.getId();
             }
         }
         return String.format("%04d", msg.length() + 5) + " " + msg;
@@ -44,17 +45,17 @@ public class BackupWordIndex implements IMessage{
     @Override
     public void handle(StringTokenizer st) {
         int wordCount = Integer.parseInt(st.nextToken());
-        Map<String, List<String>> wordIndexBackup = node.getWordIndex();
+        Map<String, List<File>> wordIndexBackup = node.getWordIndex();
         
         while (wordCount > 0) {
             int fileCount = Integer.parseInt(st.nextToken());
             String wordName = st.nextToken();
-            List<String> fileIds = new ArrayList<>();
+            List<File> files = new ArrayList<>();
             while (fileCount > 0) {
-                fileIds.add(st.nextToken());
+                files.add(new File(st.nextToken(), st.nextToken()));
                 fileCount--;
             }
-            wordIndexBackup.put(wordName, fileIds);
+            wordIndexBackup.put(wordName, files);
             wordCount--;
         }
         node.setWordIndexBackup(wordIndexBackup);

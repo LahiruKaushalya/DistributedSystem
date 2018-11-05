@@ -1,6 +1,7 @@
 package CS4262.Helpers;
 
 import CS4262.Interfaces.IMain;
+import CS4262.Models.File;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
 import java.util.List;
@@ -32,13 +33,18 @@ public class UICreator implements IMain{
     }
     
     public void updateWordIndexUI(){
-        String displayText = "Word ID\tWord\tFile IDs\n\n";
-        Map<String, List<String>> indices = node.getWordIndex();
+        String displayText = "Word ID\tWord\tFile IDs\tFile Names\n\n";
+        Map<String, List<File>> indices = node.getWordIndex();
         
         for(String wordName : indices.keySet()) {
             displayText += idCreator.generateWordID(wordName) + "\t" + wordName + "\t";
-            for(String fileID : indices.get(wordName)){
-                displayText += fileID + "\t";
+            int count = 0;
+            for(File file : indices.get(wordName)){
+                if(count != 0){
+                    displayText += "\t\t";
+                }
+                displayText += file.getId() + "\t" + file.getName().replace('_', ' ') + "\n";
+                count ++;
             }
             displayText += "\n";
         }

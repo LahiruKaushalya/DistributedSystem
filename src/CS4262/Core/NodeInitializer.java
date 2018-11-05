@@ -5,6 +5,7 @@ import CS4262.Interfaces.IInitializerRoute;
 import CS4262.Message.Route.*;
 import CS4262.Message.FileIndex.BackupFileIndex;
 import CS4262.Message.WordIndex.BackupWordIndex;
+import CS4262.Models.File;
 import CS4262.Models.MessageDTO;
 import CS4262.Models.Node;
 import CS4262.Models.NodeDTO;
@@ -182,8 +183,8 @@ public class NodeInitializer implements IInitializerRoute, IInitializerContent{
     }
     
     private void activateWordIndexBackup() {
-        Map<String, List<String>> wordIndexBackup = node.getWordIndexBackup();
-        Map<String, List<String>> wordIndex = node.getWordIndex();
+        Map<String, List<File>> wordIndexBackup = node.getWordIndexBackup();
+        Map<String, List<File>> wordIndex = node.getWordIndex();
 
         for (String wordName : wordIndexBackup.keySet()) {
             wordIndex.put(wordName, wordIndexBackup.get(wordName));

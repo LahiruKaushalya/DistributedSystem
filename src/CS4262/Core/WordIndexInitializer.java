@@ -39,18 +39,18 @@ public class WordIndexInitializer implements IInitializerWordIndex{
     }
     
     public void createLocalWordIndex(File file){
-        Map<String, List<String>> tempList = node.getWordIndex();
+        Map<String, List<File>> tempList = node.getWordIndex();
         String[] words = getWords(file);
         for(String word : words){
             String wordID = idCreator.generateWordID(word);
             NodeDTO receiver = findReceiver.search(wordID);
             Word _word = new Word(word, wordID);
             if(receiver != null){
-                new AddSingleWordIndex().send(new MessageDTO(receiver, _word, file.getId()));
+                new AddSingleWordIndex().send(new MessageDTO(receiver, _word, file));
             }
             else{
-                List<String> temp = new ArrayList<>();
-                temp.add(file.getId());
+                List<File> temp = new ArrayList<>();
+                temp.add(file);
                 tempList.put(word, temp);
             }
         }
@@ -59,34 +59,34 @@ public class WordIndexInitializer implements IInitializerWordIndex{
     }
     
     //Add new file to index (incoming msg)
-    public void insert(Word word, String fileID){
+    public void insert(Word word, File file){
         NodeDTO receiver = findReceiver.search(word.getId());
         if (receiver != null) {
-            new AddSingleWordIndex().send(new MessageDTO(receiver, word, fileID));
+            new AddSingleWordIndex().send(new MessageDTO(receiver, word, file));
         } 
         else {
-            localAdd(word, fileID);
+            localAdd(word, file);
         }
     }
     
     //Create file index from predecessor's file insex (incoming msg)
-    public void insertFromPredecessor(Word word, String fileID){
-        localAdd(word, fileID);
+    public void insertFromPredecessor(Word word, File file){
+        localAdd(word, file);
     }
     
     //Update when successor changed
     public void updateForSuccessor(){
         Node successor = node.getSuccessor();
-        Map<String, List<String>> wordIndex = node.getWordIndex();
+        Map<String, List<File>> wordIndex = node.getWordIndex();
         
         int nodeID = idCreator.getComparableID(node.getId());
         int succID = idCreator.getComparableID(successor.getId());
         int wordIntID;
         
-        Iterator<Map.Entry<String, List<String>>> iterator = wordIndex.entrySet().iterator();
+        Iterator<Map.Entry<String, List<File>>> iterator = wordIndex.entrySet().iterator();
         
         while (iterator.hasNext()) {
-            Map.Entry<String, List<String>> entry = iterator.next();
+            Map.Entry<String, List<File>> entry = iterator.next();
             String wordName = entry.getKey();
             wordIntID = idCreator.getComparableID(idCreator.generateWordID(wordName));
             
@@ -99,29 +99,29 @@ public class WordIndexInitializer implements IInitializerWordIndex{
     }
     
     private String[] getWords(File file){
-        return file.getName().split(" ");
+        return file.getName().split("_");
     }
     
-    private void localAdd(Word word, String fileID) {
+    private void localAdd(Word word, File file) {
         
-        Map<String, List<String>> wordIndex = node.getWordIndex();
-        List<String> temp = wordIndex.get(word.getName());
+        Map<String, List<File>> wordIndex = node.getWordIndex();
+        List<File> temp = wordIndex.get(word.getName());
         if (temp == null) {
             temp = new ArrayList<>();
-            temp.add(fileID);
+            temp.add(file);
             wordIndex.put(word.getName(), temp);
             node.setWordIndex(wordIndex);
         } 
         else {
             boolean exists = false;
-            for (String _fileID : temp) {
-                if (_fileID.equals(fileID)) {
+            for (File _file : temp) {
+                if (_file.getName().equals(file.getName())) {
                     exists = true;
                     break;
                 }
             }
             if (!exists) {
-                temp.add(fileID);
+                temp.add(file);
                 wordIndex.put(word.getName(), temp);
                 node.setWordIndex(wordIndex);
             }

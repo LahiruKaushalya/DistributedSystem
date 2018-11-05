@@ -48,14 +48,15 @@ public class SearchInitializer implements IInitializerSearch{
                 }
                 else{
                     //File or File index not available locally. Start global search..
-                    globalSearch(node, fileName);
+                    File file = new File(fileName, idCreator.generateFileID(fileName));
+                    globalSearch(node, file);
                 }
             }
         }
     }
     
-    public void globalSearch(NodeDTO sender, String fileName) {
-        String searchingFileID = idCreator.generateFileID(fileName);
+    public void globalSearch(NodeDTO sender, File file) {
+        String searchingFileID = file.getId();
         String senderID = idCreator.generateNodeID(sender.getIpAdress(), sender.getPort());
         
         if (!senderID.equals(node.getId())) {
@@ -90,18 +91,18 @@ public class SearchInitializer implements IInitializerSearch{
             //File holder not found. 
             else {
                 //Check for a search redirector node
-                findRedirector(sender, fileName);
+                findRedirector(sender, file);
             }
         }
         else{
             //Check for a search redirector node
-            findRedirector(sender, fileName);
+            findRedirector(sender, file);
         }
     }
 
     private String filterFileName(String fileName) {
         //Implement filter logic
-        return fileName;
+        return fileName.replace(' ', '_');
     }
     
     private boolean isFileAvailable(String searchingFileID){
@@ -125,8 +126,8 @@ public class SearchInitializer implements IInitializerSearch{
         return null;
     }
     
-    private void findRedirector(NodeDTO sender, String fileName) {
-        String searchingFileID = idCreator.generateFileID(fileName);
+    private void findRedirector(NodeDTO sender, File file) {
+        String searchingFileID = file.getId();
         int fileIntID = idCreator.getComparableID(searchingFileID);
         Node redirector = null;
         Node[] neighbours = node.getRoutes();
@@ -147,7 +148,7 @@ public class SearchInitializer implements IInitializerSearch{
                 }
             }
             if(redirector != null){
-                new SearchRequest().send(new MessageDTO(redirector, sender, fileName));
+                new SearchRequest().send(new MessageDTO(redirector, sender, file));
             }
             else{
                 //File not found

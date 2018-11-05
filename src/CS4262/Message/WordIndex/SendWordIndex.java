@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import CS4262.Interfaces.IMessage;
+import CS4262.Models.File;
 import CS4262.Models.MessageDTO;
 import CS4262.Models.Word;
 
@@ -27,14 +28,14 @@ public class SendWordIndex implements IMessage, IInitializerWordIndex{
     @Override
     public String createMsg() {
         String msg = " SEND_WI ";
-        Map<String, List<String>> wordIndex = node.getWordIndex();
+        Map<String, List<File>> wordIndex = node.getWordIndex();
         msg += wordIndex.size();
         
         for(String wordName : wordIndex.keySet()){
-            List<String> tempFileIDs = wordIndex.get(wordName);
-            msg += " " + tempFileIDs.size() + " " + wordName;
-            for(String fileID : tempFileIDs){
-                msg += " " + fileID;
+            List<File> files = wordIndex.get(wordName);
+            msg += " " + files.size() + " " + wordName;
+            for(File file : files){
+                msg += " " + file.getName() + " " + file.getId();
             }
         }
         return String.format("%04d", msg.length() + 5) + " " + msg;  
@@ -49,9 +50,9 @@ public class SendWordIndex implements IMessage, IInitializerWordIndex{
             int fileCount = Integer.parseInt(st.nextToken());
             String wordName = st.nextToken();
             while (fileCount > 0) {
-                String fileID = st.nextToken();
+                File file = new File(st.nextToken(), st.nextToken());
                 Word word = new Word(wordName, idCreator.generateWordID(wordName));
-                wordIndexInitializer.insertFromPredecessor(word, fileID);
+                wordIndexInitializer.insertFromPredecessor(word, file);
                 fileCount--;
             }
             wordCount--;
