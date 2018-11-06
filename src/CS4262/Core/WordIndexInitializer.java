@@ -1,13 +1,11 @@
 package CS4262.Core;
 
 import CS4262.Interfaces.IInitializerWordIndex;
-import static CS4262.Interfaces.IInitializerWordIndex.wordIndexInitializer;
 import static CS4262.Interfaces.IMain.findReceiver;
 import static CS4262.Interfaces.IMain.idCreator;
 import static CS4262.Interfaces.IMain.node;
 import static CS4262.Interfaces.IMain.rangeChecker;
 import static CS4262.Interfaces.IMain.uiCreator;
-import CS4262.Message.FileIndex.AddSingleFileIndex;
 import CS4262.Message.WordIndex.AddSingleWordIndex;
 import CS4262.Models.File;
 import CS4262.Models.MessageDTO;
@@ -99,7 +97,7 @@ public class WordIndexInitializer implements IInitializerWordIndex{
     }
     
     private String[] getWords(File file){
-        return file.getName().split("_");
+        return file.getName().toLowerCase().split("_");
     }
     
     private void localAdd(Word word, File file) {

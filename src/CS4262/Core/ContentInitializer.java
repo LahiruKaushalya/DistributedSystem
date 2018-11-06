@@ -66,7 +66,7 @@ public class ContentInitializer implements IInitializerContent {
             //Avoid file duplications
             if(!temp.contains(index)){
                 fileName = availableFiles[index].replace(' ', '_');
-                String fileID = idCreator.generateFileID(fileName);
+                String fileID = idCreator.generateFileID(fileName.toLowerCase());
                 content.add(new File(fileName, fileID));
                 displayText += fileID + "\t" + fileName.replace('_', ' ') + "\n";
                 temp.add(index);

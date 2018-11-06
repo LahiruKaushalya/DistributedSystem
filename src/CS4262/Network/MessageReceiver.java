@@ -95,7 +95,11 @@ public class MessageReceiver extends Thread{
                 return response;
                 
             case "SER":
-                response = processMsg(new SearchRequest(), command, st);
+                response = processMsg(new FileSearchRequest(), command, st);
+                return response;
+                
+            case "SER_WORD":
+                response = processMsg(new WordSearchRequest(), command, st);
                 return response;
                 
             case "SEROK":

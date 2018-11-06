@@ -10,10 +10,11 @@ import java.util.List;
 public class MessageDTO {
     
     private NodeDTO sender;
-    private NodeDTO receiver;
+    private final NodeDTO receiver;
     private int hopCount = 0;
     private File file;
     private Word word;
+    private SearchDTO searchDTO;
     private List<NodeDTO> additional = new ArrayList<>();
     private List<NodeDTO> fileHolders = new ArrayList<>();
     
@@ -48,6 +49,12 @@ public class MessageDTO {
         this.hopCount = hopCount;
     }
     
+    public MessageDTO(NodeDTO receiver, NodeDTO sender, SearchDTO searchDTO){
+        this.receiver = receiver;
+        this.sender = sender;
+        this.searchDTO = searchDTO;
+    }
+    
     public MessageDTO(NodeDTO receiver, NodeDTO sender, File file){
         this.receiver = receiver;
         this.sender = sender;
@@ -80,6 +87,10 @@ public class MessageDTO {
     
     public Word getWord() {
         return word;
+    }
+    
+    public SearchDTO getSearchDTO() {
+        return searchDTO;
     }
 
     public List<NodeDTO> getAdditional() {

@@ -30,36 +30,24 @@ public class SearchInitializer implements IInitializerSearch{
     public void localSearch(String fileName){
         if(node != null){
             //Filter user input
-            fileName = filterFileName(fileName);
+            SearchDTO searchDTO = filterFileName(fileName);
             
-            String searchingFileID = idCreator.generateFileID(fileName);
-            //Check in local files
-            boolean isAvailble = isFileAvailable(searchingFileID);
-            if (isAvailble) {
-                //File locally available
-                mainController.getMainFrame().displayError("File Available Locally");
+            String keyWord = searchDTO.getWord().getName();
+            //Check in local wordIndex for keyword
+            boolean isKeyAvailble = isWordAvailable(keyWord);
+            if (isKeyAvailble) {
+                //KeyWord locally available
+                searchFile(node, searchDTO);
             }
             else{
-                //Check in file index
-                List<NodeDTO> fileHolders = getFileHolders(searchingFileID);
-                if(fileHolders != null){
-                    //request file from file Holders
-                    mainController.getMainFrame().displayError("File Available " + fileHolders.get(0).getPort());
-                }
-                else{
-                    //File or File index not available locally. Start global search..
-                    File file = new File(fileName, idCreator.generateFileID(fileName));
-                    globalSearch(node, file);
-                }
+                findWordRedirector(node, searchDTO);
             }
         }
     }
     
     public void globalSearch(NodeDTO sender, File file) {
         String searchingFileID = file.getId();
-        String senderID = idCreator.generateNodeID(sender.getIpAdress(), sender.getPort());
         
-        if (!senderID.equals(node.getId())) {
             //Search locally first
             List<NodeDTO> fileHolders = getFileHolders(searchingFileID);
             //Check in local files
@@ -91,18 +79,110 @@ public class SearchInitializer implements IInitializerSearch{
             //File holder not found. 
             else {
                 //Check for a search redirector node
-                findRedirector(sender, file);
+                findFileRedirector(sender, file);
             }
-        }
-        else{
-            //Check for a search redirector node
-            findRedirector(sender, file);
+        
+    }
+    
+    public void globalSearch(NodeDTO sender, SearchDTO searchDTO){
+        String senderID = idCreator.generateNodeID(sender.getIpAdress(), sender.getPort());
+        
+        if (!senderID.equals(node.getId())) {
+            
         }
     }
+     
+    private void findFileRedirector(NodeDTO sender, File file){
+        int fileID = idCreator.getComparableID(file.getId());
+        NodeDTO redirector = FindRedirector(fileID);
+        
+        if(redirector != null){
+            new FileSearchRequest().send(new MessageDTO(redirector, sender, file));
+        }
+        else{
+            //File not found
+        }
+    }
+    
+    private void findWordRedirector(NodeDTO sender, SearchDTO searchDTO){
+        int wordID = idCreator.getComparableID(searchDTO.getWord().getId());
+        NodeDTO redirector = FindRedirector(wordID);
+        
+        if(redirector != null){
+            new WordSearchRequest().send(new MessageDTO(redirector, sender, searchDTO));
+        }
+        else{
+            //File not found
+        }
+    }
+    
+    private NodeDTO FindRedirector(int id) {
+        Node redirector = null;
+        Node[] neighbours = node.getRoutes();
+        
+        if (neighbours != null) {
+            int nodeIntID = idCreator.getComparableID(node.getId());
+            Node neighbour;
+            int neighbourIntID;
+            //Find nearest node to file 
+            for (int i = neighbours.length - 1; i >= 0; i--) {
+                neighbour = neighbours[i];
+                if (neighbour != null) {
+                    neighbourIntID = idCreator.getComparableID(neighbour.getId());
+                    if (rangeChecker.isInRange(nodeIntID, neighbourIntID, id)) {
+                        redirector = neighbour;
+                        break;
+                    }
+                }
+            }
+        }
+        return redirector;
+    }
+       
+    //This method will call when searching keyword available in local word index
+    private void searchFile(NodeDTO sender, SearchDTO searchDTO){
+        String senderId = idCreator.generateNodeID(sender.getIpAdress(), sender.getPort());
+        Word searchingWord = searchDTO.getWord();
+        File searchingFile = searchDTO.getFile();
+        
+        List<File> files = node.getWordIndex().get(searchingWord.getName());
+        boolean isFileMatched = false;
+        
+        for(File file : files){
+            if(file.getId().equals(searchingFile.getId())){
+                if(!senderId.equals(node.getId())){
+                    globalSearch(sender, file);
+                }
+                else{
+                    mainController.getMainFrame().displayError(file.getName());
+                }
+                isFileMatched = true;
+                break;
+            }
+        }
+        
+        if(!isFileMatched){
+            for (File file : files) {
+                if (!senderId.equals(node.getId())) {
+                    globalSearch(sender, file);
+                } 
+                else {
+                    mainController.getMainFrame().displayError(file.getName());
+                }
 
-    private String filterFileName(String fileName) {
-        //Implement filter logic
-        return fileName.replace(' ', '_');
+            }
+        }
+        
+    }
+    
+    private boolean isWordAvailable(String keyWord){
+        Map<String, List<File>> wordIndex = node.getWordIndex();
+        for (String word : wordIndex.keySet()) {
+            if (word.equals(keyWord)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     private boolean isFileAvailable(String searchingFileID){
@@ -126,36 +206,17 @@ public class SearchInitializer implements IInitializerSearch{
         return null;
     }
     
-    private void findRedirector(NodeDTO sender, File file) {
-        String searchingFileID = file.getId();
-        int fileIntID = idCreator.getComparableID(searchingFileID);
-        Node redirector = null;
-        Node[] neighbours = node.getRoutes();
+    private SearchDTO filterFileName(String fileName) {
+        //Implement filter logic
+        fileName =  fileName.trim().toLowerCase().replace(' ', '_');
         
-        if (neighbours != null) {
-            int nodeIntID = idCreator.getComparableID(node.getId());
-            Node neighbour;
-            int neighbourIntID;
-            //Find nearest node to file 
-            for (int i = neighbours.length - 1; i >= 0; i--) {
-                neighbour = neighbours[i];
-                if (neighbour != null) {
-                    neighbourIntID = idCreator.getComparableID(neighbour.getId());
-                    if (rangeChecker.isInRange(nodeIntID, neighbourIntID, fileIntID)) {
-                        redirector = neighbour;
-                        break;
-                    }
-                }
-            }
-            if(redirector != null){
-                new SearchRequest().send(new MessageDTO(redirector, sender, file));
-            }
-            else{
-                //File not found
-            }
-        }
-        else{
-            //File not found
-        }
+        String[] words = fileName.split("_");
+        String keyWord = words[0];
+        
+        Word word = new Word(keyWord, idCreator.generateWordID(keyWord));
+        File file = new File(fileName, idCreator.generateFileID(fileName));
+        
+        return new SearchDTO(word, file);
     }
+    
 }

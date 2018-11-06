@@ -1,17 +1,18 @@
 package CS4262.Message.Search;
 
 import CS4262.Interfaces.IInitializerSearch;
-import CS4262.Models.NodeDTO;
+import CS4262.Models.*;
 import CS4262.Interfaces.IMessage;
 import CS4262.Models.File;
 import CS4262.Models.MessageDTO;
+import CS4262.Models.SearchDTO;
 import java.util.StringTokenizer;
 
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class SearchRequest implements IMessage, IInitializerSearch{
+public class WordSearchRequest implements IMessage, IInitializerSearch{
     
     private MessageDTO msgDTO;
     
@@ -24,14 +25,16 @@ public class SearchRequest implements IMessage, IInitializerSearch{
     
     /*
     Search message format 
-    length SER sender_ip sender_port file_name
+    length SER_WORD sender_ip sender_port word_name file_name
     */
     @Override
     public String createMsg() {
         NodeDTO sender = msgDTO.getSender();
-        File file = msgDTO.getFile();
-        String msg = " SER ";
-        msg += sender.getIpAdress() + " " + sender.getPort() + " " + file.getName();
+        SearchDTO searchDTO = msgDTO.getSearchDTO();
+        String msg = " SER_WORD ";
+        msg += sender.getIpAdress() + " " + sender.getPort() + " " 
+             + searchDTO.getWord().getName() + " " + searchDTO.getFile().getName();
+        
         return String.format("%04d", msg.length() + 5) + " " + msg;
     }
     
@@ -42,12 +45,18 @@ public class SearchRequest implements IMessage, IInitializerSearch{
         int senderPort = Integer.parseInt(st.nextToken());
         NodeDTO sender = new NodeDTO(senderIP, senderPort);
         
+        //Searching KeyWord
+        String keyWord = st.nextToken();
+        Word word = new Word(keyWord, idCreator.generateWordID(keyWord));
+        
+        //Searching File
         String fileName = st.nextToken();
+        File file = new File(fileName, idCreator.generateWordID(fileName));
         
         String SenderID = idCreator.generateNodeID(senderIP, senderPort);
         if(!SenderID.equals(node.getId())){
-            File file = new File(fileName, idCreator.generateFileID(fileName));
-            searchInitializer.globalSearch(sender, file);
+            SearchDTO searchDTO = new SearchDTO(word, file);
+            searchInitializer.globalSearch(sender, searchDTO);
         }
     }
 
