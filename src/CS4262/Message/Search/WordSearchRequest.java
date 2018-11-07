@@ -1,11 +1,12 @@
 package CS4262.Message.Search;
 
+import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Interfaces.IInitializerSearch;
 import CS4262.Models.*;
 import CS4262.Interfaces.IMessage;
 import CS4262.Models.File;
-import CS4262.Models.MessageDTO;
-import CS4262.Models.SearchDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
+import CS4262.Models.DataTransfer.SearchDTO;
 import java.util.StringTokenizer;
 
 /**
@@ -51,7 +52,7 @@ public class WordSearchRequest implements IMessage, IInitializerSearch{
         
         //Searching File
         String fileName = st.nextToken();
-        File file = new File(fileName, idCreator.generateWordID(fileName));
+        File file = new File(fileName, idCreator.generateFileID(fileName));
         
         String SenderID = idCreator.generateNodeID(senderIP, senderPort);
         if(!SenderID.equals(node.getId())){

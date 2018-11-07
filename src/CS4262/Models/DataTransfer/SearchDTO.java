@@ -1,4 +1,7 @@
-package CS4262.Models;
+package CS4262.Models.DataTransfer;
+
+import CS4262.Models.File;
+import CS4262.Models.Word;
 
 /**
  *

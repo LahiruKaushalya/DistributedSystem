@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import CS4262.Interfaces.IMessage;
 import CS4262.Models.File;
-import CS4262.Models.MessageDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
 import CS4262.Models.Word;
 
 /**

@@ -1,5 +1,8 @@
 package CS4262.Core;
 
+import CS4262.Models.DataTransfer.NodeDTO;
+import CS4262.Models.DataTransfer.SearchDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
 import CS4262.Message.Search.*;
 import CS4262.Models.*;
 import CS4262.Interfaces.IInitializerSearch;
@@ -23,11 +26,13 @@ public class SearchInitializer implements IInitializerSearch{
         return instance;
     }
 
-    private SearchInitializer() {
-        
-    }
+    private SearchInitializer() {}
     
+    //Starts serarh from search term
     public void localSearch(String fileName){
+        //Clear previous results
+        clearSearchResults();
+        
         if(node != null){
             //Filter user input
             SearchDTO searchDTO = filterFileName(fileName);
@@ -36,8 +41,8 @@ public class SearchInitializer implements IInitializerSearch{
             //Check in local wordIndex for keyword
             boolean isKeyAvailble = isWordAvailable(keyWord);
             if (isKeyAvailble) {
-                //KeyWord locally available
-                searchFile(node, searchDTO);
+                //KeyWord locally available. Start File search
+                startFileSearch(node, searchDTO);
             }
             else{
                 findWordRedirector(node, searchDTO);
@@ -45,50 +50,30 @@ public class SearchInitializer implements IInitializerSearch{
         }
     }
     
+    //File Search
     public void globalSearch(NodeDTO sender, File file) {
-        String searchingFileID = file.getId();
+        List<SearchResult> searchResults = getResults(file);
         
-            //Search locally first
-            List<NodeDTO> fileHolders = getFileHolders(searchingFileID);
-            //Check in local files
-            boolean isAvailble = isFileAvailable(searchingFileID);
-            if (isAvailble) {
-                //File locally available
-                boolean exists = false;
-                if(fileHolders != null){
-                    for(NodeDTO fileHolder : fileHolders){
-                        String fhID = idCreator.generateNodeID(fileHolder.getIpAdress(), fileHolder.getPort());
-                        if(fhID.equals(node.getId())){
-                            exists = true;
-                            break;
-                        }
-                    }
-                    if(!exists){
-                        fileHolders.add(new NodeDTO(node.getIpAdress(), node.getPort()));
-                    }
-                }
-                else {
-                    fileHolders = new ArrayList<>();
-                    fileHolders.add(new NodeDTO(node.getIpAdress(), node.getPort()));
-                }
-            }
-            //Check at least one file holder has been found
-            if (fileHolders != null) {
-                new SearchResults().send(new MessageDTO(sender, fileHolders));
-            } 
-            //File holder not found. 
-            else {
-                //Check for a search redirector node
-                findFileRedirector(sender, file);
-            }
-        
+        //Check at least one file holder has been found
+        if (searchResults != null) {
+            new SearchResults().send(new MessageDTO(sender, searchResults));
+        } //File holder not found. 
+        else {
+            //Check for a search redirector node
+            findFileRedirector(sender, file);
+        }
     }
     
+    //Word search
     public void globalSearch(NodeDTO sender, SearchDTO searchDTO){
-        String senderID = idCreator.generateNodeID(sender.getIpAdress(), sender.getPort());
-        
-        if (!senderID.equals(node.getId())) {
-            
+        String keyWord = searchDTO.getWord().getName();
+        //Check in local wordIndex for keyword
+        boolean isKeyAvailble = isWordAvailable(keyWord);
+        if (isKeyAvailble) {
+            //KeyWord locally available
+            startFileSearch(sender, searchDTO);
+        } else {
+            findWordRedirector(sender, searchDTO);
         }
     }
      
@@ -124,7 +109,7 @@ public class SearchInitializer implements IInitializerSearch{
             int nodeIntID = idCreator.getComparableID(node.getId());
             Node neighbour;
             int neighbourIntID;
-            //Find nearest node to file 
+            //Find nearest node to content 
             for (int i = neighbours.length - 1; i >= 0; i--) {
                 neighbour = neighbours[i];
                 if (neighbour != null) {
@@ -140,8 +125,7 @@ public class SearchInitializer implements IInitializerSearch{
     }
        
     //This method will call when searching keyword available in local word index
-    private void searchFile(NodeDTO sender, SearchDTO searchDTO){
-        String senderId = idCreator.generateNodeID(sender.getIpAdress(), sender.getPort());
+    private void startFileSearch(NodeDTO sender, SearchDTO searchDTO){
         Word searchingWord = searchDTO.getWord();
         File searchingFile = searchDTO.getFile();
         
@@ -150,12 +134,7 @@ public class SearchInitializer implements IInitializerSearch{
         
         for(File file : files){
             if(file.getId().equals(searchingFile.getId())){
-                if(!senderId.equals(node.getId())){
-                    globalSearch(sender, file);
-                }
-                else{
-                    mainController.getMainFrame().displayError(file.getName());
-                }
+                globalSearch(sender, file);
                 isFileMatched = true;
                 break;
             }
@@ -163,18 +142,13 @@ public class SearchInitializer implements IInitializerSearch{
         
         if(!isFileMatched){
             for (File file : files) {
-                if (!senderId.equals(node.getId())) {
-                    globalSearch(sender, file);
-                } 
-                else {
-                    mainController.getMainFrame().displayError(file.getName());
-                }
-
+                globalSearch(sender, file);
             }
         }
         
     }
     
+    //Chaeck word available in word index
     private boolean isWordAvailable(String keyWord){
         Map<String, List<File>> wordIndex = node.getWordIndex();
         for (String word : wordIndex.keySet()) {
@@ -185,23 +159,35 @@ public class SearchInitializer implements IInitializerSearch{
         return false;
     }
     
-    private boolean isFileAvailable(String searchingFileID){
+    //Chaeck file available in content
+    private boolean isFileAvailable(File file){
         List<File> files = node.getContent();
-        for (File file : files) {
-            if (file.getId().equals(searchingFileID)) {
+        for (File _file : files) {
+            if (file.getId().equals(_file.getId())) {
                 return true;
             }
         }
         return false;
     }
     
-    private List<NodeDTO> getFileHolders(String searchingFileID){
+    private List<SearchResult> getResults(File file){
         //Check searching file index availability
         Map<String, List<NodeDTO>> index = node.getFileIndex();
+        List<SearchResult> results = new ArrayList<>();
+        List<NodeDTO> fileHolders = null;
+        
         for (String fileID : index.keySet()) {
-            if (fileID.equals(searchingFileID)) {
-                return index.get(fileID);
+            if (fileID.equals(file.getId())) {
+                fileHolders = index.get(fileID);
+                break;
             }
+        }
+        
+        if(fileHolders != null){
+            for(NodeDTO fileHolder : fileHolders){
+                results.add(new SearchResult(file, fileHolder));
+            }
+            return results;
         }
         return null;
     }
@@ -217,6 +203,12 @@ public class SearchInitializer implements IInitializerSearch{
         File file = new File(fileName, idCreator.generateFileID(fileName));
         
         return new SearchDTO(word, file);
+    }
+    
+    private void clearSearchResults(){
+        List<SearchResult> searchResults = node.getSearchResults();
+        searchResults.clear();
+        node.setSearchResults(searchResults);
     }
     
 }

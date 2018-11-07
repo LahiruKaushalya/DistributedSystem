@@ -1,10 +1,11 @@
 package CS4262.Message.Search;
 
-import CS4262.Models.NodeDTO;
-import java.util.ArrayList;
+import CS4262.Models.DataTransfer.NodeDTO;
 import java.util.StringTokenizer;
 import CS4262.Interfaces.IMessage;
-import CS4262.Models.MessageDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
+import CS4262.Models.File;
+import CS4262.Models.SearchResult;
 import java.util.List;
 
 /**
@@ -13,24 +14,27 @@ import java.util.List;
  */
 public class SearchResults implements IMessage{
     
-    private List<NodeDTO> fileHolders;
-    
-    public SearchResults() {
-        this.fileHolders = new ArrayList<>();
-    }
+    private MessageDTO msgDTO;
     
     @Override
     public String send(MessageDTO msgDTO){
-        this.fileHolders = msgDTO.getFileHolders();
+        this.msgDTO = msgDTO;
         String message = createMsg();
         return msgSender.sendMsg(msgDTO.getReceiver(), message);
     }
     
+    /*
+    Search Results message format 
+    length SEROK file_name fileholder_ip fileholder_port......
+    */
     @Override
     public String createMsg() {
-        String msg = " SEROK " + fileHolders.size();
-        for(NodeDTO holder : fileHolders){
-            msg += " " + holder.getIpAdress() + " " + holder.getPort();
+        List<SearchResult> searchResults = msgDTO.getSearchResults();
+        String msg = " SEROK " + searchResults.size() + " ";
+        for(SearchResult searchResult : searchResults){
+            msg += searchResult.getFile().getName() + " " 
+                 + searchResult.getFileHolder().getIpAdress() + " "
+                 + searchResult.getFileHolder().getPort() + " ";
         }
         return String.format("%04d", msg.length() + 5) + " " + msg; 
     }
@@ -38,21 +42,21 @@ public class SearchResults implements IMessage{
     @Override
     public void handle(StringTokenizer st) {
         int filesFound = Integer.parseInt(st.nextToken());
-        for(int i = 0; i < filesFound; i++){
-            fileHolders.add(new NodeDTO(st.nextToken(), Integer.parseInt(st.nextToken())));
+        List<SearchResult> searchResults = node.getSearchResults();
+        while(filesFound > 0){
+            String fileName = st.nextToken();
+            String fileHolderIP = st.nextToken();
+            int fileHolderPort = Integer.parseInt(st.nextToken());
+            searchResults.add(
+                    new SearchResult(
+                            new File(fileName, idCreator.generateFileID(fileName)),
+                            new NodeDTO(fileHolderIP, fileHolderPort)
+                    )
+            );
+            filesFound--;
         }
-        updateResultsUI();
+        node.setSearchResults(searchResults);
+        uiCreator.updateSearchResultsUI();
     }
     
-    private void updateResultsUI(){
-        String dataText = "Node ID\tNode IP Adress\tUDP Port\tTCP Port\n\n";
-        for(NodeDTO fileHolder : fileHolders){
-            dataText += idCreator.generateNodeID(fileHolder.getIpAdress(), fileHolder.getPort()) + "\t"
-                     + fileHolder.getIpAdress() + "\t\t"
-                     + fileHolder.getPort() + "\t"
-                     + " - " + "\n";
-        }
-        mainController.getMainFrame().updateSearchResponse(dataText);
-    }
-
 }

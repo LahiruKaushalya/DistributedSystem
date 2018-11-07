@@ -1,4 +1,4 @@
-package CS4262.Models;
+package CS4262.Models.DataTransfer;
 
 /**
  *

@@ -5,11 +5,11 @@ import CS4262.Core.FileIndexInitializer;
 import CS4262.Helpers.IDCreator;
 import CS4262.MainController;
 import CS4262.Models.Node;
-import CS4262.Models.NodeDTO;
+import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Core.NodeInitializer;
 import CS4262.Message.Route.Leave;
 import CS4262.Message.Route.UpdateRoutes;
-import CS4262.Models.MessageDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

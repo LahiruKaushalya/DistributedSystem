@@ -1,5 +1,6 @@
 package CS4262.Models;
 
+import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Helpers.IDCreator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,16 +23,18 @@ public class Node extends NodeDTO
     
     private Map<String, List<File>> wordIndex;
     private Map<String, List<File>> wordIndexBackup;
-
+    
     private List<File> content;
+    private List<SearchResult> searchResults;
+    
     //Routes has fixed length -> m 
     private Node[] routes;
 
-    public Node(String ip, int port, String nodeID)
-    { 
+    public Node(String ip, int port, String nodeID){ 
         super(ip, port);
         this.id = nodeID;
         this.content = new ArrayList<>();
+        this.searchResults = new ArrayList<>();
         this.routes = new Node[new IDCreator().getBIN_ID_LENGTH()];
         this.fileIndex = new HashMap<>();
         this.wordIndex = new HashMap<>();
@@ -58,6 +61,13 @@ public class Node extends NodeDTO
      */
     public Node[] getRoutes() {
         return routes;
+    }
+    
+    /**
+     * @return the searchResults
+     */
+    public List<SearchResult> getSearchResults() {
+        return searchResults;
     }
     
     /**
@@ -103,6 +113,10 @@ public class Node extends NodeDTO
     public void setRoutes(Node[] routes) {
         this.routes = routes;
     }
+
+    public void setSearchResults(List<SearchResult> searchResults) {
+        this.searchResults = searchResults;
+    }
     
     public void setSuccessor(Node successor) {
         this.successor = successor;
@@ -127,6 +141,6 @@ public class Node extends NodeDTO
     public void setWordIndexBackup(Map<String, List<File>> wordIndexBackup) {
         this.wordIndexBackup = wordIndexBackup;
     }
-
+    
 }
 

@@ -2,7 +2,7 @@ package CS4262.Helpers;
 
 import CS4262.Interfaces.IMain;
 import CS4262.Models.Node;
-import CS4262.Models.NodeDTO;
+import CS4262.Models.DataTransfer.NodeDTO;
 
 /**
  *

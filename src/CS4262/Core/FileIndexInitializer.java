@@ -1,5 +1,7 @@
 package CS4262.Core;
 
+import CS4262.Models.DataTransfer.NodeDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
 import CS4262.Message.FileIndex.*;
 import CS4262.Interfaces.IInitializerFileIndex;
 import CS4262.Interfaces.IInitializerWordIndex;

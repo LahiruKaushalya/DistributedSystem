@@ -1,12 +1,12 @@
 package CS4262.Message.FileIndex;
 
 import CS4262.Interfaces.IInitializerFileIndex;
-import CS4262.Models.NodeDTO;
+import CS4262.Models.DataTransfer.NodeDTO;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import CS4262.Interfaces.IMessage;
-import CS4262.Models.MessageDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
 
 /**
  *

@@ -1,6 +1,6 @@
-package CS4262.Models;
+package CS4262.Models.DataTransfer;
 
-import java.util.ArrayList;
+import CS4262.Models.*;
 import java.util.List;
 
 /**
@@ -15,8 +15,8 @@ public class MessageDTO {
     private File file;
     private Word word;
     private SearchDTO searchDTO;
-    private List<NodeDTO> additional = new ArrayList<>();
-    private List<NodeDTO> fileHolders = new ArrayList<>();
+    private List<NodeDTO> additional;
+    private List<SearchResult> searchResults;
     
     public MessageDTO(NodeDTO receiver){
         this.receiver = receiver;
@@ -27,9 +27,9 @@ public class MessageDTO {
         this.word = word;
     }
     
-    public MessageDTO(NodeDTO receiver, List<NodeDTO> fileHolders){
+    public MessageDTO(NodeDTO receiver, List<SearchResult> searchResults){
         this.receiver = receiver;
-        this.fileHolders = fileHolders;
+        this.searchResults = searchResults;
     }
     
     public MessageDTO(NodeDTO receiver, Word word, File file){
@@ -97,8 +97,8 @@ public class MessageDTO {
         return additional;
     }
     
-    public List<NodeDTO> getFileHolders() {
-        return fileHolders;
+    public List<SearchResult> getSearchResults() {
+        return searchResults;
     }
     
 }

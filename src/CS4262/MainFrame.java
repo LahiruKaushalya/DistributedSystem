@@ -1,6 +1,7 @@
 package CS4262;
 
 import CS4262.Core.SearchInitializer;
+import CS4262.Helpers.UICreator;
 import CS4262.Models.Node;
 import CS4262.Network.BSConnector;
 
@@ -16,6 +17,7 @@ public class MainFrame extends javax.swing.JFrame {
     
     private static MainFrame instance;
     private BSConnector bsConnector;
+    private final UICreator uiCreator;
 
     public static MainFrame getInstance() {
         if(instance == null){
@@ -26,10 +28,13 @@ public class MainFrame extends javax.swing.JFrame {
     
     private MainFrame() {
         initComponents();
+        
         this.setResizable(false);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize(); //Set frame position
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
         unregBtn.setEnabled(false);
+        
+        this.uiCreator = new UICreator();
         setDefaultText();
     }
 
@@ -92,8 +97,10 @@ public class MainFrame extends javax.swing.JFrame {
         downloadBtn = new javax.swing.JButton();
         fileNameTextField = new javax.swing.JTextField();
         searchScrollPane = new javax.swing.JScrollPane();
-        searchTextPane = new javax.swing.JTextPane();
+        searchResultsTextPane = new javax.swing.JTextPane();
         searchBtn = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        downloadTextPane = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -380,8 +387,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         downloadBtn.setText("DOWNLOAD");
 
-        searchTextPane.setEditable(false);
-        searchScrollPane.setViewportView(searchTextPane);
+        searchResultsTextPane.setEditable(false);
+        searchScrollPane.setViewportView(searchResultsTextPane);
 
         searchBtn.setText("SEARCH");
         searchBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -390,6 +397,8 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane1.setViewportView(downloadTextPane);
+
         javax.swing.GroupLayout searchPanelLayout = new javax.swing.GroupLayout(searchPanel);
         searchPanel.setLayout(searchPanelLayout);
         searchPanelLayout.setHorizontalGroup(
@@ -397,14 +406,15 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(searchPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(searchPanelLayout.createSequentialGroup()
-                        .addGap(180, 180, 180)
-                        .addComponent(downloadBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(searchScrollPane)
                     .addGroup(searchPanelLayout.createSequentialGroup()
                         .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(searchBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(searchBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(downloadBtn))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         searchPanelLayout.setVerticalGroup(
@@ -415,7 +425,9 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(searchScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                .addComponent(searchScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(downloadBtn)
                 .addContainerGap())
@@ -458,7 +470,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
         //Reset previous search results
-        searchTextPane.setText("Node ID\tNode IP Adress\tUDP Port\tTCP Port\n\n");
+        searchResultsTextPane.setText(uiCreator.getSearchResultsHeader());
         String fileName = fileNameTextField.getText();
         if(!fileName.equals("")){
             SearchInitializer.getInstance().localSearch(fileName);
@@ -469,11 +481,11 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_searchBtnActionPerformed
     
     private void setDefaultText(){
-        details_contentTextPane.setText("File ID\tFile Name\n\n");
-        routingTextPane.setText("Index\tRange\tNode ID\tIP Address\tPort\n\n");
-        searchTextPane.setText("Node ID\tNode IP Adress\tUDP Port\tTCP Port\n\n");
-        fileIndexTextPane.setText("File ID\t\t\tNode\n\t\tIP Address\t\tPort\n\n");
-        wordIndexTextPane.setText("Word ID\tFile IDs\n\n");
+        details_contentTextPane.setText(uiCreator.getContentHeader());
+        routingTextPane.setText(uiCreator.getRoutingHeader());
+        searchResultsTextPane.setText(uiCreator.getSearchResultsHeader());
+        fileIndexTextPane.setText(uiCreator.getFileIndexHeader());
+        wordIndexTextPane.setText(uiCreator.getWordIndexHeader());
     }
     
     public void updateConnctionResponce(String responce){
@@ -533,7 +545,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     public void updateSearchResponse(String data){
-        searchTextPane.setText(data);
+        searchResultsTextPane.setText(data);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -569,6 +581,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel details_succportDisplayLbl;
     private javax.swing.JLabel details_succportLbl;
     private javax.swing.JButton downloadBtn;
+    private javax.swing.JTextPane downloadTextPane;
     private javax.swing.JScrollPane fileIndexScrollPane;
     private javax.swing.JTextPane fileIndexTextPane;
     private javax.swing.JTextField fileNameTextField;
@@ -576,6 +589,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTabbedPane indexTab;
     private javax.swing.JLabel ipLbl;
     private javax.swing.JTextField ipTextField;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel portLabel;
     private javax.swing.JTextField portTextField;
     private javax.swing.JButton regtBtn;
@@ -584,8 +598,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextPane routingTextPane;
     private javax.swing.JButton searchBtn;
     private javax.swing.JPanel searchPanel;
+    private javax.swing.JTextPane searchResultsTextPane;
     private javax.swing.JScrollPane searchScrollPane;
-    private javax.swing.JTextPane searchTextPane;
     private javax.swing.JButton unregBtn;
     private javax.swing.JScrollPane wordIndexScrollPane;
     private javax.swing.JTextPane wordIndexTextPane;

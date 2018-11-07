@@ -3,7 +3,8 @@ package CS4262.Helpers;
 import CS4262.Interfaces.IMain;
 import CS4262.Models.File;
 import CS4262.Models.Node;
-import CS4262.Models.NodeDTO;
+import CS4262.Models.DataTransfer.NodeDTO;
+import CS4262.Models.SearchResult;
 import java.util.List;
 import java.util.Map;
 
@@ -13,8 +14,22 @@ import java.util.Map;
  */
 public class UICreator implements IMain{
     
+    private final String contentHeader;
+    private final String routingHeader;
+    private final String searchResultsHeader;
+    private final String fileIndexHeader;
+    private final String wordIndexHeader;
+    
+    public UICreator(){
+        this.contentHeader = "File ID\tFile Name\n\n";
+        this.routingHeader = "Index\tRange\tNode ID\tIP Address\tPort\n\n";
+        this.searchResultsHeader = "File Name\t\t\tFile Holder\n\t\t\tIP Adress\tUDP\tTCP\n";
+        this.fileIndexHeader = "File ID\t\t\tNode\n\t\tIP Address\t\tPort\n\n";
+        this.wordIndexHeader = "Word\t\t\tFile\nID\tName\t\tId\tName";
+    }
+
     public void updateFileIndexUI(){
-        String displayText = "File ID\t\t\tNode\n\t\tIP Address\t\tPort\n\n";
+        String displayText = fileIndexHeader;
         Map<String, List<NodeDTO>> indices = node.getFileIndex();
         
         for(String fileID : indices.keySet()) {
@@ -33,7 +48,7 @@ public class UICreator implements IMain{
     }
     
     public void updateWordIndexUI(){
-        String displayText = "Word ID\tWord\tFile IDs\tFile Names\n\n";
+        String displayText = wordIndexHeader;
         Map<String, List<File>> indices = node.getWordIndex();
         
         for(String wordName : indices.keySet()) {
@@ -41,7 +56,7 @@ public class UICreator implements IMain{
             int count = 0;
             for(File file : indices.get(wordName)){
                 if(count != 0){
-                    displayText += "\t\t";
+                    displayText += "\t\t\t";
                 }
                 displayText += file.getId() + "\t" + file.getName().replace('_', ' ') + "\n";
                 count ++;
@@ -52,7 +67,7 @@ public class UICreator implements IMain{
     }
     
     public void updateRoutesUI(){
-        String displayText = "Index\tRange\tNode ID\tIP Address\tPort\n\n";
+        String displayText = routingHeader;
         
         Node[] routes = node.getRoutes();
         int nodeID = idCreator.getComparableID(node.getId());
@@ -87,6 +102,42 @@ public class UICreator implements IMain{
         }
         mainController.getMainFrame().updateSuccessorDetails(node.getSuccessor());
         mainController.getMainFrame().updateRoutingTable(displayText);
+    }
+    
+    public void updateSearchResultsUI(){
+        String dataText = searchResultsHeader;
+        List<SearchResult> searchResults = node.getSearchResults();
+        for(SearchResult searchResult : searchResults){
+            
+            File file = searchResult.getFile();
+            NodeDTO fileHolder = searchResult.getFileHolder();
+            
+            dataText += file.getName().replace('_', ' ') + "\t\t\t"
+                    + fileHolder.getIpAdress() + "\t"
+                    + fileHolder.getPort() + "\t"
+                    + "-\n";
+        }
+        mainController.getMainFrame().updateSearchResponse(dataText);
+    }
+    
+    public String getContentHeader() {
+        return contentHeader;
+    }
+
+    public String getRoutingHeader() {
+        return routingHeader;
+    }
+
+    public String getSearchResultsHeader() {
+        return searchResultsHeader;
+    }
+
+    public String getFileIndexHeader() {
+        return fileIndexHeader;
+    }
+
+    public String getWordIndexHeader() {
+        return wordIndexHeader;
     }
     
 }

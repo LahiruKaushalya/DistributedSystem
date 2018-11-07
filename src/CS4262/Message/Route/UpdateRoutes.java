@@ -2,9 +2,9 @@ package CS4262.Message.Route;
 
 import CS4262.Interfaces.IInitializerRoute;
 import CS4262.Models.Node;
-import CS4262.Models.NodeDTO;
+import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Interfaces.IMessage;
-import CS4262.Models.MessageDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;

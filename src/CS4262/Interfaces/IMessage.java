@@ -1,6 +1,6 @@
 package CS4262.Interfaces;
 
-import CS4262.Models.MessageDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
 import CS4262.Network.MessageSender;
 import java.util.StringTokenizer;
 

@@ -1,10 +1,10 @@
 package CS4262.Message.Search;
 
 import CS4262.Interfaces.IInitializerSearch;
-import CS4262.Models.NodeDTO;
+import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Interfaces.IMessage;
 import CS4262.Models.File;
-import CS4262.Models.MessageDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
 import java.util.StringTokenizer;
 
 /**

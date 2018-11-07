@@ -1,6 +1,6 @@
 package CS4262.Network;
 
-import CS4262.Models.NodeDTO;
+import CS4262.Models.DataTransfer.NodeDTO;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

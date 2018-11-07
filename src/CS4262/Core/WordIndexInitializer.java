@@ -1,16 +1,11 @@
 package CS4262.Core;
 
 import CS4262.Interfaces.IInitializerWordIndex;
-import static CS4262.Interfaces.IMain.findReceiver;
-import static CS4262.Interfaces.IMain.idCreator;
-import static CS4262.Interfaces.IMain.node;
-import static CS4262.Interfaces.IMain.rangeChecker;
-import static CS4262.Interfaces.IMain.uiCreator;
 import CS4262.Message.WordIndex.AddSingleWordIndex;
 import CS4262.Models.File;
-import CS4262.Models.MessageDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
 import CS4262.Models.Node;
-import CS4262.Models.NodeDTO;
+import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Models.Word;
 import java.util.ArrayList;
 import java.util.Iterator;

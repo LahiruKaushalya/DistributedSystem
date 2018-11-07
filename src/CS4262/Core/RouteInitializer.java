@@ -4,11 +4,11 @@ import CS4262.Interfaces.IInitializerFileIndex;
 import CS4262.Message.FileIndex.SendFileIndex;
 import CS4262.Message.Route.UpdatePredecessor;
 import CS4262.Models.Node;
-import CS4262.Models.NodeDTO;
+import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Interfaces.IInitializerRoute;
 import CS4262.Interfaces.IInitializerWordIndex;
 import CS4262.Message.WordIndex.SendWordIndex;
-import CS4262.Models.MessageDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
 
 /**
  *

@@ -3,7 +3,7 @@ package CS4262.Message.Route;
 import CS4262.Message.FileIndex.BackupFileIndex;
 import CS4262.Models.Node;
 import CS4262.Interfaces.IMessage;
-import CS4262.Models.MessageDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
 import java.util.StringTokenizer;
 
 /**

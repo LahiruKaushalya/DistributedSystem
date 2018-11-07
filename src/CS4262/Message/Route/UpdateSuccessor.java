@@ -2,7 +2,7 @@ package CS4262.Message.Route;
 
 import java.util.StringTokenizer;
 import CS4262.Interfaces.IMessage;
-import CS4262.Models.MessageDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
 
 /**
  *
