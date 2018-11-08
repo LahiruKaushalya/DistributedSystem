@@ -24,7 +24,7 @@ public class Active implements IMessage, IInitializerRoute{
     
     /*
     Update state message format 
-    length ALIVE sender_ip sender_port
+    length ALIVE hopcount sender_ip sender_port
     */
     @Override
     public String createMsg() {

@@ -1,19 +1,20 @@
 package CS4262.Core;
 
+import CS4262.Helpers.TaskCheckSucessor;
+import CS4262.Helpers.TaskSendLivePulse;
 import CS4262.Interfaces.IInitializerContent;
 import CS4262.Interfaces.IInitializerRoute;
 import CS4262.Message.Route.*;
 import CS4262.Message.FileIndex.BackupFileIndex;
 import CS4262.Message.WordIndex.BackupWordIndex;
 import CS4262.Models.File;
-import CS4262.Models.DataTransfer.MessageDTO;
 import CS4262.Models.Node;
+import CS4262.Models.DataTransfer.MessageDTO;
 import CS4262.Models.DataTransfer.NodeDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
 import java.util.TimerTask;
 
 
@@ -26,10 +27,8 @@ import java.util.TimerTask;
 
 public class NodeInitializer implements IInitializerRoute, IInitializerContent{
     
-    private Timer sendNodeStateTimer;
-    private Timer checkSuccessorTimer;
-    private TimerTask sendNodeStateTask;
-    private TimerTask checkSuccessorTask;
+    private final TaskCheckSucessor checkSuccessor;
+    private final TaskSendLivePulse sendLivePulse;
     
     private static int hopCount;
     private int retryCount;
@@ -46,6 +45,8 @@ public class NodeInitializer implements IInitializerRoute, IInitializerContent{
     private NodeInitializer() {
         NodeInitializer.hopCount = 3;
         this.retryCount = 0;
+        this.checkSuccessor = new TaskCheckSucessor();
+        this.sendLivePulse = new TaskSendLivePulse();
     }
 
     public static int getHopCount() {
@@ -86,86 +87,20 @@ public class NodeInitializer implements IInitializerRoute, IInitializerContent{
         }
         
         //Schedule successor status checker
-        long delay = 10000, Period = 10000;
-        checkSuccessorTask = checkSuccessorState();
-        checkSuccessorTimer = new Timer();
-        checkSuccessorTimer.scheduleAtFixedRate(checkSuccessorTask, delay, Period);
+        checkSuccessor.startTask();
         
-        delay = 30000; Period = 30000;
-        sendNodeStateTask = sendNodeState();
-        sendNodeStateTimer = new Timer();
-        sendNodeStateTimer.scheduleAtFixedRate(sendNodeState(), delay, Period);
+        //Schedule live pulse sender
+        sendLivePulse.startTask();
         
     }
     
     public void cancelAllScheduledTasks(){
-        checkSuccessorTask.cancel();
-        sendNodeStateTask.cancel();
-        sendNodeStateTimer.cancel();
-        checkSuccessorTimer.cancel();
+        checkSuccessor.stopTask();
+        sendLivePulse.stopTask();
     }
     
-    private TimerTask checkSuccessorState() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                Node successor = node.getSuccessor();
-                if(successor != null){
-                    //Check successor node is alive
-                    String response = new UpdateSuccessor().send(new MessageDTO(successor));
-                    if(response == null){
-                        retryCount++;
-                    }
-                    else {
-                        retryCount = 0;
-                    }
-                    
-                    if(retryCount == 2){
-                        //Remove dead node from routing table
-                        routeInitializer.removeAndUpdate(successor);
-                        uiCreator.updateRoutesUI();
-                        
-                        //Inform neighbours 
-                        Node[] neighbours = node.getRoutes();
-                        for (Node neighbour : neighbours) {
-                            if (neighbour != null) {
-                                new Leave().send(new MessageDTO(neighbour, successor, hopCount));
-                                new UpdateRoutes().send(new MessageDTO(neighbour, node, hopCount, null));
-                            }
-                        }
-                        
-                        //Activate file index backup
-                        activateFileIndexBackup();
-                        
-                        //Activate word index backup
-                        activateWordIndexBackup();
-                        
-                        retryCount = 0;
-                    }
-                }
-            }
-        };
-        return task;
-    }
     
-    private TimerTask sendNodeState() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                Node successor = node.getSuccessor();
-                if(successor != null){
-                    //Check successor node is alive
-                    String response = new Active().send(new MessageDTO(successor, node, 20));
-                }
-                else{
-                    retryCount = 0;
-                }
-            }
-        };
-        return task;
-    }
-    
-    private void activateFileIndexBackup(){
+    public void activateFileIndexBackup(){
         Map<String, List<NodeDTO>> fileIndexBackup = node.getFileIndexBackup();
                         Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
                         
@@ -182,7 +117,7 @@ public class NodeInitializer implements IInitializerRoute, IInitializerContent{
                         new BackupFileIndex().send(new MessageDTO(node.getPredecessor()));
     }
     
-    private void activateWordIndexBackup() {
+    public void activateWordIndexBackup() {
         Map<String, List<File>> wordIndexBackup = node.getWordIndexBackup();
         Map<String, List<File>> wordIndex = node.getWordIndex();
 

@@ -22,10 +22,17 @@ public class UICreator implements IMain{
     
     public UICreator(){
         this.contentHeader = "File ID\tFile Name\n\n";
-        this.routingHeader = "Index\tRange\tNode ID\tIP Address\tPort\n\n";
-        this.searchResultsHeader = "File Name\t\t\tFile Holder\n\t\t\tIP Adress\tUDP\tTCP\n";
+        
+        this.routingHeader =  rpad("Index",1) + rpad("Range",1) + rpad("Node ID",1) 
+                                + rpad("IP Address",1) + rpad("UDP port",1) + "TCP port\n\n";
+        
+        this.searchResultsHeader = rpad("File Name",4) + "File Holder\n" + rpad("",2)
+                                    + rpad("IP Address",1) + rpad("UDP port",1) + "TCP port\n\n";
+        
         this.fileIndexHeader = "File ID\t\t\tNode\n\t\tIP Address\t\tPort\n\n";
-        this.wordIndexHeader = "Word\t\t\tFile\nID\tName\t\tId\tName";
+        
+        this.wordIndexHeader = rpad("Word", 3) + rpad("File", 2) +  "\n"
+                                + rpad("ID", 1) + rpad("Name", 2) + rpad("ID", 1) + rpad("Name", 2) +"\n\n";
     }
 
     public void updateFileIndexUI(){
@@ -52,13 +59,13 @@ public class UICreator implements IMain{
         Map<String, List<File>> indices = node.getWordIndex();
         
         for(String wordName : indices.keySet()) {
-            displayText += idCreator.generateWordID(wordName) + "\t" + wordName + "\t";
+            displayText += rpad(""+idCreator.generateWordID(wordName), 1) + rpad(wordName, 2) ;
             int count = 0;
             for(File file : indices.get(wordName)){
                 if(count != 0){
-                    displayText += "\t\t\t";
+                    displayText += rpad("", 2);
                 }
-                displayText += file.getId() + "\t" + file.getName().replace('_', ' ') + "\n";
+                displayText += rpad(file.getId(), 1) + rpad(file.getName().replace('_', ' '), 2) + "\n";
                 count ++;
             }
             displayText += "\n";
@@ -112,12 +119,23 @@ public class UICreator implements IMain{
             File file = searchResult.getFile();
             NodeDTO fileHolder = searchResult.getFileHolder();
             
-            dataText += file.getName().replace('_', ' ') + "\t\t\t"
-                    + fileHolder.getIpAdress() + "\t"
-                    + fileHolder.getPort() + "\t"
-                    + "-\n";
+            dataText += rpad(file.getName().replace('_', ' ') , 3)
+                    + rpad(fileHolder.getIpAdress() , 1)
+                    + rpad("" + fileHolder.getPort() , 1)
+                    + rpad("-" , 1)
+                    + "\n";
         }
         mainController.getMainFrame().updateSearchResponse(dataText);
+    }
+    
+    private String rpad(String word, int tabs) {
+        int tabsReq = ((12 * tabs) - word.length()) / 12;
+        String pad = "\t";
+        while(tabsReq > 0){
+            pad += "\t";
+            tabsReq--;
+        }
+        return word + pad;
     }
     
     public String getContentHeader() {

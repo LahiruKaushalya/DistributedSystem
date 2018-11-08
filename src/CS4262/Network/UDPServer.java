@@ -13,21 +13,21 @@ import java.util.logging.Logger;
  *
  * @author Lahiru Kaushalya
  */
-public class NodeServer implements Runnable {
+public class UDPServer implements Runnable {
     
     private final Node node;
     private final Thread thread;
     private DatagramSocket server;
-    private static NodeServer instance; 
+    private static UDPServer instance; 
     
-    public static NodeServer getInstance(Node node) {
+    public static UDPServer getInstance(Node node) {
         if(instance == null){
-            instance = new NodeServer(node);
+            instance = new UDPServer(node);
         }
         return instance;
     }
     
-    private NodeServer(Node node){
+    private UDPServer(Node node){
         this.node = node;
         this.thread = new Thread(this);
     }
@@ -57,7 +57,7 @@ public class NodeServer implements Runnable {
             }
         } 
         catch (IOException ex) {
-            Logger.getLogger(NodeServer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
         }
         finally{
             server.close();

@@ -37,7 +37,7 @@ public class BSConnector {
     private final IDCreator idCreator;
     
     private ArrayList<NodeDTO> nodes;
-    private NodeServer nodeServerThread;;
+    private UDPServer nodeServerThread;;
 
     public BSConnector(String bsipAddress, String ipAddress, int port) {
         
@@ -196,7 +196,7 @@ public class BSConnector {
     
     private void onRegSuccess(){
         //Start Node TCP Server
-        nodeServerThread = NodeServer.getInstance(node);
+        nodeServerThread = UDPServer.getInstance(node);
         nodeServerThread.startServer();
         //Initialize neighbours
         NodeInitializer.getInstance().initializeNode(nodes);
