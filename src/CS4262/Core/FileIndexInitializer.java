@@ -68,14 +68,14 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
         for(String fileID : fileIndex.keySet()){
             List<NodeDTO> fileHolders = fileIndex.get(fileID);
             if(fileHolders.size() == 1){
-                String fileHolderID = idCreator.generateNodeID(fileHolders.get(0).getIpAdress(), fileHolders.get(0).getPort());
+                String fileHolderID = idCreator.generateNodeID(fileHolders.get(0).getipAdress(), fileHolders.get(0).getUdpPort());
                 if(fileHolderID.equals(node.getId())){
                     fileIndex.remove(fileID);
                 }
             }
             else{
                 for(NodeDTO fileHolder : fileHolders){
-                    String fileHolderID = idCreator.generateNodeID(fileHolder.getIpAdress(), fileHolder.getPort());
+                    String fileHolderID = idCreator.generateNodeID(fileHolder.getipAdress(), fileHolder.getUdpPort());
                     if(fileHolderID.equals(node.getId())){
                         fileHolders.remove(fileHolder);
                     }
@@ -119,8 +119,8 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
                 } 
                 else {
                     for (NodeDTO fileHolder : fileHolders) {
-                        if (idCreator.generateNodeID(fileHolder.getIpAdress(), fileHolder.getPort())
-                                .equals(idCreator.generateNodeID(sender.getIpAdress(), sender.getPort()))) {
+                        if (idCreator.generateNodeID(fileHolder.getipAdress(), fileHolder.getUdpPort())
+                                .equals(idCreator.generateNodeID(sender.getipAdress(), sender.getUdpPort()))) {
 
                             fileHolders.remove(fileHolder);
                             break;
@@ -163,7 +163,7 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
     }
     
     private void localAdd(NodeDTO sender, String fileID) {
-        String senderID = idCreator.generateNodeID(sender.getIpAdress(), sender.getPort());
+        String senderID = idCreator.generateNodeID(sender.getipAdress(), sender.getUdpPort());
 
         Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
         List<NodeDTO> temp = fileIndex.get(fileID);
@@ -176,7 +176,7 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
         else {
             boolean exists = false;
             for (NodeDTO nodeT : temp) {
-                String nodeTID = idCreator.generateNodeID(nodeT.getIpAdress(), nodeT.getPort());
+                String nodeTID = idCreator.generateNodeID(nodeT.getipAdress(), nodeT.getUdpPort());
                 if (nodeTID.equals(senderID)) {
                     exists = true;
                     break;

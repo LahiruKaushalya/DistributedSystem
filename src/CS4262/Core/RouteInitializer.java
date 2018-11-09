@@ -40,8 +40,8 @@ public class RouteInitializer implements IInitializerRoute, IInitializerFileInde
         int m = idCreator.getBIN_ID_LENGTH();
         int bp = (int)Math.pow(2, m);
         
-        String neighbourIP = neighbour.getIpAdress();
-        int neighbourPort = neighbour.getPort();
+        String neighbourIP = neighbour.getipAdress();
+        int neighbourPort = neighbour.getUdpPort();
         
         String neighbourID = idCreator.generateNodeID(neighbourIP, neighbourPort);
         int neighbourIntID = idCreator.getComparableID(neighbourID);
@@ -80,7 +80,7 @@ public class RouteInitializer implements IInitializerRoute, IInitializerFileInde
     }
     
     public void removeAndUpdate(NodeDTO leaver){
-        String id = idCreator.generateNodeID(leaver.getIpAdress(), leaver.getPort());
+        String id = idCreator.generateNodeID(leaver.getipAdress(), leaver.getUdpPort());
         Node[] routes = node.getRoutes();
         
         for(int i = 0; i < routes.length; i++){
@@ -106,9 +106,9 @@ public class RouteInitializer implements IInitializerRoute, IInitializerFileInde
             Node temp = routes[i];
             if(temp != null){
                 node.setSuccessor(new Node(
-                        temp.getIpAdress(),
-                        temp.getPort(),
-                        idCreator.generateNodeID(temp.getIpAdress(), temp.getPort())
+                        temp.getipAdress(),
+                        temp.getUdpPort(),
+                        idCreator.generateNodeID(temp.getipAdress(), temp.getUdpPort())
                 ));
                 break;
             }

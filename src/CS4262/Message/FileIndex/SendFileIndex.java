@@ -34,7 +34,7 @@ public class SendFileIndex implements IMessage, IInitializerFileIndex{
             List<NodeDTO> tempNodes = fileIndex.get(fileID);
             msg += " " + tempNodes.size() + " " + fileID;
             for(NodeDTO tempNode : tempNodes){
-                msg += " " + tempNode.getIpAdress() + " " + tempNode.getPort();
+                msg += " " + tempNode.getipAdress() + " " + tempNode.getUdpPort();
             }
         }
         return String.format("%04d", msg.length() + 5) + " " + msg;  

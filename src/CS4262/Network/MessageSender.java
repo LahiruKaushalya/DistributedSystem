@@ -42,8 +42,8 @@ public class MessageSender {
                         DatagramPacket dp;
                         byte[] buf = new byte[65536];
                         socket = new DatagramSocket();
-                        InetAddress receiverIP = InetAddress.getByName(receiver.getIpAdress());
-                        int receiverPort = receiver.getPort();
+                        InetAddress receiverIP = InetAddress.getByName(receiver.getipAdress());
+                        int receiverPort = receiver.getUdpPort();
                         
                         //Create datagrame packet
                         dp = new DatagramPacket(message.getBytes(), message.length(), receiverIP, receiverPort);

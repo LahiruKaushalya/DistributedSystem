@@ -1,9 +1,11 @@
 package CS4262.Network;
 
+import CS4262.Interfaces.IMessage;
 import CS4262.Message.Route.*;
 import CS4262.Message.Search.*;
 import CS4262.Message.FileIndex.*;
 import CS4262.Message.WordIndex.*;
+import CS4262.Message.Download.*;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -11,7 +13,7 @@ import java.net.DatagramSocket;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import CS4262.Interfaces.IMessage;
+
 
 
 /**
@@ -104,6 +106,10 @@ public class MessageReceiver extends Thread{
                 
             case "SEROK":
                 response = processMsg(new SearchResults(), command, st);
+                return response;
+                
+            case "DOWN":
+                response = processMsg(new DownloadRequest(), command, st);
                 return response;
                 
             case "ALIVE":

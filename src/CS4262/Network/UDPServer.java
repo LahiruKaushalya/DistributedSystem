@@ -35,8 +35,8 @@ public class UDPServer implements Runnable {
     @Override
     public void run(){
         try {
-            System.out.println("Server starts on port " + node.getPort());
-            server = new DatagramSocket(node.getPort());
+            System.out.println("Server starts on port " + node.getUdpPort());
+            server = new DatagramSocket(node.getUdpPort());
             server.setSoTimeout(500);
             while(true){
                 try {

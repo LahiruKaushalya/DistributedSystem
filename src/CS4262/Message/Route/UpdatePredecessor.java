@@ -27,7 +27,7 @@ public class UpdatePredecessor implements IMessage{
     @Override
     public String createMsg() {
         String msg = " PRE ";
-        msg += node.getIpAdress() + " " + node.getPort();
+        msg += node.getipAdress() + " " + node.getUdpPort();
         return String.format("%04d", msg.length() + 5) + " " + msg;
     }
     

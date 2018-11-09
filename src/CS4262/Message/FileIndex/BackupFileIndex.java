@@ -35,8 +35,8 @@ public class BackupFileIndex implements IMessage{
             List<NodeDTO> tempNodes = fileIndex.get(fileID);
             msg += " " + tempNodes.size() + " " + fileID;
             for(NodeDTO tempNode : tempNodes){
-                if(!node.getId().equals(idCreator.generateNodeID(tempNode.getIpAdress(), tempNode.getPort()))){
-                    msg += " " + tempNode.getIpAdress() + " " + tempNode.getPort();
+                if(!node.getId().equals(idCreator.generateNodeID(tempNode.getipAdress(), tempNode.getUdpPort()))){
+                    msg += " " + tempNode.getipAdress() + " " + tempNode.getUdpPort();
                 }
             }
         }

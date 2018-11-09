@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
  *
  * @author Lahiru Kaushalya
  */
-public class Response implements IMessage, IInitializerDownload{
+public class DownloadResponse implements IMessage, IInitializerDownload{
 
     @Override
     public String send(MessageDTO msgDTO) {

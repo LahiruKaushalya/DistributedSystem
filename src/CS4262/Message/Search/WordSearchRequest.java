@@ -33,7 +33,7 @@ public class WordSearchRequest implements IMessage, IInitializerSearch{
         NodeDTO sender = msgDTO.getSender();
         SearchDTO searchDTO = msgDTO.getSearchDTO();
         String msg = " SER_WORD ";
-        msg += sender.getIpAdress() + " " + sender.getPort() + " " 
+        msg += sender.getipAdress() + " " + sender.getUdpPort() + " " 
              + searchDTO.getWord().getName() + " " + searchDTO.getFile().getName();
         
         return String.format("%04d", msg.length() + 5) + " " + msg;

@@ -159,17 +159,6 @@ public class SearchInitializer implements IInitializerSearch{
         return false;
     }
     
-    //Chaeck file available in content
-    private boolean isFileAvailable(File file){
-        List<File> files = node.getContent();
-        for (File _file : files) {
-            if (file.getId().equals(_file.getId())) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
     private List<SearchResult> getResults(File file){
         //Check searching file index availability
         Map<String, List<NodeDTO>> index = node.getFileIndex();

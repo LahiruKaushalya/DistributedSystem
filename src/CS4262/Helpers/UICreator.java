@@ -16,7 +16,6 @@ public class UICreator implements IMain{
     
     private final String contentHeader;
     private final String routingHeader;
-    private final String searchResultsHeader;
     private final String fileIndexHeader;
     private final String wordIndexHeader;
     
@@ -25,9 +24,6 @@ public class UICreator implements IMain{
         
         this.routingHeader =  rpad("Index",1) + rpad("Range",1) + rpad("Node ID",1) 
                                 + rpad("IP Address",1) + rpad("UDP port",1) + "TCP port\n\n";
-        
-        this.searchResultsHeader = rpad("File Name",4) + "File Holder\n" + rpad("",2)
-                                    + rpad("IP Address",1) + rpad("UDP port",1) + "TCP port\n\n";
         
         this.fileIndexHeader = "File ID\t\t\tNode\n\t\tIP Address\t\tPort\n\n";
         
@@ -47,7 +43,7 @@ public class UICreator implements IMain{
                 if(count > 1){
                     displayText += "\t\t";
                 }
-                displayText += _node.getIpAdress() + "\t\t" + _node.getPort() + "\n";
+                displayText += _node.getipAdress() + "\t\t" + _node.getUdpPort() + "\n";
             }
             displayText += "\n";
         }
@@ -88,8 +84,8 @@ public class UICreator implements IMain{
         for(int i = 0; i < m; i++){
             tempNode = routes[i];
             if(tempNode != null){
-                ip = tempNode.getIpAdress();
-                port = tempNode.getPort();
+                ip = tempNode.getipAdress();
+                port = tempNode.getUdpPort();
                 id = idCreator.generateNodeID(ip, port);
                 
                 for(int k = lbound; k <= i; k++){
@@ -112,20 +108,31 @@ public class UICreator implements IMain{
     }
     
     public void updateSearchResultsUI(){
-        String dataText = searchResultsHeader;
         List<SearchResult> searchResults = node.getSearchResults();
+        Object[][] out = new Object[searchResults.size()][];
+        int index = 0;
         for(SearchResult searchResult : searchResults){
-            
             File file = searchResult.getFile();
             NodeDTO fileHolder = searchResult.getFileHolder();
-            
-            dataText += rpad(file.getName().replace('_', ' ') , 3)
-                    + rpad(fileHolder.getIpAdress() , 1)
-                    + rpad("" + fileHolder.getPort() , 1)
-                    + rpad("-" , 1)
-                    + "\n";
+            out[index] = new Object[]{
+                    file.getName().replace("_", " "), 
+                    fileHolder.getipAdress(), 
+                    fileHolder.getUdpPort(), 
+                    fileHolder.getTcpPort()
+            };
+            index++;
         }
-        mainController.getMainFrame().updateSearchResponse(dataText);
+        mainController.getMainFrame().updateSearchResponse(out);
+    }
+    
+    public void displayFileContent(File file){
+        String dataText = "";
+        
+        dataText += rpad("File Name", 1) + rpad(file.getName().replace('_', ' '), 2) + "\n"
+                + rpad("File Size", 1) + rpad(file.getFileSize() + " MB", 2) + "\n"
+                + rpad("Hash", 1) + rpad(file.getHashCode(), 2);
+
+        mainController.getMainFrame().displayFileContent(dataText);
     }
     
     private String rpad(String word, int tabs) {
@@ -146,10 +153,6 @@ public class UICreator implements IMain{
         return routingHeader;
     }
 
-    public String getSearchResultsHeader() {
-        return searchResultsHeader;
-    }
-
     public String getFileIndexHeader() {
         return fileIndexHeader;
     }
@@ -157,5 +160,5 @@ public class UICreator implements IMain{
     public String getWordIndexHeader() {
         return wordIndexHeader;
     }
-    
+
 }

@@ -33,8 +33,8 @@ public class SearchResults implements IMessage{
         String msg = " SEROK " + searchResults.size() + " ";
         for(SearchResult searchResult : searchResults){
             msg += searchResult.getFile().getName() + " " 
-                 + searchResult.getFileHolder().getIpAdress() + " "
-                 + searchResult.getFileHolder().getPort() + " ";
+                 + searchResult.getFileHolder().getipAdress() + " "
+                 + searchResult.getFileHolder().getUdpPort() + " ";
         }
         return String.format("%04d", msg.length() + 5) + " " + msg; 
     }

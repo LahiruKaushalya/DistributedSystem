@@ -28,7 +28,7 @@ public class Join implements IMessage, IInitializerRoute{
     @Override
     public String createMsg() {
         String msg = " JOIN ";
-        msg += msgDTO.getHopCount() + " " + msgDTO.getSender().getIpAdress() + " " + msgDTO.getSender().getPort();
+        msg += msgDTO.getHopCount() + " " + msgDTO.getSender().getipAdress() + " " + msgDTO.getSender().getUdpPort();
         return String.format("%04d", msg.length() + 5) + " " + msg; 
     }
     

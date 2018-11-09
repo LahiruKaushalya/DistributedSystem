@@ -23,7 +23,7 @@ public class UpdateSuccessor implements IMessage{
     @Override
     public String createMsg() {
         String msg = " ISALIVE ";
-        msg += node.getIpAdress() + " " + node.getPort();
+        msg += node.getipAdress() + " " + node.getUdpPort();
         return String.format("%04d", msg.length() + 5) + " " + msg;
     }
     

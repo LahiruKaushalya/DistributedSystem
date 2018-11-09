@@ -35,7 +35,7 @@ public class UpdateRoutes implements IMessage, IInitializerRoute{
         List<NodeDTO> addi = msgDTO.getAdditional();
         
         String msg = " UPDATE_ROUTES ";
-        msg += hopCount + " " + sender.getIpAdress() + " " + sender.getPort();
+        msg += hopCount + " " + sender.getipAdress() + " " + sender.getUdpPort();
         
         Node[] neighbours = node.getRoutes();
         int count = 0;
@@ -44,7 +44,7 @@ public class UpdateRoutes implements IMessage, IInitializerRoute{
         for(Node neighbour : neighbours){
             if(neighbour != null){
                 count++;
-                tempStr += " " + neighbour.getIpAdress() + " " + neighbour.getPort();
+                tempStr += " " + neighbour.getipAdress() + " " + neighbour.getUdpPort();
             }
         }
         
@@ -52,7 +52,7 @@ public class UpdateRoutes implements IMessage, IInitializerRoute{
             if (!addi.isEmpty()) {
                 count += addi.size();
                 for (NodeDTO neighbour : addi) {
-                    tempStr += " " + neighbour.getIpAdress() + " " + neighbour.getPort();
+                    tempStr += " " + neighbour.getipAdress() + " " + neighbour.getUdpPort();
                 }
             }
         }

@@ -31,7 +31,7 @@ public class FileSearchRequest implements IMessage, IInitializerSearch{
         NodeDTO sender = msgDTO.getSender();
         File file = msgDTO.getFile();
         String msg = " SER ";
-        msg += sender.getIpAdress() + " " + sender.getPort() + " " + file.getName();
+        msg += sender.getipAdress() + " " + sender.getUdpPort() + " " + file.getName();
         return String.format("%04d", msg.length() + 5) + " " + msg;
     }
     

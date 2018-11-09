@@ -133,8 +133,8 @@ public class BSConnector {
     
     private String genarateMsg(String code) {
         String message;
-        String ip = node.getIpAdress();
-        int port = node.getPort();
+        String ip = node.getipAdress();
+        int port = node.getUdpPort();
         message = code + ip + " " + port + " " + idCreator.generateNodeID(ip, port);
         message = "00" + String.valueOf(message.length() + 5) + message;
         return message;

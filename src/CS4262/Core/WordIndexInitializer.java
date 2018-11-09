@@ -42,8 +42,14 @@ public class WordIndexInitializer implements IInitializerWordIndex{
                 new AddSingleWordIndex().send(new MessageDTO(receiver, _word, file));
             }
             else{
-                List<File> temp = new ArrayList<>();
-                temp.add(file);
+                List<File> temp = tempList.get(word);
+                if(temp != null){
+                    temp.add(file);
+                }
+                else{
+                    temp = new ArrayList<>();
+                    temp.add(file);
+                }
                 tempList.put(word, temp);
             }
         }

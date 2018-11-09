@@ -8,8 +8,10 @@ public class File {
     
     private final String name;
     private final String id;
+    
     private String body;
     private String hashCode;
+    private float fileSize;
 
     public File(String name, String id){
         this.name = name;
@@ -28,6 +30,10 @@ public class File {
         return body;
     }
 
+    public float getFileSize() {
+        return fileSize;
+    }
+    
     public void setBody(String body) {
         this.body = body;
     }
@@ -39,4 +45,10 @@ public class File {
     public void setHashCode(String hashCode) {
         this.hashCode = hashCode;
     }
+
+    public void setFileSize(float fileSize) {
+        this.fileSize = fileSize;
+    }
+    
+    
 }

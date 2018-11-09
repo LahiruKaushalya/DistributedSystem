@@ -32,7 +32,7 @@ public class RemoveSingleFileIndex implements IMessage, IInitializerFileIndex{
         File file = msgDTO.getFile();
         
         String msg = " REMOVE_FI ";
-        msg += sender.getIpAdress() + " " + sender.getPort() + " " + file.getName() + " " + file.getId();
+        msg += sender.getipAdress() + " " + sender.getUdpPort() + " " + file.getName() + " " + file.getId();
         return String.format("%04d", msg.length() + 5) + " " + msg; 
     }
     
