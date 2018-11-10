@@ -32,7 +32,11 @@ public class AddSingleFileIndex implements IMessage, IInitializerFileIndex{
         File file = msgDTO.getFile();
         
         String msg = " ADD_FI ";
-        msg += sender.getipAdress() + " " + sender.getUdpPort() + " " + file.getName() + " " + file.getId();
+        msg += sender.getipAdress() + " " 
+                + sender.getUdpPort() + " " 
+                + file.getName().replace(" ", "_") + " " 
+                + file.getId();
+        
         return String.format("%04d", msg.length() + 5) + " " + msg; 
     }
     
@@ -40,7 +44,7 @@ public class AddSingleFileIndex implements IMessage, IInitializerFileIndex{
         //Message sender
         NodeDTO sender = new NodeDTO(st.nextToken(), Integer.parseInt(st.nextToken()));
         //File
-        File file = new File(st.nextToken(), st.nextToken());
+        File file = new File(st.nextToken().replace("_", " "), st.nextToken());
         
         fileIndexInitializer.insert(sender, file);
         uiCreator.updateFileIndexUI();

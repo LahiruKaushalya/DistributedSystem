@@ -7,6 +7,8 @@ import CS4262.MainController;
 import CS4262.Models.Node;
 import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Core.NodeInitializer;
+import CS4262.Interfaces.IInitializerFileIndex;
+import static CS4262.Interfaces.IInitializerFileIndex.fileIndexInitializer;
 import CS4262.Message.Route.Leave;
 import CS4262.Message.Route.UpdateRoutes;
 import CS4262.Models.DataTransfer.MessageDTO;
@@ -26,7 +28,7 @@ import java.util.logging.Logger;
  *
  * @author Lahiru Kaushalya
  */
-public class BSConnector {
+public class BSConnector implements IInitializerFileIndex{
     
     private static Node node;
     private static String response;
@@ -195,7 +197,7 @@ public class BSConnector {
     }
     
     private void onRegSuccess(){
-        //Start Node TCP Server
+        //Start Node UDP Server
         nodeServerThread = UDPServer.getInstance(node);
         nodeServerThread.startServer();
         //Initialize neighbours
@@ -203,15 +205,22 @@ public class BSConnector {
     }
     
     private void onUnregSuccess(){
-        Node[] neighbours = node.getRoutes();
-        try {  
+        try {
             Thread t = new Thread(){
                 @Override
                 public void run(){
-                    FileIndexInitializer fileIndexInit = FileIndexInitializer.getInstance();
+                    //Stop scheduled tasks
+                    NodeInitializer.getInstance().cancelAllScheduledTasks();
+                    
+                    Node[] neighbours = node.getRoutes();
+                    //Send local file Index to predecessor
+                    fileIndexInitializer.sendFileIndexToPre();
                     
                     //Send message to remove file indices
-                    fileIndexInit.sendRemoveMsg();
+                    fileIndexInitializer.sendRemoveMsg();
+
+                    //Clear File Index
+                    fileIndexInitializer.clearFileIndex();
                     
                     int count = 0;
                     for (Node neighbour : neighbours) {
@@ -223,8 +232,6 @@ public class BSConnector {
                             }
                         }
                     }
-                    //Send local file Index to predecessor and remove
-                    fileIndexInit.removeFileIndex();
                     //Clear files
                     ContentInitializer.getInstance().removeContent();
                     node.setSuccessor(null);
@@ -239,7 +246,6 @@ public class BSConnector {
         }
         finally {
             nodeServerThread.stopServer();
-            NodeInitializer.getInstance().cancelAllScheduledTasks();
         }
     }
 }

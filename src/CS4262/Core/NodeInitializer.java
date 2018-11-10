@@ -26,11 +26,10 @@ import java.util.Map;
 
 public class NodeInitializer implements IInitializerRoute, IInitializerContent{
     
-    private final TaskCheckSucessor checkSuccessor;
-    private final TaskSendLivePulse sendLivePulse;
+    private TaskCheckSucessor checkSuccessor;
+    private TaskSendLivePulse sendLivePulse;
     
     private static int hopCount;
-    private int retryCount;
     
     private static NodeInitializer instance; 
     
@@ -43,9 +42,6 @@ public class NodeInitializer implements IInitializerRoute, IInitializerContent{
     
     private NodeInitializer() {
         NodeInitializer.hopCount = 3;
-        this.retryCount = 0;
-        this.checkSuccessor = new TaskCheckSucessor();
-        this.sendLivePulse = new TaskSendLivePulse();
     }
 
     public static int getHopCount() {
@@ -86,9 +82,11 @@ public class NodeInitializer implements IInitializerRoute, IInitializerContent{
         }
         
         //Schedule successor status checker
+        this.checkSuccessor = new TaskCheckSucessor();
         checkSuccessor.startTask();
         
         //Schedule live pulse sender
+        this.sendLivePulse = new TaskSendLivePulse();
         sendLivePulse.startTask();
         
     }

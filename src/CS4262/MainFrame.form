@@ -88,15 +88,17 @@
                                       <Component id="portLabel" min="-2" pref="85" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="unregBtn" min="-2" pref="111" max="-2" attributes="0"/>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="regtBtn" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="unregBtn" min="-2" pref="111" max="-2" attributes="0"/>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Component id="regtBtn" min="-2" pref="108" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Component id="portTextField" alignment="1" min="-2" pref="237" max="-2" attributes="0"/>
+                                          <Component id="ipTextField" min="-2" pref="237" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="bsServerIPTextField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="ipTextField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="portTextField" alignment="0" min="-2" pref="237" max="-2" attributes="0"/>
+                                      <Component id="bsServerIPTextField" alignment="1" min="-2" pref="237" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -108,36 +110,36 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="connectScrollPane" pref="153" max="32767" attributes="0"/>
+                          <Component id="connectScrollPane" pref="141" max="32767" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
                                   <Component id="icon" min="-2" pref="120" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="bsServerIPTextField" min="-2" pref="25" max="-2" attributes="0"/>
-                                      <Component id="bsServerIPLbl" alignment="0" min="-2" pref="23" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="ipTextField" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
-                                      <Component id="ipLbl" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
+                                      <Component id="bsServerIPTextField" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                                      <Component id="bsServerIPLbl" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="portTextField" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="ipLbl" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
+                                      <Component id="ipTextField" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="portLabel" min="-2" pref="25" max="-2" attributes="0"/>
+                                      <Component id="portTextField" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="regtBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="unregBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
+                                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>

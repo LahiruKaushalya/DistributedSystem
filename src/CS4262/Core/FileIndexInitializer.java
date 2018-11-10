@@ -39,9 +39,15 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
                 new AddSingleFileIndex().send(new MessageDTO(receiver, node, file));
             }
             else{
-                List<NodeDTO> t = new ArrayList<>();
-                t.add(node);
-                tempList.put(file.getId(), t);
+                List<NodeDTO> fileHolders = tempList.get(file.getId());
+                if(fileHolders == null){
+                    fileHolders = new ArrayList<>();
+                    fileHolders.add(node);
+                }
+                else{
+                    fileHolders.add(node);
+                }
+                tempList.put(file.getId(), fileHolders);
             }
             wordIndexInitializer.createLocalWordIndex(file);
         }
@@ -49,7 +55,28 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
         uiCreator.updateFileIndexUI();
     }
     
-    //Notify nodes to remove file indices when leave (outgoing msg)
+    //Create file index from predecessor's file insex (incoming msg)
+    public void updateFromPre(NodeDTO sender, String fileID){
+        Node successor = node.getSuccessor();
+        if(successor != null){
+            int sucID = idCreator.getComparableID(successor.getId());
+            int nodeID = idCreator.getComparableID(node.getId());
+            int fileIntID = idCreator.getComparableID(fileID);
+            if(!rangeChecker.isInRange(nodeID, sucID, fileIntID)){
+                localAdd(sender, fileID);
+            }
+        }
+        else{
+            localAdd(sender, fileID);
+        }
+    }
+    
+    //Modify file index when successor leaving (incoming msg)
+    public void updateFromSuc(NodeDTO sender, String fileID){
+        localAdd(sender, fileID);
+    }
+    
+    //Notify nodes to remove file indices when leaveing (outgoing msg)
     public void sendRemoveMsg(){
         List<File> files = node.getContent();
         for(File file : files){
@@ -61,31 +88,43 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
         }
     }
     
-    //Send local file Index to predecessor and remove (outgoing msg)
-    public void removeFileIndex(){
-        Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
-        
-        for(String fileID : fileIndex.keySet()){
-            List<NodeDTO> fileHolders = fileIndex.get(fileID);
-            if(fileHolders.size() == 1){
-                String fileHolderID = idCreator.generateNodeID(fileHolders.get(0).getipAdress(), fileHolders.get(0).getUdpPort());
-                if(fileHolderID.equals(node.getId())){
-                    fileIndex.remove(fileID);
-                }
-            }
-            else{
-                for(NodeDTO fileHolder : fileHolders){
+    //Send local file Index to predecessor when leaving(outgoing msg)
+    public void sendFileIndexToPre(){
+        NodeDTO predecessor = node.getPredecessor();
+        if (predecessor != null) {
+            Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
+            Iterator<Map.Entry<String, List<NodeDTO>>> iterator = fileIndex.entrySet().iterator();
+
+            while (iterator.hasNext()) {
+                Map.Entry<String, List<NodeDTO>> entry = iterator.next();
+                String fileID = entry.getKey();
+                List<NodeDTO> fileHolders = entry.getValue();
+                
+                if(fileHolders.size() == 1){
+                    NodeDTO fileHolder = fileHolders.get(0);
                     String fileHolderID = idCreator.generateNodeID(fileHolder.getipAdress(), fileHolder.getUdpPort());
                     if(fileHolderID.equals(node.getId())){
-                        fileHolders.remove(fileHolder);
+                        iterator.remove();
                     }
                 }
-                fileIndex.put(fileID, fileHolders);
+                else{
+                    for(NodeDTO fileHolder : fileHolders){
+                        String fileHolderID = idCreator.generateNodeID(fileHolder.getipAdress(), fileHolder.getUdpPort());
+                        if(fileHolderID.equals(node.getId())){
+                            fileHolders.remove(fileHolder);
+                        }
+                    }
+                    fileIndex.put(fileID, fileHolders);
+                }
             }
+            node.setFileIndex(fileIndex);
+            new SendFileIndexToPre().send(new MessageDTO(node.getPredecessor()));
         }
-        node.setFileIndex(fileIndex);
-        new SendFileIndex().send(new MessageDTO(node.getPredecessor()));
-        
+    }
+    
+    //Delete file index
+    public void clearFileIndex(){
+        Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
         //Reset file index
         fileIndex.clear();
         node.setFileIndex(fileIndex);
@@ -111,11 +150,11 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
         } 
         else {
             Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
-
-            if (fileIndex.containsKey(file)) {
-                List<NodeDTO> fileHolders = fileIndex.get(file);
+            
+            if (fileIndex.containsKey(file.getId())) {
+                List<NodeDTO> fileHolders = fileIndex.get(file.getId());
                 if (fileHolders.size() == 1) {
-                    fileIndex.remove(file);
+                    fileIndex.remove(file.getId());
                 } 
                 else {
                     for (NodeDTO fileHolder : fileHolders) {
@@ -133,12 +172,7 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
         }
     }
     
-    //Create file index from predecessor's file insex (incoming msg)
-    public void insertFromPredecessor(NodeDTO sender, String fileID){
-        localAdd(sender, fileID);
-    }
-    
-    //Update when successor changed
+    //Update file index when successor changed
     public void updateForSuccessor(){
         Node successor = node.getSuccessor();
         Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
@@ -172,6 +206,7 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
             temp.add(sender);
             fileIndex.put(fileID, temp);
             node.setFileIndex(fileIndex);
+            uiCreator.updateFileIndexUI();
         } 
         else {
             boolean exists = false;
@@ -186,6 +221,7 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
                 temp.add(sender);
                 fileIndex.put(fileID, temp);
                 node.setFileIndex(fileIndex);
+                uiCreator.updateFileIndexUI();
             }
         }
     }

@@ -52,15 +52,21 @@ public class SearchInitializer implements IInitializerSearch{
     
     //File Search
     public void globalSearch(NodeDTO sender, File file) {
+        String senderId = idCreator.generateNodeID(sender.getipAdress(), sender.getUdpPort());
         List<SearchResult> searchResults = getResults(file);
-        
-        //Check at least one file holder has been found
-        if (searchResults != null) {
-            new SearchResults().send(new MessageDTO(sender, searchResults));
-        } //File holder not found. 
-        else {
-            //Check for a search redirector node
-            findFileRedirector(sender, file);
+        if(senderId.equals(node.getId()) && searchResults != null){
+            node.setSearchResults(searchResults);
+            uiCreator.updateSearchResultsUI();
+        }
+        else{
+            //Check at least one file holder has been found
+            if (searchResults != null) {
+                new SearchResults().send(new MessageDTO(sender, searchResults));
+            } //File holder not found. 
+            else {
+                //Check for a search redirector node
+                findFileRedirector(sender, file);
+            }
         }
     }
     

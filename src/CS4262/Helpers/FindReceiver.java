@@ -17,13 +17,14 @@ public class FindReceiver implements IMain{
         int nodeIntID = idCreator.getComparableID(node.getId());
         Node[] neighbours = node.getRoutes();
         
-        for(Node neighbour : neighbours){
+        for(int i = neighbours.length - 1; i >= 0; i--){
+            Node neighbour = neighbours[i];
             if(neighbour != null){
                 int neiIntID = idCreator.getComparableID(neighbour.getId());
                 if(rangeChecker.isInRange(nodeIntID, neiIntID, contentIntID)){
                     receiver = neighbour;
+                    break;
                 }
-                else{break;}
             }
         }
         return receiver;

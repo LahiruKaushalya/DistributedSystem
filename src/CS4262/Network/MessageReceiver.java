@@ -76,10 +76,14 @@ public class MessageReceiver extends Thread{
                 response = processMsg(new RemoveSingleFileIndex(), command, st);
                 return response;
             
-            case "SEND_FI":
-                response = processMsg(new SendFileIndex(), command, st);
+            case "SEND_FI_PRE":
+                response = processMsg(new SendFileIndexToPre(), command, st);
                 return response;
-              
+                
+            case "SEND_FI_SUC":
+                response = processMsg(new SendFileIndexToSuc(), command, st);
+                return response;
+            
             case "BACKUP_FI":
                 response = processMsg(new BackupFileIndex(), command, st);
                 return response;

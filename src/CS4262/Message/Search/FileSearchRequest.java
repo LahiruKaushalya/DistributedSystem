@@ -43,12 +43,10 @@ public class FileSearchRequest implements IMessage, IInitializerSearch{
         NodeDTO sender = new NodeDTO(senderIP, senderPort);
         
         String fileName = st.nextToken();
-        
-        String SenderID = idCreator.generateNodeID(senderIP, senderPort);
-        if(!SenderID.equals(node.getId())){
-            File file = new File(fileName, idCreator.generateFileID(fileName));
-            searchInitializer.globalSearch(sender, file);
-        }
+
+        File file = new File(fileName, idCreator.generateFileID(fileName));
+        searchInitializer.globalSearch(sender, file);
+
     }
 
     

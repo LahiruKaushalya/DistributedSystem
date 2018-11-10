@@ -27,7 +27,7 @@ public class IDCreator {
     }
     
     public String generateFileID(String fileName) {
-        return "F" + String.valueOf(generateID(fileName.trim().toLowerCase()));
+        return "F" + String.valueOf(generateID(fileName.trim().toLowerCase().replace(" ", "_")));
     }
     
     public String generateWordID(String wordName) {

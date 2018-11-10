@@ -12,7 +12,7 @@ import CS4262.Models.DataTransfer.MessageDTO;
  *
  * @author Lahiru Kaushalya
  */
-public class SendFileIndex implements IMessage, IInitializerFileIndex{
+public class SendFileIndexToSuc implements IMessage, IInitializerFileIndex{
     
     @Override
     public String send(MessageDTO msgDTO){
@@ -22,11 +22,11 @@ public class SendFileIndex implements IMessage, IInitializerFileIndex{
     
     /*
     Update File Index message format 
-    length SEND_FI file_cound file_id_1 ip port file_id_2 ip port ....
+    length SEND_FI_SUC file_cound file_id_1 ip port file_id_2 ip port ....
     */
     @Override
     public String createMsg() {
-        String msg = " SEND_FI ";
+        String msg = " SEND_FI_SUC ";
         Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
         msg += fileIndex.size();
         
@@ -50,13 +50,11 @@ public class SendFileIndex implements IMessage, IInitializerFileIndex{
             String fileID = st.nextToken();
             while (nodeCount > 0) {
                 NodeDTO fileHolder = new NodeDTO(st.nextToken(), Integer.parseInt(st.nextToken()));
-                fileIndexInitializer.insertFromPredecessor(fileHolder, fileID);
+                fileIndexInitializer.updateFromPre(fileHolder, fileID);
                 nodeCount--;
             }
             fileCount--;
         }
-
-        fileIndexInitializer.updateForSuccessor();
         uiCreator.updateFileIndexUI();
     }
     

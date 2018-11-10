@@ -39,8 +39,12 @@ public class DownloadInitializer implements IInitializerDownload{
             NodeDTO fileHolder = new NodeDTO(ipAddress, udpPort);
             fileName = fileName.toLowerCase().replace(" ", "_");
             File file = new File(fileName, idCreator.generateFileID(fileName));
-
+            
+            //Start TCP server and wait for responce
+            
+            //Send download request over UDP
             new DownloadRequest().send(new MessageDTO(fileHolder, node, file));
+            
         }
     }
     
