@@ -4,7 +4,6 @@ import CS4262.Interfaces.IInitializerWordIndex;
 import CS4262.Interfaces.IMessage;
 import CS4262.Models.File;
 import CS4262.Models.DataTransfer.MessageDTO;
-import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Models.Word;
 import java.util.StringTokenizer;
 

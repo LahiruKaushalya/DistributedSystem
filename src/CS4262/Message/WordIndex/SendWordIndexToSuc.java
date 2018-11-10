@@ -13,7 +13,7 @@ import CS4262.Models.Word;
  *
  * @author Lahiru Kaushalya
  */
-public class SendWordIndex implements IMessage, IInitializerWordIndex{
+public class SendWordIndexToSuc implements IMessage, IInitializerWordIndex{
     
     @Override
     public String send(MessageDTO msgDTO){
@@ -23,11 +23,11 @@ public class SendWordIndex implements IMessage, IInitializerWordIndex{
     
     /*
     Update File Index message format 
-    length SEND_WI word_cound file_count word_name file_id_1 file_id_2... file_count word_name file_id_1 file_id_2....
+    length SEND_WI_SUC word_cound file_count word_name file_id_1 file_id_2... file_count word_name file_id_1 file_id_2....
     */
     @Override
     public String createMsg() {
-        String msg = " SEND_WI ";
+        String msg = " SEND_WI_SUC ";
         Map<String, List<File>> wordIndex = node.getWordIndex();
         msg += wordIndex.size();
         
@@ -52,7 +52,7 @@ public class SendWordIndex implements IMessage, IInitializerWordIndex{
             while (fileCount > 0) {
                 File file = new File(st.nextToken(), st.nextToken());
                 Word word = new Word(wordName, idCreator.generateWordID(wordName));
-                wordIndexInitializer.insertFromPredecessor(word, file);
+                wordIndexInitializer.updateFromPre(word, file);
                 fileCount--;
             }
             wordCount--;

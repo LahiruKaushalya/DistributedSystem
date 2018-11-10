@@ -8,7 +8,7 @@ import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Interfaces.IInitializerRoute;
 import CS4262.Interfaces.IInitializerWordIndex;
 import CS4262.Message.FileIndex.SendFileIndexToSuc;
-import CS4262.Message.WordIndex.SendWordIndex;
+import CS4262.Message.WordIndex.SendWordIndexToSuc;
 import CS4262.Models.DataTransfer.MessageDTO;
 
 /**
@@ -18,7 +18,7 @@ import CS4262.Models.DataTransfer.MessageDTO;
 public class RouteInitializer implements IInitializerRoute, IInitializerFileIndex, IInitializerWordIndex{
     
     private final SendFileIndexToSuc sendFileIndexToSuc;
-    private final SendWordIndex sendWordIndex;
+    private final SendWordIndexToSuc sendWordIndex;
     private final UpdatePredecessor updatePredecessor;
     private static RouteInitializer instance;
     
@@ -32,7 +32,7 @@ public class RouteInitializer implements IInitializerRoute, IInitializerFileInde
     private RouteInitializer(){
         this.updatePredecessor = new UpdatePredecessor();
         this.sendFileIndexToSuc = new SendFileIndexToSuc();
-        this.sendWordIndex = new SendWordIndex();
+        this.sendWordIndex = new SendWordIndexToSuc();
     }
     
     public Node addAndUpdate(NodeDTO neighbour){

@@ -189,13 +189,13 @@ public class SearchInitializer implements IInitializerSearch{
     
     private SearchDTO filterFileName(String fileName) {
         //Implement filter logic
-        fileName =  fileName.trim().toLowerCase().replace(' ', '_');
+        fileName =  fileName.trim().replace(" ", "_");
         
         String[] words = fileName.split("_");
         String keyWord = words[0];
         
-        Word word = new Word(keyWord, idCreator.generateWordID(keyWord));
-        File file = new File(fileName, idCreator.generateFileID(fileName));
+        Word word = new Word(keyWord, idCreator.generateWordID(keyWord.toLowerCase()));
+        File file = new File(fileName, idCreator.generateFileID(fileName.toLowerCase()));
         
         return new SearchDTO(word, file);
     }

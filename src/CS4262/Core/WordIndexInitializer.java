@@ -27,9 +27,7 @@ public class WordIndexInitializer implements IInitializerWordIndex{
         return instance;
     }
 
-    private WordIndexInitializer() {
-        
-    }
+    private WordIndexInitializer() {}
     
     public void createLocalWordIndex(File file){
         Map<String, List<File>> tempList = node.getWordIndex();
@@ -42,19 +40,42 @@ public class WordIndexInitializer implements IInitializerWordIndex{
                 new AddSingleWordIndex().send(new MessageDTO(receiver, _word, file));
             }
             else{
-                List<File> temp = tempList.get(word);
-                if(temp != null){
-                    temp.add(file);
+                List<File> files = tempList.get(word);
+                if (files != null) {
+                    if (!isExists(files, file)) {
+                        files.add(file);
+                    }
                 }
                 else{
-                    temp = new ArrayList<>();
-                    temp.add(file);
+                    files = new ArrayList<>();
+                    files.add(file);
                 }
-                tempList.put(word, temp);
+                tempList.put(word, files);
             }
         }
         node.setWordIndex(tempList);
         uiCreator.updateWordIndexUI();
+    }
+    
+    //Create word index from predecessor's word insex (incoming msg)
+    public void updateFromPre(Word word, File file){
+        Node successor = node.getSuccessor();
+        if(successor != null){
+            int sucID = idCreator.getComparableID(successor.getId());
+            int nodeID = idCreator.getComparableID(node.getId());
+            int wordIntID = idCreator.getComparableID(word.getId());
+            if(!rangeChecker.isInRange(nodeID, sucID, wordIntID)){
+                localAdd(word, file);
+            }
+        }
+        else{
+            localAdd(word, file);
+        }
+    }
+    
+    //Modify word index when successor leaving (incoming msg)
+    public void updateFromSuc(Word word, File file){
+        localAdd(word, file);
     }
     
     //Add new file to index (incoming msg)
@@ -66,11 +87,6 @@ public class WordIndexInitializer implements IInitializerWordIndex{
         else {
             localAdd(word, file);
         }
-    }
-    
-    //Create file index from predecessor's file insex (incoming msg)
-    public void insertFromPredecessor(Word word, File file){
-        localAdd(word, file);
     }
     
     //Update when successor changed
@@ -98,33 +114,33 @@ public class WordIndexInitializer implements IInitializerWordIndex{
     }
     
     private String[] getWords(File file){
-        return file.getName().toLowerCase().split("_");
+        return file.getName().split("_");
     }
     
     private void localAdd(Word word, File file) {
-        
         Map<String, List<File>> wordIndex = node.getWordIndex();
         List<File> temp = wordIndex.get(word.getName());
+        
         if (temp == null) {
             temp = new ArrayList<>();
             temp.add(file);
-            wordIndex.put(word.getName(), temp);
-            node.setWordIndex(wordIndex);
         } 
         else {
-            boolean exists = false;
-            for (File _file : temp) {
-                if (_file.getName().equals(file.getName())) {
-                    exists = true;
-                    break;
-                }
-            }
-            if (!exists) {
+            if (!isExists(temp, file)) {
                 temp.add(file);
-                wordIndex.put(word.getName(), temp);
-                node.setWordIndex(wordIndex);
             }
         }
+        wordIndex.put(word.getName(), temp);
+        node.setWordIndex(wordIndex);
+    }
+    
+    private boolean isExists(List<File> files, File file){
+        for (File _file : files) {
+            if (_file.getId().equals(file.getId())) {
+                return true;
+            }
+        }
+        return false;
     }
     
 }

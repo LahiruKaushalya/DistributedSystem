@@ -20,17 +20,28 @@ public class UICreator implements IMain{
     private final String wordIndexHeader;
     
     public UICreator(){
-        this.contentHeader = "File ID\tFile Name\n\n";
+        this.contentHeader = rpad("File ID",1) + rpad("File Name",2) + "\n\n";
         
         this.routingHeader =  rpad("Index",1) + rpad("Range",1) + rpad("Node ID",1) 
-                                + rpad("IP Address",1) + rpad("UDP port",1) + "TCP port\n\n";
+                                + rpad("IP Address",2) + rpad("TCP port",1) + "UDP port\n\n";
         
         this.fileIndexHeader = "File ID\t\t\tNode\n\t\tIP Address\t\tPort\n\n";
         
         this.wordIndexHeader = rpad("Word", 3) + rpad("File", 2) +  "\n"
-                                + rpad("ID", 1) + rpad("Name", 2) + rpad("ID", 1) + rpad("Name", 2) +"\n\n";
+                                + rpad("ID", 1) + rpad("Name", 2) + rpad("ID", 1) + rpad("Name", 2) + "\n\n";
     }
-
+    
+    public void updateContentUI(){
+        List<File> content = node.getContent();
+        String displayText = contentHeader;
+        
+        for(File file : content){
+            String fileName = Capitalize(file.getName());
+            displayText += rpad(file.getId(),1) + rpad(fileName,2) +"\n";
+        }
+        mainController.getMainFrame().updateContent(displayText);
+    }
+    
     public void updateFileIndexUI(){
         String displayText = fileIndexHeader;
         Map<String, List<NodeDTO>> indices = node.getFileIndex();
@@ -55,13 +66,13 @@ public class UICreator implements IMain{
         Map<String, List<File>> indices = node.getWordIndex();
         
         for(String wordName : indices.keySet()) {
-            displayText += rpad(""+idCreator.generateWordID(wordName), 1) + rpad(wordName, 2) ;
+            displayText += rpad(""+idCreator.generateWordID(wordName), 1) + rpad(Capitalize(wordName), 2);
             int count = 0;
             for(File file : indices.get(wordName)){
                 if(count != 0){
                     displayText += rpad("", 2);
                 }
-                displayText += rpad(file.getId(), 1) + rpad(file.getName().replace('_', ' '), 2) + "\n";
+                displayText += rpad(file.getId(), 1) + rpad(Capitalize(file.getName()), 2) + "\n";
                 count ++;
             }
             displayText += "\n";
@@ -77,20 +88,26 @@ public class UICreator implements IMain{
         int m = idCreator.getBIN_ID_LENGTH();
         int bp = (int)Math.pow(2, m);
         
-        String ip = "-", id = "-";
-        int port = 0, rend, lbound = 0;
+        String ip, id;
+        int udpPort, tcpPort, rend, lbound = 0;
         NodeDTO tempNode;
         
         for(int i = 0; i < m; i++){
             tempNode = routes[i];
             if(tempNode != null){
                 ip = tempNode.getipAdress();
-                port = tempNode.getUdpPort();
-                id = idCreator.generateNodeID(ip, port);
+                udpPort = tempNode.getUdpPort();
+                tcpPort = tempNode.getTcpPort();
+                id = idCreator.generateNodeID(ip, udpPort);
                 
                 for(int k = lbound; k <= i; k++){
                     rend = (nodeID + (int)Math.pow(2, k)) % bp;
-                    displayText += k + "\t" +rend + "\t" + id + "\t" + ip + "\t" + port + "\n";
+                    displayText += k + "\t" 
+                                + rend + "\t" 
+                                + id + "\t" 
+                                + ip + "\t\t" 
+                                + tcpPort + "\t" 
+                                + udpPort + "\n";
                 }
                 lbound = i + 1;
             }
@@ -98,7 +115,7 @@ public class UICreator implements IMain{
                 if(i == m - 1){
                     for (int k = lbound; k <= i; k++) {
                         rend = (nodeID + (int)Math.pow(2, k)) % bp;
-                        displayText += k + "\t" + rend + "\t-\t-\t-\n";
+                        displayText += k + "\t" + rend + "\t-\t-\t\t-\t-\n";
                     }
                 }
             }
@@ -115,7 +132,7 @@ public class UICreator implements IMain{
             File file = searchResult.getFile();
             NodeDTO fileHolder = searchResult.getFileHolder();
             out[index] = new Object[]{
-                    file.getName().replace("_", " "), 
+                    Capitalize(file.getName()), 
                     fileHolder.getipAdress(), 
                     fileHolder.getUdpPort(), 
                     fileHolder.getTcpPort()
@@ -128,7 +145,7 @@ public class UICreator implements IMain{
     public void displayFileContent(File file){
         String dataText = "";
         
-        dataText += rpad("File Name", 1) + rpad(file.getName().replace('_', ' '), 2) + "\n"
+        dataText += rpad("File Name", 1) + rpad(Capitalize(file.getName()), 2) + "\n"
                 + rpad("File Size", 1) + rpad(file.getFileSize() + " MB", 2) + "\n"
                 + rpad("Hash", 1) + rpad(file.getHashCode(), 2);
 
@@ -160,5 +177,14 @@ public class UICreator implements IMain{
     public String getWordIndexHeader() {
         return wordIndexHeader;
     }
-
+    
+    private String Capitalize(String input){
+        StringBuffer sb = new StringBuffer();
+        for(String word : input.split("_")){
+            sb.append(word.substring(0,1).toUpperCase());
+            sb.append(word.substring(1));
+            sb.append(" ");
+        }
+        return sb.toString();
+    }
 }

@@ -99,19 +99,19 @@ public class NodeInitializer implements IInitializerRoute, IInitializerContent{
     
     public void activateFileIndexBackup(){
         Map<String, List<NodeDTO>> fileIndexBackup = node.getFileIndexBackup();
-                        Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
-                        
-                        for(String fileID : fileIndexBackup.keySet()){
-                            fileIndex.put(fileID, fileIndexBackup.get(fileID));
-                        }
-                        fileIndexBackup.clear();
-                        node.setFileIndexBackup(fileIndexBackup);
-                        node.setFileIndex(fileIndex);
-                        
-                        //update UI
-                        uiCreator.updateFileIndexUI();
-                        
-                        new BackupFileIndex().send(new MessageDTO(node.getPredecessor()));
+        Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
+
+        for(String fileID : fileIndexBackup.keySet()){
+            fileIndex.put(fileID, fileIndexBackup.get(fileID));
+        }
+        fileIndexBackup.clear();
+        node.setFileIndexBackup(fileIndexBackup);
+        node.setFileIndex(fileIndex);
+
+        //update UI
+        uiCreator.updateFileIndexUI();
+
+        new BackupFileIndex().send(new MessageDTO(node.getPredecessor()));
     }
     
     public void activateWordIndexBackup() {

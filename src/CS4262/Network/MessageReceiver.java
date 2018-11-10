@@ -91,9 +91,13 @@ public class MessageReceiver extends Thread{
             case "ADD_WI":
                 response = processMsg( new AddSingleWordIndex(), command, st);
                 return response;
+            
+            case "SEND_WI_PRE":
+                response = processMsg(new SendWordIndexToPre(), command, st);
+                return response;
                 
-            case "SEND_WI":
-                response = processMsg(new SendWordIndex(), command, st);
+            case "SEND_WI_SUC":
+                response = processMsg(new SendWordIndexToSuc(), command, st);
                 return response;
                 
             case "BACKUP_WI":
