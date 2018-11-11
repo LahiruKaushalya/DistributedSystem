@@ -1,8 +1,6 @@
 package CS4262.Message.WordIndex;
 
-import CS4262.Models.DataTransfer.NodeDTO;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;

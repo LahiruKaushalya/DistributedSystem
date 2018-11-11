@@ -1,7 +1,6 @@
 package CS4262.Core;
 
 import CS4262.Interfaces.IInitializerFileIndex;
-import CS4262.Message.FileIndex.SendFileIndexToPre;
 import CS4262.Message.Route.UpdatePredecessor;
 import CS4262.Models.Node;
 import CS4262.Models.DataTransfer.NodeDTO;
@@ -18,7 +17,7 @@ import CS4262.Models.DataTransfer.MessageDTO;
 public class RouteInitializer implements IInitializerRoute, IInitializerFileIndex, IInitializerWordIndex{
     
     private final SendFileIndexToSuc sendFileIndexToSuc;
-    private final SendWordIndexToSuc sendWordIndex;
+    private final SendWordIndexToSuc sendWordIndexToSuc;
     private final UpdatePredecessor updatePredecessor;
     private static RouteInitializer instance;
     
@@ -32,7 +31,7 @@ public class RouteInitializer implements IInitializerRoute, IInitializerFileInde
     private RouteInitializer(){
         this.updatePredecessor = new UpdatePredecessor();
         this.sendFileIndexToSuc = new SendFileIndexToSuc();
-        this.sendWordIndex = new SendWordIndexToSuc();
+        this.sendWordIndexToSuc = new SendWordIndexToSuc();
     }
     
     public Node addAndUpdate(NodeDTO neighbour){
@@ -129,9 +128,9 @@ public class RouteInitializer implements IInitializerRoute, IInitializerFileInde
         if(updated){
             updatePredecessor.send(new MessageDTO(newSucc));
             sendFileIndexToSuc.send(new MessageDTO(newSucc));
-            sendWordIndex.send(new MessageDTO(newSucc));
-            fileIndexInitializer.updateForSuccessor();
-            wordIndexInitializer.updateForSuccessor();
+            sendWordIndexToSuc.send(new MessageDTO(newSucc));
+            fileIndexInitializer.updateWhenSucChanged();
+            wordIndexInitializer.updateWhenSucChanged();
             mainController.getMainFrame().updateSuccessorDetails(newSucc);
         }
     }

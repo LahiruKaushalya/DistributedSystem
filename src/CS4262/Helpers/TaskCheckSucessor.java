@@ -12,7 +12,11 @@ import java.util.TimerTask;
  *
  * @author Lahiru Kaushalya
  */
-public class TaskCheckSucessor extends TimerTask implements IMain, IInitializerNode, IInitializerRoute{
+public class TaskCheckSucessor extends TimerTask implements IMain, 
+                                                            IInitializerNode, 
+                                                            IInitializerRoute, 
+                                                            IInitializerFileIndex,
+                                                            IInitializerWordIndex{
     
     private final int hopCount;
     private final long delay, period;
@@ -22,8 +26,8 @@ public class TaskCheckSucessor extends TimerTask implements IMain, IInitializerN
     
     
     public TaskCheckSucessor() {
-        this.delay = 10000; //10 seconds
-        this.period = 10000; //10 seconds
+        this.delay = 5000; //10 seconds
+        this.period = 4000; //10 seconds
         this.retryCount = 0;
         this.hopCount = NodeInitializer.getHopCount();
         this.timer = new Timer();
@@ -50,7 +54,7 @@ public class TaskCheckSucessor extends TimerTask implements IMain, IInitializerN
                 retryCount = 0;
             }
 
-            if (retryCount == 2) {
+            if (retryCount == 3) {
                 //Remove dead node from routing table
                 routeInitializer.removeAndUpdate(successor);
                 uiCreator.updateRoutesUI();
@@ -65,10 +69,10 @@ public class TaskCheckSucessor extends TimerTask implements IMain, IInitializerN
                 }
 
                 //Activate file index backup
-                nodeInitializer.activateFileIndexBackup();
+                fileIndexInitializer.activateFileIndexBackup();
 
                 //Activate word index backup
-                nodeInitializer.activateWordIndexBackup();
+                wordIndexInitializer.activateWordIndexBackup();
 
                 retryCount = 0;
             }

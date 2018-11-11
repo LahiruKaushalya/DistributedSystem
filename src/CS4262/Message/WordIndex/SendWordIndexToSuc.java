@@ -57,8 +57,7 @@ public class SendWordIndexToSuc implements IMessage, IInitializerWordIndex{
             }
             wordCount--;
         }
-
-        wordIndexInitializer.updateForSuccessor();
+        wordIndexInitializer.updateWhenSucChanged();
         uiCreator.updateWordIndexUI();
     }
     

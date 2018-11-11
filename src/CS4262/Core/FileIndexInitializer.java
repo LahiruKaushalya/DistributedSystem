@@ -1,10 +1,10 @@
 package CS4262.Core;
 
-import CS4262.Models.DataTransfer.NodeDTO;
-import CS4262.Models.DataTransfer.MessageDTO;
-import CS4262.Message.FileIndex.*;
+
 import CS4262.Interfaces.IInitializerFileIndex;
 import CS4262.Interfaces.IInitializerWordIndex;
+import CS4262.Models.DataTransfer.*;
+import CS4262.Message.FileIndex.*;
 import CS4262.Models.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -74,6 +74,27 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
     //Modify file index when successor leaving (incoming msg)
     public void updateFromSuc(NodeDTO sender, String fileID){
         localAdd(sender, fileID);
+    }
+    
+    //Activate file index backup when sucessor crash
+    public void activateFileIndexBackup(){
+        Map<String, List<NodeDTO>> fileIndexBackup = node.getFileIndexBackup();
+        Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
+
+        for(String fileID : fileIndexBackup.keySet()){
+            fileIndex.put(fileID, fileIndexBackup.get(fileID));
+        }
+        fileIndexBackup.clear();
+        node.setFileIndexBackup(fileIndexBackup);
+        node.setFileIndex(fileIndex);
+
+        //update UI
+        uiCreator.updateFileIndexUI();
+        
+        NodeDTO predecessor = node.getPredecessor();
+        if(predecessor != null){
+            new BackupFileIndex().send(new MessageDTO(node.getPredecessor()));
+        }
     }
     
     //Notify nodes to remove file indices when leaveing (outgoing msg)
@@ -173,7 +194,7 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
     }
     
     //Update file index when successor changed
-    public void updateForSuccessor(){
+    public void updateWhenSucChanged(){
         Node successor = node.getSuccessor();
         Map<String, List<NodeDTO>> fileIndex = node.getFileIndex();
         
@@ -194,6 +215,11 @@ public class FileIndexInitializer implements IInitializerFileIndex, IInitializer
         }
         node.setFileIndex(fileIndex);
         uiCreator.updateFileIndexUI();
+        
+        NodeDTO predecessor = node.getPredecessor();
+        if(predecessor != null){
+            new BackupFileIndex().send(new MessageDTO(predecessor));
+        }
     }
     
     private void localAdd(NodeDTO sender, String fileID) {

@@ -1,12 +1,9 @@
 package CS4262.Core;
 
 import CS4262.Interfaces.IInitializerWordIndex;
-import CS4262.Message.WordIndex.AddSingleWordIndex;
-import CS4262.Models.File;
-import CS4262.Models.DataTransfer.MessageDTO;
-import CS4262.Models.Node;
-import CS4262.Models.DataTransfer.NodeDTO;
-import CS4262.Models.Word;
+import CS4262.Message.WordIndex.*;
+import CS4262.Models.*;
+import CS4262.Models.DataTransfer.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -78,6 +75,27 @@ public class WordIndexInitializer implements IInitializerWordIndex{
         localAdd(word, file);
     }
     
+    //Activate word index backup when sucessor crash
+    public void activateWordIndexBackup() {
+        Map<String, List<File>> wordIndexBackup = node.getWordIndexBackup();
+        Map<String, List<File>> wordIndex = node.getWordIndex();
+
+        for (String wordName : wordIndexBackup.keySet()) {
+            wordIndex.put(wordName, wordIndexBackup.get(wordName));
+        }
+        wordIndexBackup.clear();
+        node.setWordIndexBackup(wordIndexBackup);
+        node.setWordIndex(wordIndex);
+
+        //update UI
+        uiCreator.updateWordIndexUI();
+        
+        NodeDTO predecessor = node.getPredecessor();
+        if(predecessor != null){
+            new BackupWordIndex().send(new MessageDTO(node.getPredecessor()));
+        }
+    }
+    
     //Add new file to index (incoming msg)
     public void insert(Word word, File file){
         NodeDTO receiver = findReceiver.search(word.getId());
@@ -90,7 +108,7 @@ public class WordIndexInitializer implements IInitializerWordIndex{
     }
     
     //Update when successor changed
-    public void updateForSuccessor(){
+    public void updateWhenSucChanged(){
         Node successor = node.getSuccessor();
         Map<String, List<File>> wordIndex = node.getWordIndex();
         
@@ -111,6 +129,11 @@ public class WordIndexInitializer implements IInitializerWordIndex{
         }
         node.setWordIndex(wordIndex);
         uiCreator.updateWordIndexUI();
+        
+        NodeDTO predecessor = node.getPredecessor();
+        if(predecessor != null){
+            new BackupWordIndex().send(new MessageDTO(predecessor));
+        }
     }
     
     private String[] getWords(File file){
@@ -119,18 +142,18 @@ public class WordIndexInitializer implements IInitializerWordIndex{
     
     private void localAdd(Word word, File file) {
         Map<String, List<File>> wordIndex = node.getWordIndex();
-        List<File> temp = wordIndex.get(word.getName());
+        List<File> files = wordIndex.get(word.getName());
         
-        if (temp == null) {
-            temp = new ArrayList<>();
-            temp.add(file);
+        if (files == null) {
+            files = new ArrayList<>();
+            files.add(file);
         } 
         else {
-            if (!isExists(temp, file)) {
-                temp.add(file);
+            if (!isExists(files, file)) {
+                files.add(file);
             }
         }
-        wordIndex.put(word.getName(), temp);
+        wordIndex.put(word.getName(), files);
         node.setWordIndex(wordIndex);
     }
     

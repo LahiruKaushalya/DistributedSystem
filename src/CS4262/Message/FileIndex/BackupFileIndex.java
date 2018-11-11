@@ -23,7 +23,7 @@ public class BackupFileIndex implements IMessage{
     
     /*
     Update File Index message format 
-    length BACKUP_FI file_cound file_id_1 ip port file_id_2 ip port ....
+    length BACKUP_FI file_count file_id_1 ip port file_id_2 ip port ....
     */
     @Override
     public String createMsg() {
@@ -47,7 +47,7 @@ public class BackupFileIndex implements IMessage{
     @Override
     public void handle(StringTokenizer st) {
         int fileCount = Integer.parseInt(st.nextToken());
-        Map<String, List<NodeDTO>> fileIndexBackup = new HashMap();
+        Map<String, List<NodeDTO>> fileIndexBackup = node.getFileIndexBackup();
         
         while (fileCount > 0) {
             int nodeCount = Integer.parseInt(st.nextToken());
@@ -62,6 +62,7 @@ public class BackupFileIndex implements IMessage{
             fileCount--;
         }
         node.setFileIndexBackup(fileIndexBackup);
+        System.out.print("");
     }
     
 }

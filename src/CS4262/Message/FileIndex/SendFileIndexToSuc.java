@@ -55,6 +55,7 @@ public class SendFileIndexToSuc implements IMessage, IInitializerFileIndex{
             }
             fileCount--;
         }
+        fileIndexInitializer.updateWhenSucChanged();
         uiCreator.updateFileIndexUI();
     }
     
