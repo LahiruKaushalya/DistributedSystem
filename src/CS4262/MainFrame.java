@@ -8,6 +8,9 @@ import CS4262.Network.BSConnector;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -561,7 +564,11 @@ public class MainFrame extends javax.swing.JFrame {
             String fileName = (String)tableModel.getValueAt(index, 0);
             String ipAddress = (String)tableModel.getValueAt(index, 1);
             int udpPort = (int)tableModel.getValueAt(index, 2);
-            DownloadInitializer.getInstance().downloadFile(ipAddress, udpPort, fileName);
+            try {
+                DownloadInitializer.getInstance().downloadFile(ipAddress, udpPort, fileName);
+            } catch (IOException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else{
             JOptionPane.showMessageDialog(this,"Select file for download");

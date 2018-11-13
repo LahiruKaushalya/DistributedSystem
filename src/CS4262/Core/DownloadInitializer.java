@@ -2,9 +2,13 @@ package CS4262.Core;
 
 import CS4262.Interfaces.IInitializerDownload;
 import CS4262.Message.Download.DownloadRequest;
+import CS4262.Models.DataTransfer.FileDTO;
 import CS4262.Models.DataTransfer.MessageDTO;
 import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Models.File;
+import CS4262.Network.TCPClient;
+import CS4262.Network.TCPServer;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
@@ -15,9 +19,11 @@ import java.util.logging.Logger;
  *
  * @author Lahiru Kaushalya
  */
-public class DownloadInitializer implements IInitializerDownload{
+public class DownloadInitializer implements IInitializerDownload
+{
     
     private static DownloadInitializer instance;
+    
 
     public static DownloadInitializer getInstance() {
         if (instance == null) {
@@ -29,7 +35,7 @@ public class DownloadInitializer implements IInitializerDownload{
     private DownloadInitializer() {}
     
     //Initiate download request
-    public void downloadFile(String ipAddress, int udpPort, String fileName){
+    public void downloadFile(String ipAddress, int udpPort, String fileName) throws IOException{
         String fileHolderID = idCreator.generateNodeID(ipAddress, udpPort);
         //Check for local download request
         if(fileHolderID.equals(node.getId())){
@@ -41,6 +47,8 @@ public class DownloadInitializer implements IInitializerDownload{
             File file = new File(fileName, idCreator.generateFileID(fileName));
             
             //Start TCP server and wait for responce
+            TCPServer server = TCPServer.getInstance(node);
+            server.startServer(file);
             
             //Send download request over UDP
             new DownloadRequest().send(new MessageDTO(fileHolder, node, file));
@@ -49,16 +57,22 @@ public class DownloadInitializer implements IInitializerDownload{
     }
     
     //Send file to requester
-    public void uploadFile(NodeDTO requester, File file){
+    public void uploadFile(NodeDTO requester, File file) throws IOException, InterruptedException{
         //Genetate file content
         File generatedFile = genFile(file);
+        FileDTO fto = new FileDTO(requester);
+        fto.setFileObject(generatedFile);
+        fto.setSender(node);
+        
         //Display File content
         uiCreator.displayFileContent(generatedFile);
         
-        //Start Tcp server
+        //Start Tcp client
+        TCPClient client = new TCPClient(fto);
         
         //Send file
-        
+        String result = client.sendFile();
+        System.out.println(result);
         //Stop Tcp server
     }
     
@@ -87,7 +101,7 @@ public class DownloadInitializer implements IInitializerDownload{
     }
     
     //Generate hash for file content
-    private String genHash(String fileContent){
+    public String genHash(String fileContent){
         StringBuilder sb = new StringBuilder();
         try {
             //Generate SHA-1 hash

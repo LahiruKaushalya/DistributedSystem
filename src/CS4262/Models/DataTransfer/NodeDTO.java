@@ -1,16 +1,19 @@
 package CS4262.Models.DataTransfer;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Lahiru Kaushalya
  */
 
 //Create node object for data transfer perposes
-public class NodeDTO{
+public class NodeDTO implements Serializable
+{    
     
-    private final String ipAddress;
-    private final int udpPort;
-    private final int tcpPort;
+    private String ipAddress;
+    private int udpPort;
+    private int tcpPort;
     
     public NodeDTO(String ip, int udpPort)
     { 
@@ -31,7 +34,26 @@ public class NodeDTO{
         return tcpPort;
     }
     
-    
+    /**
+     * @param ipAddress the ipAddress to set
+     */
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    /**
+     * @param udpPort the udpPort to set
+     */
+    public void setUdpPort(int udpPort) {
+        this.udpPort = udpPort;
+    }
+
+    /**
+     * @param tcpPort the tcpPort to set
+     */
+    public void setTcpPort(int tcpPort) {
+        this.tcpPort = tcpPort;
+    }
     
 }
 

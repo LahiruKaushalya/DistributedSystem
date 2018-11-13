@@ -5,7 +5,10 @@ import CS4262.Interfaces.IMessage;
 import CS4262.Models.DataTransfer.MessageDTO;
 import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Models.File;
+import java.io.IOException;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -48,7 +51,11 @@ public class DownloadRequest implements IMessage, IInitializerDownload{
         String fileID = st.nextToken();
         File file = new File(fileName, fileID);
         
-        downloadInitializer.uploadFile(requester, file);
+        try {
+            downloadInitializer.uploadFile(requester, file);
+        } catch (IOException | InterruptedException ex) {
+            Logger.getLogger(DownloadRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
     
