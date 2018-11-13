@@ -5,6 +5,7 @@ import CS4262.Message.Download.DownloadRequest;
 import CS4262.Models.DataTransfer.MessageDTO;
 import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Models.File;
+import CS4262.Network.TCPServer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
@@ -56,8 +57,10 @@ public class DownloadInitializer implements IInitializerDownload{
         uiCreator.displayFileContent(generatedFile);
         
         //Start Tcp server
+        TCPServer server = TCPServer.getInstance(node);
         
         //Send file
+        
         
         //Stop Tcp server
     }

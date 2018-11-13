@@ -1,11 +1,13 @@
 package CS4262.Models;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Lahiru Kaushalya
  */
-public class File {
-    
+public class File implements Serializable
+{    
     private final String name;
     private final String id;
     
@@ -50,5 +52,5 @@ public class File {
         this.fileSize = fileSize;
     }
     
-    
+   
 }
