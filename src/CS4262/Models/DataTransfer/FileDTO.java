@@ -1,8 +1,10 @@
 package CS4262.Models.DataTransfer;
 
 import CS4262.Models.File;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
 /**
  *
  * @author Sankaja
@@ -17,6 +19,7 @@ public class FileDTO implements Serializable {
         this.receiver = receiver;
     }
 
+    
     /**
      * @return the fileObject
      */
@@ -52,4 +55,22 @@ public class FileDTO implements Serializable {
         return receiver;
     }
 
+    /**
+     * gives the string fto
+     * @return serialized object
+     */
+    public String getSerializedObj() {
+        String serializedObject = "";
+        // serialize the object
+        try {
+            ByteArrayOutputStream bo = new ByteArrayOutputStream();
+            ObjectOutputStream so = new ObjectOutputStream(bo);
+            so.writeObject(this);
+            so.flush();
+            serializedObject = bo.toString();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        return serializedObject;
+    }
 }
