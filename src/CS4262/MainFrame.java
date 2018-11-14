@@ -5,6 +5,7 @@ import CS4262.Core.SearchInitializer;
 import CS4262.Helpers.UICreator;
 import CS4262.Models.Node;
 import CS4262.Network.BSConnector;
+import java.awt.Color;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -37,6 +38,7 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         
         this.setResizable(false);
+        this.setTitle("  Distributed file system");
         //Set frame position
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize(); 
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
@@ -118,6 +120,7 @@ public class MainFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
 
+        MainTab.setBackground(new java.awt.Color(204, 204, 204));
         MainTab.setTabPlacement(javax.swing.JTabbedPane.RIGHT);
         MainTab.setAutoscrolls(true);
         MainTab.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -131,6 +134,9 @@ public class MainFrame extends javax.swing.JFrame {
         portLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         portLabel.setText("Port");
 
+        regtBtn.setBackground(new java.awt.Color(0, 0, 24));
+        regtBtn.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
+        regtBtn.setForeground(new java.awt.Color(204, 255, 255));
         regtBtn.setText("REGISTER");
         regtBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -139,11 +145,16 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         connectTextPane.setEditable(false);
+        connectTextPane.setBackground(new java.awt.Color(204, 204, 204));
+        connectTextPane.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         connectScrollPane.setViewportView(connectTextPane);
 
         bsServerIPLbl.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         bsServerIPLbl.setText("BS Server IP");
 
+        unregBtn.setBackground(new java.awt.Color(0, 0, 24));
+        unregBtn.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
+        unregBtn.setForeground(new java.awt.Color(204, 255, 255));
         unregBtn.setText("UNREGISTER");
         unregBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -185,7 +196,7 @@ public class MainFrame extends javax.swing.JFrame {
             connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, connectionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(connectScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                .addComponent(connectScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, connectionPanelLayout.createSequentialGroup()
@@ -410,6 +421,9 @@ public class MainFrame extends javax.swing.JFrame {
 
         MainTab.addTab("Index", indexTab);
 
+        downloadBtn.setBackground(new java.awt.Color(0, 0, 25));
+        downloadBtn.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
+        downloadBtn.setForeground(new java.awt.Color(204, 255, 255));
         downloadBtn.setText("DOWNLOAD");
         downloadBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -417,6 +431,9 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        searchBtn.setBackground(new java.awt.Color(0, 0, 25));
+        searchBtn.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
+        searchBtn.setForeground(new java.awt.Color(204, 255, 255));
         searchBtn.setText("SEARCH");
         searchBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -500,7 +517,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(searchResultsLbl)
                 .addGap(11, 11, 11)
-                .addComponent(searchTableSP, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                .addComponent(searchTableSP, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(fileDetailsLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -531,10 +548,19 @@ public class MainFrame extends javax.swing.JFrame {
         String ipAddress = ipTextField.getText();
         String port = portTextField.getText();
         
-        if(!bsipAddress.equals("") && !ipAddress.equals("") && !port.equals("")){
-            bsConnector = new BSConnector(bsipAddress.trim(), ipAddress.trim(),Integer.parseInt(port.trim()));
-            bsConnector.register();
-            unregBtn.setEnabled(true);
+        if(!bsipAddress.equals("") && !ipAddress.equals("") && !port.equals(""))
+        {
+            try
+            {
+                bsConnector = new BSConnector(bsipAddress.trim(), ipAddress.trim(), Integer.parseInt(port.trim()));
+                bsConnector.register();
+                unregBtn.setEnabled(true);
+            }
+            catch(NumberFormatException e)
+            {
+                JOptionPane.showMessageDialog(this, "Port value is not valid","Whoops",JOptionPane.WARNING_MESSAGE);
+            }
+            
         }
         else{
             JOptionPane.showMessageDialog(this,"Incomplete information"); 
