@@ -19,55 +19,57 @@ import javax.swing.JOptionPane;
  *
  * @author Lahiru Kaushalya
  */
-public class TCPServer extends Thread implements IInitializerDownload
-{
+public class TCPServer extends Thread implements IInitializerDownload {
+
     private final Node node;
-    
-    private static TCPServer instance; 
-    
+
+    private static TCPServer instance;
+
     public static TCPServer getInstance(Node node) {
-        if(instance == null){
+        if (instance == null) {
             instance = new TCPServer(node);
+            instance.start();
         }
         return instance;
     }
-    
-    private TCPServer(Node node){
+
+    private TCPServer(Node node) {
+        this.called = false;
         this.node = node;
     }
-    
-    
+
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
     private String downloadedFile;
     private File initialFile;
+    private boolean called;
 
     public void startServer(File file) throws IOException {
-        this.initialFile = file;   
-        this.start();  
-           
+        this.initialFile = file;
+
     }
 
     @Override
-    public void run()
-    {
-        try {
-            serverSocket = new ServerSocket(node.getTcpPort());
-            clientSocket = serverSocket.accept();
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            String file = in.readLine();
-            JOptionPane.showMessageDialog
-                (MainFrame.getInstance(), "file name : "+file.split(",")[2].replace("_", " ").trim());
-            this.downloadedFile = file;
-            stopServer();
-        } catch (IOException ex) {
-            Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
+    public void run() {
+        called = true;
+        while (true) {
+            try {
+                serverSocket = new ServerSocket(node.getTcpPort());
+                clientSocket = serverSocket.accept();
+                out = new PrintWriter(clientSocket.getOutputStream(), true);
+                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                String file = in.readLine();
+                JOptionPane.showMessageDialog(MainFrame.getInstance(), "file name : " + file.split(",")[2].replace("_", " ").trim());
+                this.downloadedFile = file;
+                stopServer();
+            } catch (IOException ex) {
+                Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
- 
+
     public void stopServer() throws IOException {
         in.close();
         out.close();
@@ -79,6 +81,5 @@ public class TCPServer extends Thread implements IInitializerDownload
         this.initialFile.setHashCode(DownloadInitializer.getInstance().genHash(body));
         uiCreator.displayFileContent(initialFile);
     }
-    
-   
+
 }
