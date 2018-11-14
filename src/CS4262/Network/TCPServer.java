@@ -56,7 +56,7 @@ public class TCPServer extends Thread
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             String file = in.readLine();
             JOptionPane.showMessageDialog(MainFrame.getInstance(), "file :"+file);
-            FileDTO fileDto = extractRecievedFile(file);
+            //FileDTO fileDto = extractRecievedFile(file);
             //JOptionPane.showMessageDialog(MainFrame.getInstance(), "Recieved file :"+fileDto.getFileObject().getName());
             stopServer();
         } catch (IOException ex) {
@@ -71,19 +71,12 @@ public class TCPServer extends Thread
         serverSocket.close();
     }
     
-    public FileDTO extractRecievedFile(String recievedFile)
+    public String extractRecievedFile(String recievedFile)
     {
-        FileDTO obj = null;
-        // deserialize the object
-        try {
-            byte b[] = recievedFile.getBytes();
-            ByteArrayInputStream bi = new ByteArrayInputStream(b);
-            ObjectInputStream si = new ObjectInputStream(bi);
-            obj = (FileDTO) si.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println(e);
-        }
-        return obj;
+        String obj = null;
+        String[] fileContent;
+        fileContent = recievedFile.trim().split(",");
+        return recievedFile;
     }
     
 }

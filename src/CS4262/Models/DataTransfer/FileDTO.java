@@ -60,17 +60,11 @@ public class FileDTO implements Serializable {
      * @return serialized object
      */
     public String getSerializedObj() {
-        String serializedObject = "";
+        String serializedObject = null;
         // serialize the object
-        try {
-            ByteArrayOutputStream bo = new ByteArrayOutputStream();
-            ObjectOutputStream so = new ObjectOutputStream(bo);
-            so.writeObject(this);
-            so.flush();
-            serializedObject = bo.toString();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
+        // format = file content,id,name
+        File f = this.fileObject;
+        serializedObject = f.getBody()+","+f.getId()+","+f.getName();
         return serializedObject;
     }
 }
