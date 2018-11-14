@@ -1,13 +1,13 @@
 package CS4262.Network;
 
+import CS4262.Core.DownloadInitializer;
+import CS4262.Interfaces.IInitializerDownload;
 import CS4262.MainFrame;
-import CS4262.Models.DataTransfer.FileDTO;
 import CS4262.Models.Node;
+import CS4262.Models.File;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  *
  * @author Lahiru Kaushalya
  */
-public class TCPServer extends Thread
+public class TCPServer extends Thread implements IInitializerDownload
 {
     private final Node node;
     
@@ -41,9 +41,13 @@ public class TCPServer extends Thread
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
+    private String downloadedFile;
+    private File initialFile;
 
-    public void startServer() throws IOException {
-           this.start();
+    public void startServer(File file) throws IOException {
+        this.initialFile = file;   
+        this.start();  
+           
     }
 
     @Override
@@ -55,9 +59,9 @@ public class TCPServer extends Thread
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             String file = in.readLine();
-            JOptionPane.showMessageDialog(MainFrame.getInstance(), "file :"+file);
-            //FileDTO fileDto = extractRecievedFile(file);
-            //JOptionPane.showMessageDialog(MainFrame.getInstance(), "Recieved file :"+fileDto.getFileObject().getName());
+            JOptionPane.showMessageDialog
+                (MainFrame.getInstance(), "file name : "+file.split(",")[2].replace("_", " ").trim());
+            this.downloadedFile = file;
             stopServer();
         } catch (IOException ex) {
             Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
@@ -69,14 +73,12 @@ public class TCPServer extends Thread
         out.close();
         clientSocket.close();
         serverSocket.close();
+        String body = this.downloadedFile.split(",")[0];
+        this.initialFile.setBody(body);
+        this.initialFile.setFileSize(Float.valueOf(this.downloadedFile.split(",")[1]));
+        this.initialFile.setHashCode(DownloadInitializer.getInstance().genHash(body));
+        uiCreator.displayFileContent(initialFile);
     }
     
-    public String extractRecievedFile(String recievedFile)
-    {
-        String obj = null;
-        String[] fileContent;
-        fileContent = recievedFile.trim().split(",");
-        return recievedFile;
-    }
-    
+   
 }

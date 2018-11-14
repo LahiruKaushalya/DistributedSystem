@@ -1,7 +1,6 @@
 package CS4262.Core;
 
 import CS4262.Interfaces.IInitializerDownload;
-import CS4262.Interfaces.IMain;
 import CS4262.Message.Download.DownloadRequest;
 import CS4262.Models.DataTransfer.FileDTO;
 import CS4262.Models.DataTransfer.MessageDTO;
@@ -24,6 +23,7 @@ public class DownloadInitializer implements IInitializerDownload
 {
     
     private static DownloadInitializer instance;
+    
 
     public static DownloadInitializer getInstance() {
         if (instance == null) {
@@ -48,7 +48,7 @@ public class DownloadInitializer implements IInitializerDownload
             
             //Start TCP server and wait for responce
             TCPServer server = TCPServer.getInstance(node);
-            server.startServer();
+            server.startServer(file);
             
             //Send download request over UDP
             new DownloadRequest().send(new MessageDTO(fileHolder, node, file));
@@ -101,7 +101,7 @@ public class DownloadInitializer implements IInitializerDownload
     }
     
     //Generate hash for file content
-    private String genHash(String fileContent){
+    public String genHash(String fileContent){
         StringBuilder sb = new StringBuilder();
         try {
             //Generate SHA-1 hash
