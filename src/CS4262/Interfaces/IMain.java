@@ -3,6 +3,7 @@ package CS4262.Interfaces;
 import CS4262.Helpers.IDCreator;
 import CS4262.Helpers.RangeChecker;
 import CS4262.Helpers.FindReceiver;
+import CS4262.Helpers.MsgCounter;
 import CS4262.Helpers.UICreator;
 import CS4262.MainController;
 import CS4262.Models.Node;
@@ -20,5 +21,5 @@ public interface IMain {
     public UICreator uiCreator = new UICreator();
     public RangeChecker rangeChecker = new RangeChecker();
     public FindReceiver findReceiver = new FindReceiver();
-    
+    public MsgCounter msgCounter = MsgCounter.getInstance();
 }

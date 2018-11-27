@@ -8,6 +8,8 @@ import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Models.DataTransfer.MessageDTO;
 import CS4262.Core.NodeInitializer;
 import CS4262.Interfaces.IInitializerFileIndex;
+import CS4262.Interfaces.IMain;
+import static CS4262.Interfaces.IMain.msgCounter;
 import CS4262.Message.Route.Leave;
 import CS4262.Message.Route.UpdateRoutes;
 
@@ -26,7 +28,7 @@ import java.util.logging.Logger;
  *
  * @author Lahiru Kaushalya
  */
-public class BSConnector implements IInitializerFileIndex{
+public class BSConnector implements IMain, IInitializerFileIndex{
     
     private static Node node;
     private static String response;
@@ -80,15 +82,23 @@ public class BSConnector implements IInitializerFileIndex{
 
                         dp = new DatagramPacket(message.getBytes(), message.length(), ip, 55555);
                         ds.send(dp);
-
+                        
+                        //Increment outgoing msg count
+                        msgCounter.incOutMsgCount();
+                        
                         dp = new DatagramPacket(buf, 1024);
                         ds.receive(dp);
-
+                        
+                        //Increment incoming msg count
+                        msgCounter.incInMsgCount();
+                        
                         response = new String(dp.getData(), 0, dp.getLength());
                         ds.close();
-                    } catch (SocketException | UnknownHostException ex) {
+                    } 
+                    catch (SocketException | UnknownHostException ex) {
                         Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IOException ex) {
+                    } 
+                    catch (IOException ex) {
                         Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }

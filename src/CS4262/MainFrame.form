@@ -356,10 +356,27 @@
                                   <Component id="details_preportDisplayLbl" min="-2" pref="84" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="details_nodeConentLbl" pref="291" max="32767" attributes="0"/>
+                              <Component id="details_nodeConentLbl" alignment="1" max="32767" attributes="0"/>
                               <Component id="detailsScrollPane" max="32767" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="details_msgCountLbl" alignment="0" pref="167" max="32767" attributes="0"/>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="details_inMsgLbl" pref="75" max="32767" attributes="0"/>
+                                              <Component id="details_outMsgLbl" max="32767" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="details_inMsgDisplayLbl" pref="80" max="32767" attributes="0"/>
+                                              <Component id="details_outMsgDisplayLbl" max="32767" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                                  <EmptySpace min="0" pref="122" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -371,26 +388,38 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="details_nodeDetailsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="details_nodeConentLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="details_msgCountLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="details_idLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="details_idDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
+                              <Component id="details_inMsgLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="details_inMsgDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="details_ipDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
+                              <Component id="details_ipLbl" min="-2" max="-2" attributes="0"/>
+                              <Component id="details_outMsgLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="details_outMsgDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="details_idLbl" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="details_idDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="details_ipDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
-                                      <Component id="details_ipLbl" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="details_portDisplayLbl" min="-2" pref="16" max="-2" attributes="0"/>
                                       <Component id="details_portLbl" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="details_nodeConentLbl" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
                                   <Component id="details_successorLbl" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -425,9 +454,9 @@
                                       <Component id="details_preportLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Component id="detailsScrollPane" min="-2" pref="296" max="-2" attributes="0"/>
+                              <Component id="detailsScrollPane" min="-2" pref="220" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="8" max="32767" attributes="0"/>
+                          <EmptySpace pref="17" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -590,6 +619,40 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Dialog" size="12" style="0"/>
                     </Property>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="details_msgCountLbl">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="14" style="1"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Message Count"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="details_inMsgLbl">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Incoming"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="details_inMsgDisplayLbl">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="12" style="0"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="0"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="details_outMsgLbl">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Outgoing"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="details_outMsgDisplayLbl">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="12" style="0"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="0"/>
                   </Properties>
                 </Component>
               </SubComponents>

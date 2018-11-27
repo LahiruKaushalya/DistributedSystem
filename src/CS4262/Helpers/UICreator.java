@@ -31,6 +31,24 @@ public class UICreator implements IMain{
                                 + rpad("ID", 1) + rpad("Name", 2) + rpad("ID", 1) + rpad("Name", 2) + "\n\n";
     }
     
+    //Getters
+    public String getContentHeader() {
+        return contentHeader;
+    }
+
+    public String getRoutingHeader() {
+        return routingHeader;
+    }
+
+    public String getFileIndexHeader() {
+        return fileIndexHeader;
+    }
+
+    public String getWordIndexHeader() {
+        return wordIndexHeader;
+    }
+    
+    
     public void updateContentUI(){
         List<File> content = node.getContent();
         String displayText = contentHeader;
@@ -152,30 +170,12 @@ public class UICreator implements IMain{
         mainController.getMainFrame().displayFileContent(dataText);
     }
     
-    private String rpad(String word, int tabs) {
-        int tabsReq = ((12 * tabs) - word.length()) / 12;
-        String pad = "\t";
-        while(tabsReq > 0){
-            pad += "\t";
-            tabsReq--;
-        }
-        return word + pad;
+    public void updateInMsgCount(String value){
+        mainController.getMainFrame().updateInMsg(value);
     }
     
-    public String getContentHeader() {
-        return contentHeader;
-    }
-
-    public String getRoutingHeader() {
-        return routingHeader;
-    }
-
-    public String getFileIndexHeader() {
-        return fileIndexHeader;
-    }
-
-    public String getWordIndexHeader() {
-        return wordIndexHeader;
+    public void updateOutMsgCount(String value){
+        mainController.getMainFrame().updateOutMsg(value);
     }
     
     private String Capitalize(String input){
@@ -186,5 +186,15 @@ public class UICreator implements IMain{
             sb.append(" ");
         }
         return sb.toString();
+    }
+    
+    private String rpad(String word, int tabs) {
+        int tabsReq = ((12 * tabs) - word.length()) / 12;
+        String pad = "\t";
+        while(tabsReq > 0){
+            pad += "\t";
+            tabsReq--;
+        }
+        return word + pad;
     }
 }

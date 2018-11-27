@@ -1,5 +1,6 @@
 package CS4262.Network;
 
+import CS4262.Interfaces.IMain;
 import CS4262.Models.Node;
 
 import java.io.IOException;
@@ -13,11 +14,12 @@ import java.util.logging.Logger;
  *
  * @author Lahiru Kaushalya
  */
-public class UDPServer implements Runnable {
+public class UDPServer implements Runnable, IMain {
     
     private final Node node;
     private final Thread thread;
     private DatagramSocket server;
+    
     private static UDPServer instance; 
     
     public static UDPServer getInstance(Node node) {
@@ -47,6 +49,8 @@ public class UDPServer implements Runnable {
                     //Create a new ClientHandler thread object 
                     Thread ch = new MessageReceiver(incoming, server);
                     ch.start();
+                    //Increment incoming msg count
+                    msgCounter.incInMsgCount();
                 }
                 catch(SocketTimeoutException ex){
                     //Check for unregistration
@@ -67,11 +71,14 @@ public class UDPServer implements Runnable {
     }
     
     public void stopServer(){
+        msgCounter.resetInMsgCount();
         thread.interrupt();
     }
     
     public void startServer(){
+        msgCounter.resetInMsgCount();
         thread.start();
     }
+    
 }
 

@@ -26,8 +26,8 @@ public class TaskCheckSucessor extends TimerTask implements IMain,
     
     
     public TaskCheckSucessor() {
-        this.delay = 5000; //10 seconds
-        this.period = 4000; //10 seconds
+        this.delay = 10000; //10 seconds
+        this.period = 10000; //10 seconds
         this.retryCount = 0;
         this.hopCount = NodeInitializer.getHopCount();
         this.timer = new Timer();
@@ -54,7 +54,7 @@ public class TaskCheckSucessor extends TimerTask implements IMain,
                 retryCount = 0;
             }
 
-            if (retryCount == 3) {
+            if (retryCount == 2) {
                 //Remove dead node from routing table
                 routeInitializer.removeAndUpdate(successor);
                 uiCreator.updateRoutesUI();

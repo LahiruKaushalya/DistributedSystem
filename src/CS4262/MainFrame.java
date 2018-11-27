@@ -99,6 +99,11 @@ public class MainFrame extends javax.swing.JFrame {
         details_preipDisplayLbl = new javax.swing.JLabel();
         details_preportLbl = new javax.swing.JLabel();
         details_preportDisplayLbl = new javax.swing.JLabel();
+        details_msgCountLbl = new javax.swing.JLabel();
+        details_inMsgLbl = new javax.swing.JLabel();
+        details_inMsgDisplayLbl = new javax.swing.JLabel();
+        details_outMsgLbl = new javax.swing.JLabel();
+        details_outMsgDisplayLbl = new javax.swing.JLabel();
         routingTablePanel = new javax.swing.JPanel();
         routingScrollPane = new javax.swing.JScrollPane();
         routingTextPane = new javax.swing.JTextPane();
@@ -303,6 +308,19 @@ public class MainFrame extends javax.swing.JFrame {
 
         details_preportDisplayLbl.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
 
+        details_msgCountLbl.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        details_msgCountLbl.setText("Message Count");
+
+        details_inMsgLbl.setText("Incoming");
+
+        details_inMsgDisplayLbl.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        details_inMsgDisplayLbl.setText("0");
+
+        details_outMsgLbl.setText("Outgoing");
+
+        details_outMsgDisplayLbl.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        details_outMsgDisplayLbl.setText("0");
+
         javax.swing.GroupLayout detailsPanelLayout = new javax.swing.GroupLayout(detailsPanel);
         detailsPanel.setLayout(detailsPanelLayout);
         detailsPanelLayout.setHorizontalGroup(
@@ -353,10 +371,22 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(details_preportLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(14, 14, 14)
                         .addComponent(details_preportDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
+                .addGap(20, 20, 20)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(details_nodeConentLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
-                    .addComponent(detailsScrollPane))
+                    .addComponent(details_nodeConentLbl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(detailsScrollPane)
+                    .addGroup(detailsPanelLayout.createSequentialGroup()
+                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(details_msgCountLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+                            .addGroup(detailsPanelLayout.createSequentialGroup()
+                                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(details_inMsgLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+                                    .addComponent(details_outMsgLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(details_inMsgDisplayLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                                    .addComponent(details_outMsgDisplayLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(0, 122, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         detailsPanelLayout.setVerticalGroup(
@@ -365,22 +395,31 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(details_nodeDetailsLbl)
-                    .addComponent(details_nodeConentLbl))
+                    .addComponent(details_msgCountLbl))
                 .addGap(12, 12, 12)
+                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(details_idLbl)
+                    .addComponent(details_idDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(details_inMsgLbl)
+                    .addComponent(details_inMsgDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(details_ipDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(details_ipLbl)
+                    .addComponent(details_outMsgLbl)
+                    .addComponent(details_outMsgDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(detailsPanelLayout.createSequentialGroup()
                         .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(details_idLbl)
-                            .addComponent(details_idDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(details_ipDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(details_ipLbl))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(details_portDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(details_portLbl))
-                        .addGap(30, 30, 30)
+                        .addGap(30, 30, 30))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detailsPanelLayout.createSequentialGroup()
+                        .addComponent(details_nodeConentLbl)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(detailsPanelLayout.createSequentialGroup()
                         .addComponent(details_successorLbl)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -408,8 +447,8 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(details_preportDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(details_preportLbl)))
-                    .addComponent(detailsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(8, Short.MAX_VALUE))
+                    .addComponent(detailsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         homeTab.addTab("Details", detailsPanel);
@@ -762,6 +801,14 @@ public class MainFrame extends javax.swing.JFrame {
         wordIndexTextPane.setText(data);
     }
     
+    public void updateInMsg(String data){
+        details_inMsgDisplayLbl.setText(data);
+    }
+    
+    public void updateOutMsg(String data){
+        details_outMsgDisplayLbl.setText(data);
+    }
+    
     public void updateSearchResponse(Object[][] data){
         //Reset previous search results
         clearPreResults();
@@ -792,10 +839,15 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextPane details_contentTextPane;
     private javax.swing.JLabel details_idDisplayLbl;
     private javax.swing.JLabel details_idLbl;
+    private javax.swing.JLabel details_inMsgDisplayLbl;
+    private javax.swing.JLabel details_inMsgLbl;
     private javax.swing.JLabel details_ipDisplayLbl;
     private javax.swing.JLabel details_ipLbl;
+    private javax.swing.JLabel details_msgCountLbl;
     private javax.swing.JLabel details_nodeConentLbl;
     private javax.swing.JLabel details_nodeDetailsLbl;
+    private javax.swing.JLabel details_outMsgDisplayLbl;
+    private javax.swing.JLabel details_outMsgLbl;
     private javax.swing.JLabel details_portDisplayLbl;
     private javax.swing.JLabel details_portLbl;
     private javax.swing.JLabel details_preidDisplayLbl;

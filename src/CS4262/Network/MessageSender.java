@@ -1,5 +1,6 @@
 package CS4262.Network;
 
+import CS4262.Interfaces.IMain;
 import CS4262.Models.DataTransfer.NodeDTO;
 
 import java.io.IOException;
@@ -13,13 +14,13 @@ import java.util.logging.Logger;
  *
  * @author Lahiru Kaushalya
  */
-public class MessageSender {
+public class MessageSender implements IMain {
     
     private final long MSG_TIMEOUT;
-    
-    private static MessageSender instance;
     private String response;
     
+    private static MessageSender instance;
+
     public static MessageSender getInstance() {
         if(instance == null){
             instance = new MessageSender();
@@ -48,7 +49,10 @@ public class MessageSender {
                         //Create datagrame packet
                         dp = new DatagramPacket(message.getBytes(), message.length(), receiverIP, receiverPort);
                         socket.send(dp);
-
+                        
+                        //Increment outgoing msg count
+                        msgCounter.incOutMsgCount();
+                        
                         dp = new DatagramPacket(buf, 65536);
                         socket.receive(dp);
 
