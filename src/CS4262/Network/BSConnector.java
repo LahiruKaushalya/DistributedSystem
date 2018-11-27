@@ -1,17 +1,15 @@
 package CS4262.Network;
 
 import CS4262.Core.ContentInitializer;
-import CS4262.Core.FileIndexInitializer;
 import CS4262.Helpers.IDCreator;
 import CS4262.MainController;
 import CS4262.Models.Node;
 import CS4262.Models.DataTransfer.NodeDTO;
+import CS4262.Models.DataTransfer.MessageDTO;
 import CS4262.Core.NodeInitializer;
 import CS4262.Interfaces.IInitializerFileIndex;
-import static CS4262.Interfaces.IInitializerFileIndex.fileIndexInitializer;
 import CS4262.Message.Route.Leave;
 import CS4262.Message.Route.UpdateRoutes;
-import CS4262.Models.DataTransfer.MessageDTO;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -39,7 +37,7 @@ public class BSConnector implements IInitializerFileIndex{
     private final IDCreator idCreator;
     
     private ArrayList<NodeDTO> nodes;
-    private UDPServer nodeServerThread;;
+    private UDPServer udpServer;;
 
     public BSConnector(String bsipAddress, String ipAddress, int port) {
         
@@ -57,39 +55,42 @@ public class BSConnector implements IInitializerFileIndex{
     }
     
     public void register() {
-        
-        try {
-            Thread t = new Thread() {
-                @Override
-                public void run() {
-                    send(" REG ");
-                }
-            };
-            t.start();
-            t.join(CON_TIMEOUT);
-
-        } 
-        catch (InterruptedException ex) {
-            Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        finally{
-            if(response == null){
-                mainController.getMainFrame().displayError("Server Error"); 
-            } else {
-                //Process bootstrap server responce
-                String processedResponse = processResponce(response);
-                //Update UI
-                mainController.getMainFrame().updateConnctionResponce(processedResponse);
-            }
-        }
+        send("REG");
     }
     
     public void unregister() {
+        send("UNREG");
+    }
+    
+    public void echo() {
+        send("ECHO");
+    }
+
+    private void send(String code) {
         try {
             Thread t = new Thread() {
                 @Override
                 public void run() {
-                    send(" UNREG ");
+                    try {
+                        String message = genarateMsg(code);
+                        DatagramPacket dp;
+                        byte[] buf = new byte[1024];
+                        DatagramSocket ds = new DatagramSocket();
+                        InetAddress ip = InetAddress.getByName(bsIPAddress);
+
+                        dp = new DatagramPacket(message.getBytes(), message.length(), ip, 55555);
+                        ds.send(dp);
+
+                        dp = new DatagramPacket(buf, 1024);
+                        ds.receive(dp);
+
+                        response = new String(dp.getData(), 0, dp.getLength());
+                        ds.close();
+                    } catch (SocketException | UnknownHostException ex) {
+                        Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             };
             t.start();
@@ -98,46 +99,21 @@ public class BSConnector implements IInitializerFileIndex{
         catch (InterruptedException ex) {
             Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
         } 
-        finally{
-            if(response == null){
-                mainController.getMainFrame().displayError("Server Error"); 
+        finally {
+            if (response == null) {
+                mainController.getMainFrame().displayError("Server Error");
             } else {
                 String processedResponse = processResponce(response);
                 mainController.getMainFrame().updateConnctionResponce(processedResponse);
             }
         }
     }
-    
-    private void send(String code){
-        try {
-            String message = genarateMsg(code);
-            DatagramPacket dp;
-            byte[] buf = new byte[1024];
-            DatagramSocket ds = new DatagramSocket();
-            InetAddress ip = InetAddress.getByName(bsIPAddress);
-            
-            dp = new DatagramPacket(message.getBytes(), message.length(), ip, 55555);
-            ds.send(dp);
-            
-            dp = new DatagramPacket(buf, 1024);
-            ds.receive(dp);
-            
-            response = new String(dp.getData(), 0, dp.getLength());
-            ds.close();
-        } 
-        catch (SocketException | UnknownHostException ex) {
-            Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (IOException ex) {
-            Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
+
     private String genarateMsg(String code) {
         String message;
         String ip = node.getipAdress();
         int port = node.getUdpPort();
-        message = code + ip + " " + port + " " + idCreator.generateNodeID(ip, port);
+        message = " " + code + " " + ip + " " + port + " " + idCreator.generateNodeID(ip, port);
         message = "00" + String.valueOf(message.length() + 5) + message;
         return message;
     }
@@ -190,6 +166,16 @@ public class BSConnector implements IInitializerFileIndex{
                         out += "Error while unregistering.\nIP and port may not be in the registry or command is incorrect.";
                         return out;
                 }
+            case "ECHOK":
+                switch(value){
+                    case 0:
+                        out += "Echo successful.";
+                        onEchoSuccess();
+                        return out;
+                    default:
+                        out += "Error while communication";
+                        return out;
+                }
             default:
                 out += "Error";
                 return out;
@@ -198,10 +184,14 @@ public class BSConnector implements IInitializerFileIndex{
     
     private void onRegSuccess(){
         //Start Node UDP Server
-        nodeServerThread = UDPServer.getInstance(node);
-        nodeServerThread.startServer();
+        udpServer = UDPServer.getInstance(node);
+        udpServer.startServer();
         //Initialize neighbours
         NodeInitializer.getInstance().initializeNode(nodes);
+    }
+    
+    private void onEchoSuccess(){
+    
     }
     
     private void onUnregSuccess(){
@@ -245,7 +235,7 @@ public class BSConnector implements IInitializerFileIndex{
             Logger.getLogger(BSConnector.class.getName()).log(Level.SEVERE, null, ex);
         }
         finally {
-            nodeServerThread.stopServer();
+            udpServer.stopServer();
         }
     }
 }

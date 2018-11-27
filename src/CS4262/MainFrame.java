@@ -8,6 +8,7 @@ import CS4262.Network.BSConnector;
 import java.awt.Color;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -134,10 +135,24 @@ public class MainFrame extends javax.swing.JFrame {
         portLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         portLabel.setText("Port");
 
-        regtBtn.setBackground(new java.awt.Color(0, 0, 24));
+        ipTextField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        portTextField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        regtBtn.setBackground(new java.awt.Color(255, 255, 255));
         regtBtn.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
-        regtBtn.setForeground(new java.awt.Color(204, 255, 255));
+        regtBtn.setForeground(new java.awt.Color(0, 0, 25));
         regtBtn.setText("REGISTER");
+        regtBtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        regtBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        regtBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                regtBtnMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                regtBtnMouseExited(evt);
+            }
+        });
         regtBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 regtBtnActionPerformed(evt);
@@ -145,17 +160,30 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         connectTextPane.setEditable(false);
-        connectTextPane.setBackground(new java.awt.Color(204, 204, 204));
+        connectTextPane.setBackground(new java.awt.Color(255, 255, 255));
+        connectTextPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         connectTextPane.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         connectScrollPane.setViewportView(connectTextPane);
 
         bsServerIPLbl.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         bsServerIPLbl.setText("BS Server IP");
 
-        unregBtn.setBackground(new java.awt.Color(0, 0, 24));
+        bsServerIPTextField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        unregBtn.setBackground(new java.awt.Color(255, 255, 255));
         unregBtn.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
-        unregBtn.setForeground(new java.awt.Color(204, 255, 255));
+        unregBtn.setForeground(new java.awt.Color(0, 0, 0));
         unregBtn.setText("UNREGISTER");
+        unregBtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        unregBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        unregBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                unregBtnMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                unregBtnMouseExited(evt);
+            }
+        });
         unregBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 unregBtnActionPerformed(evt);
@@ -196,7 +224,7 @@ public class MainFrame extends javax.swing.JFrame {
             connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, connectionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(connectScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                .addComponent(connectScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, connectionPanelLayout.createSequentialGroup()
@@ -214,16 +242,17 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(portLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(portTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(regtBtn)
-                            .addComponent(unregBtn))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(regtBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                            .addComponent(unregBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(15, 15, 15))))
         );
 
         homeTab.addTab("Connect", connectionPanel);
 
         details_contentTextPane.setEditable(false);
+        details_contentTextPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         detailsScrollPane.setViewportView(details_contentTextPane);
 
         details_nodeDetailsLbl.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -386,6 +415,7 @@ public class MainFrame extends javax.swing.JFrame {
         homeTab.addTab("Details", detailsPanel);
 
         routingTextPane.setEditable(false);
+        routingTextPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         routingScrollPane.setViewportView(routingTextPane);
 
         javax.swing.GroupLayout routingTablePanelLayout = new javax.swing.GroupLayout(routingTablePanel);
@@ -410,31 +440,55 @@ public class MainFrame extends javax.swing.JFrame {
         MainTab.addTab("Home", homeTab);
 
         fileIndexTextPane.setEditable(false);
+        fileIndexTextPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         fileIndexScrollPane.setViewportView(fileIndexTextPane);
 
-        indexTab.addTab("File ", fileIndexScrollPane);
+        indexTab.addTab("File Index ", fileIndexScrollPane);
 
         wordIndexTextPane.setEditable(false);
+        wordIndexTextPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         wordIndexScrollPane.setViewportView(wordIndexTextPane);
 
-        indexTab.addTab("Word ", wordIndexScrollPane);
+        indexTab.addTab("Word Index", wordIndexScrollPane);
 
         MainTab.addTab("Index", indexTab);
 
-        downloadBtn.setBackground(new java.awt.Color(0, 0, 25));
+        downloadBtn.setBackground(new java.awt.Color(255, 255, 255));
         downloadBtn.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
-        downloadBtn.setForeground(new java.awt.Color(204, 255, 255));
+        downloadBtn.setForeground(new java.awt.Color(0, 0, 25));
         downloadBtn.setText("DOWNLOAD");
+        downloadBtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        downloadBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        downloadBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                downloadBtnMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                downloadBtnMouseExited(evt);
+            }
+        });
         downloadBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 downloadBtnActionPerformed(evt);
             }
         });
 
-        searchBtn.setBackground(new java.awt.Color(0, 0, 25));
+        fileNameTextField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        searchBtn.setBackground(new java.awt.Color(255, 255, 255));
         searchBtn.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
-        searchBtn.setForeground(new java.awt.Color(204, 255, 255));
+        searchBtn.setForeground(new java.awt.Color(0, 0, 25));
         searchBtn.setText("SEARCH");
+        searchBtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        searchBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        searchBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                searchBtnMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                searchBtnMouseExited(evt);
+            }
+        });
         searchBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchBtnActionPerformed(evt);
@@ -466,6 +520,7 @@ public class MainFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        searchResultsTable.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         searchResultsTable.getTableHeader().setReorderingAllowed(false);
         searchTableSP.setViewportView(searchResultsTable);
         if (searchResultsTable.getColumnModel().getColumnCount() > 0) {
@@ -494,36 +549,36 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addComponent(searchTableSP, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
                     .addGroup(searchPanelLayout.createSequentialGroup()
-                        .addGap(354, 354, 354)
-                        .addComponent(downloadBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(searchPanelLayout.createSequentialGroup()
                         .addComponent(fileNameTextField)
-                        .addGap(18, 18, 18)
-                        .addComponent(searchBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(searchBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(searchPanelLayout.createSequentialGroup()
                         .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(searchResultsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(fileDetailsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(downloadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         searchPanelLayout.setVerticalGroup(
             searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(searchPanelLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(19, 19, 19)
+                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchResultsLbl)
                 .addGap(11, 11, 11)
-                .addComponent(searchTableSP, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                .addComponent(searchTableSP, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(fileDetailsLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(downloadBtn)
+                .addGap(18, 18, 18)
+                .addComponent(downloadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -567,6 +622,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_regtBtnActionPerformed
 
+    //Button mouse events 
     private void unregBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unregBtnActionPerformed
         bsConnector.unregister();
     }//GEN-LAST:event_unregBtnActionPerformed
@@ -600,6 +656,46 @@ public class MainFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"Select file for download");
         }
     }//GEN-LAST:event_downloadBtnActionPerformed
+
+    private void searchBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchBtnMouseEntered
+        searchBtn.setFont(new Font("Calibri", Font.BOLD, 13));
+        searchBtn.setBackground(new Color(225,225,225));
+    }//GEN-LAST:event_searchBtnMouseEntered
+
+    private void searchBtnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchBtnMouseExited
+        searchBtn.setFont(new Font("Calibri", Font.BOLD, 12));
+        searchBtn.setBackground(Color.WHITE);
+    }//GEN-LAST:event_searchBtnMouseExited
+
+    private void downloadBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_downloadBtnMouseEntered
+        downloadBtn.setFont(new Font("Calibri", Font.BOLD, 13));
+        downloadBtn.setBackground(new Color(225,225,225));
+    }//GEN-LAST:event_downloadBtnMouseEntered
+
+    private void downloadBtnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_downloadBtnMouseExited
+        downloadBtn.setFont(new Font("Calibri", Font.BOLD, 12));
+        downloadBtn.setBackground(Color.WHITE);
+    }//GEN-LAST:event_downloadBtnMouseExited
+
+    private void regtBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_regtBtnMouseEntered
+        regtBtn.setFont(new Font("Calibri", Font.BOLD, 13));
+        regtBtn.setBackground(new Color(225,225,225));
+    }//GEN-LAST:event_regtBtnMouseEntered
+
+    private void regtBtnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_regtBtnMouseExited
+        regtBtn.setFont(new Font("Calibri", Font.BOLD, 12));
+        regtBtn.setBackground(Color.WHITE);
+    }//GEN-LAST:event_regtBtnMouseExited
+
+    private void unregBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unregBtnMouseEntered
+        unregBtn.setFont(new Font("Calibri", Font.BOLD, 13));
+        unregBtn.setBackground(new Color(225,225,225));
+    }//GEN-LAST:event_unregBtnMouseEntered
+
+    private void unregBtnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unregBtnMouseExited
+        unregBtn.setFont(new Font("Calibri", Font.BOLD, 12));
+        unregBtn.setBackground(Color.WHITE);
+    }//GEN-LAST:event_unregBtnMouseExited
     
     private void setDefaultText(){
         details_contentTextPane.setText(uiCreator.getContentHeader());
@@ -680,7 +776,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     public void displayError(String errMsg){
-        JOptionPane.showMessageDialog(this, errMsg, "Failure", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, errMsg, "Alert", JOptionPane.WARNING_MESSAGE);
     }
     
     
