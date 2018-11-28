@@ -124,7 +124,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
-        setMinimumSize(new java.awt.Dimension(600, 420));
+        setMinimumSize(new java.awt.Dimension(620, 420));
 
         MainTab.setBackground(new java.awt.Color(204, 204, 204));
         MainTab.setTabPlacement(javax.swing.JTabbedPane.RIGHT);
@@ -206,7 +206,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(connectScrollPane)
                     .addGroup(connectionPanelLayout.createSequentialGroup()
-                        .addGap(0, 31, Short.MAX_VALUE)
+                        .addGap(0, 70, Short.MAX_VALUE)
                         .addComponent(icon, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -386,7 +386,7 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(details_inMsgDisplayLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
                                     .addComponent(details_outMsgDisplayLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(0, 141, Short.MAX_VALUE)))
+                        .addGap(0, 180, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         detailsPanelLayout.setVerticalGroup(
@@ -463,7 +463,7 @@ public class MainFrame extends javax.swing.JFrame {
             routingTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(routingTablePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(routingScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
+                .addComponent(routingScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
                 .addContainerGap())
         );
         routingTablePanelLayout.setVerticalGroup(
@@ -589,7 +589,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addComponent(searchTableSP, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
+                    .addComponent(searchTableSP, javax.swing.GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE)
                     .addGroup(searchPanelLayout.createSequentialGroup()
                         .addComponent(fileNameTextField)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -687,7 +687,7 @@ public class MainFrame extends javax.swing.JFrame {
         if(index != -1){
             String fileName = (String)tableModel.getValueAt(index, 0);
             String ipAddress = (String)tableModel.getValueAt(index, 1);
-            int udpPort = (int)tableModel.getValueAt(index, 2);
+            int udpPort = (int)tableModel.getValueAt(index, 3);
             try {
                 DownloadInitializer.getInstance().downloadFile(ipAddress, udpPort, fileName);
             } catch (IOException ex) {

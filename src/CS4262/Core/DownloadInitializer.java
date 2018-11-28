@@ -49,11 +49,8 @@ public class DownloadInitializer implements IInitializerDownload
             server.startServer(file);
             
             //Send download request over UDP
-            String response = new DownloadRequest().send(new MessageDTO(fileHolder, node, file));
+            new DownloadRequest().send(new MessageDTO(fileHolder, node, file));
             
-            if(response == null){
-                mainController.getMainFrame().displayError("File holder not responding..");
-            }
         }
     }
     

@@ -120,12 +120,13 @@ public class UICreator implements IMain{
                 
                 for(int k = lbound; k <= i; k++){
                     rend = (nodeID + (int)Math.pow(2, k)) % bp;
-                    displayText += k + "\t" 
-                                + rend + "\t" 
-                                + id + "\t" 
-                                + ip + "\t\t" 
-                                + tcpPort + "\t" 
-                                + udpPort + "\n";
+                    displayText += rpad(""+k, 1)
+                                + rpad(""+rend, 1)
+                                + rpad(""+id, 1)
+                                + rpad(""+ip, 2)
+                                + rpad(""+tcpPort, 1)
+                                + rpad(""+udpPort, 1) 
+                                + "\n";
                 }
                 lbound = i + 1;
             }
@@ -133,7 +134,13 @@ public class UICreator implements IMain{
                 if(i == m - 1){
                     for (int k = lbound; k <= i; k++) {
                         rend = (nodeID + (int)Math.pow(2, k)) % bp;
-                        displayText += k + "\t" + rend + "\t-\t-\t\t-\t-\n";
+                        displayText += rpad(""+k, 1) 
+                                    + rpad(""+rend, 1) 
+                                    + rpad("-", 1)
+                                    + rpad("-", 2)
+                                    + rpad("-", 1)
+                                    + rpad("-", 1)
+                                    + "\n";
                     }
                 }
             }
