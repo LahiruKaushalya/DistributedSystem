@@ -38,8 +38,7 @@ public class MainFrame extends javax.swing.JFrame {
     private MainFrame() {
         initComponents();
         
-        this.setResizable(false);
-        this.setTitle("  Distributed file system");
+        this.setTitle("Distributed file system");
         //Set frame position
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize(); 
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
@@ -125,6 +124,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
+        setMinimumSize(new java.awt.Dimension(600, 420));
 
         MainTab.setBackground(new java.awt.Color(204, 204, 204));
         MainTab.setTabPlacement(javax.swing.JTabbedPane.RIGHT);
@@ -206,7 +206,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(connectScrollPane)
                     .addGroup(connectionPanelLayout.createSequentialGroup()
-                        .addGap(0, 12, Short.MAX_VALUE)
+                        .addGap(0, 31, Short.MAX_VALUE)
                         .addComponent(icon, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -386,7 +386,7 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(details_inMsgDisplayLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
                                     .addComponent(details_outMsgDisplayLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(0, 122, Short.MAX_VALUE)))
+                        .addGap(0, 141, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         detailsPanelLayout.setVerticalGroup(
@@ -447,8 +447,8 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(details_preportDisplayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(details_preportLbl)))
-                    .addComponent(detailsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                    .addComponent(detailsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE))
+                .addGap(17, 17, 17))
         );
 
         homeTab.addTab("Details", detailsPanel);
@@ -463,7 +463,7 @@ public class MainFrame extends javax.swing.JFrame {
             routingTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(routingTablePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(routingScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                .addComponent(routingScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
                 .addContainerGap())
         );
         routingTablePanelLayout.setVerticalGroup(
@@ -541,14 +541,14 @@ public class MainFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "File Name", "IP Address", "UDP Port", "TCP port"
+                "File Name", "IP Address", "Hop Count", "UDP Port", "TCP port"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -566,12 +566,15 @@ public class MainFrame extends javax.swing.JFrame {
             searchResultsTable.getColumnModel().getColumn(1).setMinWidth(120);
             searchResultsTable.getColumnModel().getColumn(1).setPreferredWidth(120);
             searchResultsTable.getColumnModel().getColumn(1).setMaxWidth(140);
-            searchResultsTable.getColumnModel().getColumn(2).setMinWidth(75);
-            searchResultsTable.getColumnModel().getColumn(2).setPreferredWidth(75);
+            searchResultsTable.getColumnModel().getColumn(2).setMinWidth(70);
+            searchResultsTable.getColumnModel().getColumn(2).setPreferredWidth(70);
             searchResultsTable.getColumnModel().getColumn(2).setMaxWidth(75);
-            searchResultsTable.getColumnModel().getColumn(3).setMinWidth(75);
-            searchResultsTable.getColumnModel().getColumn(3).setPreferredWidth(75);
-            searchResultsTable.getColumnModel().getColumn(3).setMaxWidth(75);
+            searchResultsTable.getColumnModel().getColumn(3).setMinWidth(65);
+            searchResultsTable.getColumnModel().getColumn(3).setPreferredWidth(65);
+            searchResultsTable.getColumnModel().getColumn(3).setMaxWidth(70);
+            searchResultsTable.getColumnModel().getColumn(4).setMinWidth(65);
+            searchResultsTable.getColumnModel().getColumn(4).setPreferredWidth(65);
+            searchResultsTable.getColumnModel().getColumn(4).setMaxWidth(70);
         }
 
         searchResultsLbl.setText("Search Results");
@@ -586,7 +589,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addComponent(searchTableSP, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
+                    .addComponent(searchTableSP, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
                     .addGroup(searchPanelLayout.createSequentialGroup()
                         .addComponent(fileNameTextField)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)

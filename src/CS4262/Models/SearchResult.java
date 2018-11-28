@@ -10,10 +10,12 @@ public class SearchResult {
     
     private final File file;
     private final NodeDTO fileHolder;
-
-    public SearchResult(File file, NodeDTO fileHolder) {
+    private final int hopCount;
+    
+    public SearchResult(File file, NodeDTO fileHolder, int hopCount) {
         this.file = file;
         this.fileHolder = fileHolder;
+        this.hopCount = hopCount;
     }
 
     public File getFile() {
@@ -22,6 +24,10 @@ public class SearchResult {
 
     public NodeDTO getFileHolder() {
         return fileHolder;
+    }
+
+    public int getHopCount() {
+        return hopCount;
     }
     
 }

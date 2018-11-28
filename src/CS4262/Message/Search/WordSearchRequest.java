@@ -26,7 +26,7 @@ public class WordSearchRequest implements IMessage, IInitializerSearch{
     
     /*
     Search message format 
-    length SER_WORD sender_ip sender_port word_name file_name
+    length SER_WORD sender_ip sender_port hop_count word_name file_name
     */
     @Override
     public String createMsg() {
@@ -34,7 +34,8 @@ public class WordSearchRequest implements IMessage, IInitializerSearch{
         SearchDTO searchDTO = msgDTO.getSearchDTO();
         String msg = " SER_WORD ";
         msg += sender.getipAdress() + " " + sender.getUdpPort() + " " 
-             + searchDTO.getWord().getName() + " " + searchDTO.getFile().getName();
+                + searchDTO.getHopCount() + " "
+                + searchDTO.getWord().getName() + " " + searchDTO.getFile().getName();
         
         return String.format("%04d", msg.length() + 5) + " " + msg;
     }
@@ -46,6 +47,9 @@ public class WordSearchRequest implements IMessage, IInitializerSearch{
         int senderPort = Integer.parseInt(st.nextToken());
         NodeDTO sender = new NodeDTO(senderIP, senderPort);
         
+        //Hop count
+        int hopCount = Integer.parseInt(st.nextToken());
+        
         //Searching KeyWord
         String keyWord = st.nextToken();
         Word word = new Word(keyWord, idCreator.generateWordID(keyWord));
@@ -56,8 +60,8 @@ public class WordSearchRequest implements IMessage, IInitializerSearch{
         
         String SenderID = idCreator.generateNodeID(senderIP, senderPort);
         if(!SenderID.equals(node.getId())){
-            SearchDTO searchDTO = new SearchDTO(word, file);
-            searchInitializer.globalSearch(sender, searchDTO);
+            SearchDTO searchDTO = new SearchDTO(word, file, hopCount);
+            searchInitializer.globalWordSearch(sender, searchDTO);
         }
     }
 

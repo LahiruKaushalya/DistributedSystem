@@ -5,6 +5,7 @@ import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Interfaces.IMessage;
 import CS4262.Models.File;
 import CS4262.Models.DataTransfer.MessageDTO;
+import CS4262.Models.DataTransfer.SearchDTO;
 import java.util.StringTokenizer;
 
 /**
@@ -24,14 +25,17 @@ public class FileSearchRequest implements IMessage, IInitializerSearch{
     
     /*
     Search message format 
-    length SER sender_ip sender_port file_name
+    length SER sender_ip sender_port hop_count file_name
     */
     @Override
     public String createMsg() {
         NodeDTO sender = msgDTO.getSender();
-        File file = msgDTO.getFile();
+        SearchDTO searchDTO = msgDTO.getSearchDTO();
         String msg = " SER ";
-        msg += sender.getipAdress() + " " + sender.getUdpPort() + " " + file.getName();
+        msg += sender.getipAdress() + " " 
+                + sender.getUdpPort() + " " 
+                + searchDTO.getHopCount() + " " 
+                + searchDTO.getFile().getName();
         return String.format("%04d", msg.length() + 5) + " " + msg;
     }
     
@@ -42,10 +46,12 @@ public class FileSearchRequest implements IMessage, IInitializerSearch{
         int senderPort = Integer.parseInt(st.nextToken());
         NodeDTO sender = new NodeDTO(senderIP, senderPort);
         
+        //Hop count
+        int hopCount = Integer.parseInt(st.nextToken());
         String fileName = st.nextToken();
 
         File file = new File(fileName, idCreator.generateFileID(fileName));
-        searchInitializer.globalSearch(sender, file);
+        searchInitializer.globalFileSearch(sender, new SearchDTO(file, hopCount));
 
     }
 

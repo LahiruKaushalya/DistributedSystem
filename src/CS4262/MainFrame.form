@@ -4,6 +4,9 @@
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
     <Property name="alwaysOnTop" type="boolean" value="true"/>
+    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[600, 420]"/>
+    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -82,7 +85,7 @@
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Component id="connectScrollPane" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
-                                  <EmptySpace min="0" pref="12" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="31" max="32767" attributes="0"/>
                                   <Component id="icon" min="-2" pref="118" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -375,7 +378,7 @@
                                           </Group>
                                       </Group>
                                   </Group>
-                                  <EmptySpace min="0" pref="122" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="141" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -385,7 +388,7 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="details_nodeDetailsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="details_msgCountLbl" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -397,14 +400,14 @@
                               <Component id="details_inMsgLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="details_inMsgDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="details_ipDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
                               <Component id="details_ipLbl" min="-2" max="-2" attributes="0"/>
                               <Component id="details_outMsgLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="details_outMsgDisplayLbl" alignment="0" min="-2" pref="16" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -454,9 +457,9 @@
                                       <Component id="details_preportLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Component id="detailsScrollPane" min="-2" pref="220" max="-2" attributes="0"/>
+                              <Component id="detailsScrollPane" pref="220" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="17" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -671,7 +674,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="routingScrollPane" pref="482" max="32767" attributes="0"/>
+                          <Component id="routingScrollPane" pref="501" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -791,7 +794,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jScrollPane1" max="32767" attributes="0"/>
-                          <Component id="searchTableSP" alignment="0" pref="484" max="32767" attributes="0"/>
+                          <Component id="searchTableSP" alignment="0" pref="503" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="fileNameTextField" max="32767" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -921,9 +924,10 @@
                 <Component class="javax.swing.JTable" name="searchResultsTable">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="4" rowCount="0">
+                      <Table columnCount="5" rowCount="0">
                         <Column editable="false" title="File Name" type="java.lang.String"/>
                         <Column editable="false" title="IP Address" type="java.lang.String"/>
+                        <Column editable="false" title="Hop Count" type="java.lang.String"/>
                         <Column editable="false" title="UDP Port" type="java.lang.String"/>
                         <Column editable="false" title="TCP port" type="java.lang.String"/>
                       </Table>
@@ -940,12 +944,17 @@
                           <Editor/>
                           <Renderer/>
                         </Column>
-                        <Column maxWidth="75" minWidth="75" prefWidth="75" resizable="true">
+                        <Column maxWidth="75" minWidth="70" prefWidth="70" resizable="true">
                           <Title/>
                           <Editor/>
                           <Renderer/>
                         </Column>
-                        <Column maxWidth="75" minWidth="75" prefWidth="75" resizable="true">
+                        <Column maxWidth="70" minWidth="65" prefWidth="65" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="70" minWidth="65" prefWidth="65" resizable="true">
                           <Title/>
                           <Editor/>
                           <Renderer/>

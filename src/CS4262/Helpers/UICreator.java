@@ -152,6 +152,7 @@ public class UICreator implements IMain{
             out[index] = new Object[]{
                     Capitalize(file.getName()), 
                     fileHolder.getipAdress(), 
+                    searchResult.getHopCount(),
                     fileHolder.getUdpPort(), 
                     fileHolder.getTcpPort()
             };

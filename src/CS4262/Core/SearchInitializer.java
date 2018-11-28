@@ -51,44 +51,40 @@ public class SearchInitializer implements IInitializerSearch{
     }
     
     //File Search
-    public void globalSearch(NodeDTO sender, File file) {
-        String senderId = idCreator.generateNodeID(sender.getipAdress(), sender.getUdpPort());
-        List<SearchResult> searchResults = getResults(file);
-        if(senderId.equals(node.getId()) && searchResults != null){
-            node.setSearchResults(searchResults);
-            uiCreator.updateSearchResultsUI();
-        }
-        else{
-            //Check at least one file holder has been found
-            if (searchResults != null) {
-                new SearchResults().send(new MessageDTO(sender, searchResults));
-            } //File holder not found. 
-            else {
-                //Check for a search redirector node
-                findFileRedirector(sender, file);
-            }
+    public void globalFileSearch(NodeDTO sender, SearchDTO searchDTO) {
+        List<SearchResult> searchResults = getResults(searchDTO);
+        
+        //Check at least one file holder has been found
+        if (searchResults != null) {
+            new SearchResults().send(new MessageDTO(sender, searchResults));
+        } //File holder not found. 
+        else {
+            //Check for a search redirector node
+            findFileRedirector(sender, searchDTO);
         }
     }
     
     //Word search
-    public void globalSearch(NodeDTO sender, SearchDTO searchDTO){
+    public void globalWordSearch(NodeDTO sender, SearchDTO searchDTO){
         String keyWord = searchDTO.getWord().getName();
         //Check in local wordIndex for keyword
         boolean isKeyAvailble = isWordAvailable(keyWord);
         if (isKeyAvailble) {
             //KeyWord locally available
             startFileSearch(sender, searchDTO);
-        } else {
+        } 
+        else {
             findWordRedirector(sender, searchDTO);
         }
     }
      
-    private void findFileRedirector(NodeDTO sender, File file){
-        int fileID = idCreator.getComparableID(file.getId());
+    private void findFileRedirector(NodeDTO sender, SearchDTO searchDTO){
+        int fileID = idCreator.getComparableID(searchDTO.getFile().getId());
         NodeDTO redirector = FindRedirector(fileID);
         
         if(redirector != null){
-            new FileSearchRequest().send(new MessageDTO(redirector, sender, file));
+            searchDTO.incHopCount();
+            new FileSearchRequest().send(new MessageDTO(redirector, sender, searchDTO));
         }
         else{
             //File not found
@@ -100,10 +96,11 @@ public class SearchInitializer implements IInitializerSearch{
         NodeDTO redirector = FindRedirector(wordID);
         
         if(redirector != null){
+            searchDTO.incHopCount();
             new WordSearchRequest().send(new MessageDTO(redirector, sender, searchDTO));
         }
         else{
-            //File not found
+            //Word not found
         }
     }
     
@@ -140,7 +137,7 @@ public class SearchInitializer implements IInitializerSearch{
         
         for(File file : files){
             if(file.getId().equals(searchingFile.getId())){
-                globalSearch(sender, file);
+                globalFileSearch(sender, new SearchDTO(file, searchDTO.getHopCount()));
                 isFileMatched = true;
                 break;
             }
@@ -148,7 +145,7 @@ public class SearchInitializer implements IInitializerSearch{
         
         if(!isFileMatched){
             for (File file : files) {
-                globalSearch(sender, file);
+                globalFileSearch(sender, new SearchDTO(file, searchDTO.getHopCount()));
             }
         }
         
@@ -165,11 +162,12 @@ public class SearchInitializer implements IInitializerSearch{
         return false;
     }
     
-    private List<SearchResult> getResults(File file){
+    private List<SearchResult> getResults(SearchDTO searchDTO){
         //Check searching file index availability
         Map<String, List<NodeDTO>> index = node.getFileIndex();
         List<SearchResult> results = new ArrayList<>();
         List<NodeDTO> fileHolders = null;
+        File file = searchDTO.getFile();
         
         for (String fileID : index.keySet()) {
             if (fileID.equals(file.getId())) {
@@ -180,7 +178,7 @@ public class SearchInitializer implements IInitializerSearch{
         
         if(fileHolders != null){
             for(NodeDTO fileHolder : fileHolders){
-                results.add(new SearchResult(file, fileHolder));
+                results.add(new SearchResult(file, fileHolder, searchDTO.getHopCount()));
             }
             return results;
         }
@@ -197,7 +195,7 @@ public class SearchInitializer implements IInitializerSearch{
         Word word = new Word(keyWord, idCreator.generateWordID(keyWord.toLowerCase()));
         File file = new File(fileName, idCreator.generateFileID(fileName.toLowerCase()));
         
-        return new SearchDTO(word, file);
+        return new SearchDTO(word, file, 0);
     }
     
     private void clearSearchResults(){

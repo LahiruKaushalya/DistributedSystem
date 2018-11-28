@@ -11,12 +11,20 @@ public class SearchDTO {
     
     private final Word word;
     private final File file;
+    private int hopCount;
     
-    public SearchDTO(Word word, File file){
+    public SearchDTO(File file, int hopCount){
+        this.file = file;
+        this.word = null;
+        this.hopCount = hopCount;
+    }
+    
+    public SearchDTO(Word word, File file, int hopCount){
         this.word = word;
         this.file = file;
+        this.hopCount = hopCount;
     }
-
+    
     public Word getWord() {
         return word;
     }
@@ -24,4 +32,13 @@ public class SearchDTO {
     public File getFile() {
         return file;
     }
+
+    public int getHopCount() {
+        return hopCount;
+    }
+
+    public void incHopCount() {
+        this.hopCount++;
+    }
+    
 }

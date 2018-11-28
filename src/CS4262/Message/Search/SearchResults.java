@@ -25,7 +25,7 @@ public class SearchResults implements IMessage{
     
     /*
     Search Results message format 
-    length SEROK file_name fileholder_ip fileholder_port......
+    length SEROK result_count file_name fileholder_ip fileholder_port hop_count ......
     */
     @Override
     public String createMsg() {
@@ -33,9 +33,11 @@ public class SearchResults implements IMessage{
         String msg = " SEROK " + searchResults.size() + " ";
         for(SearchResult searchResult : searchResults){
             msg += searchResult.getFile().getName() + " " 
-                 + searchResult.getFileHolder().getipAdress() + " "
-                 + searchResult.getFileHolder().getUdpPort() + " ";
+                    + searchResult.getFileHolder().getipAdress() + " "
+                    + searchResult.getFileHolder().getUdpPort() + " "
+                    + searchResult.getHopCount() + " ";
         }
+        msg = msg.trim();
         return String.format("%04d", msg.length() + 5) + " " + msg; 
     }
     
@@ -47,10 +49,12 @@ public class SearchResults implements IMessage{
             String fileName = st.nextToken();
             String fileHolderIP = st.nextToken();
             int fileHolderPort = Integer.parseInt(st.nextToken());
+            int hopCount = Integer.parseInt(st.nextToken());
             searchResults.add(
                     new SearchResult(
                             new File(fileName, idCreator.generateFileID(fileName)),
-                            new NodeDTO(fileHolderIP, fileHolderPort)
+                            new NodeDTO(fileHolderIP, fileHolderPort),
+                            hopCount
                     )
             );
             filesFound--;

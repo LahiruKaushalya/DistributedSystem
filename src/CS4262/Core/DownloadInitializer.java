@@ -2,9 +2,7 @@ package CS4262.Core;
 
 import CS4262.Interfaces.IInitializerDownload;
 import CS4262.Message.Download.DownloadRequest;
-import CS4262.Models.DataTransfer.FileDTO;
-import CS4262.Models.DataTransfer.MessageDTO;
-import CS4262.Models.DataTransfer.NodeDTO;
+import CS4262.Models.DataTransfer.*;
 import CS4262.Models.File;
 import CS4262.Network.TCPClient;
 import CS4262.Network.TCPServer;
@@ -51,8 +49,11 @@ public class DownloadInitializer implements IInitializerDownload
             server.startServer(file);
             
             //Send download request over UDP
-            new DownloadRequest().send(new MessageDTO(fileHolder, node, file));
+            String response = new DownloadRequest().send(new MessageDTO(fileHolder, node, file));
             
+            if(response == null){
+                mainController.getMainFrame().displayError("File holder not responding..");
+            }
         }
     }
     
