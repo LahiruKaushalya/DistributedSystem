@@ -187,7 +187,7 @@ public class SearchInitializer implements IInitializerSearch{
     
     private SearchDTO filterFileName(String fileName) {
         //Implement filter logic
-        fileName =  fileName.trim().replace(" ", "_");
+        fileName =  fileName.trim().toLowerCase().replace(" ", "_");
         
         String[] words = fileName.split("_");
         String keyWord = words[0];

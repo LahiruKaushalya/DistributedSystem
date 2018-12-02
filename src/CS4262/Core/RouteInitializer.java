@@ -6,8 +6,6 @@ import CS4262.Models.Node;
 import CS4262.Models.DataTransfer.NodeDTO;
 import CS4262.Interfaces.IInitializerRoute;
 import CS4262.Interfaces.IInitializerWordIndex;
-import CS4262.Message.FileIndex.SendFileIndexToSuc;
-import CS4262.Message.WordIndex.SendWordIndexToSuc;
 import CS4262.Models.DataTransfer.MessageDTO;
 
 /**
@@ -16,8 +14,6 @@ import CS4262.Models.DataTransfer.MessageDTO;
  */
 public class RouteInitializer implements IInitializerRoute, IInitializerFileIndex, IInitializerWordIndex{
     
-    private final SendFileIndexToSuc sendFileIndexToSuc;
-    private final SendWordIndexToSuc sendWordIndexToSuc;
     private final UpdatePredecessor updatePredecessor;
     private static RouteInitializer instance;
     
@@ -30,8 +26,6 @@ public class RouteInitializer implements IInitializerRoute, IInitializerFileInde
     
     private RouteInitializer(){
         this.updatePredecessor = new UpdatePredecessor();
-        this.sendFileIndexToSuc = new SendFileIndexToSuc();
-        this.sendWordIndexToSuc = new SendWordIndexToSuc();
     }
     
     public Node addAndUpdate(NodeDTO neighbour){
@@ -70,11 +64,12 @@ public class RouteInitializer implements IInitializerRoute, IInitializerFileInde
                 break;
             }
         }
+        //Previous successor
+        Node preSucc = node.getSuccessor();
         //Set new routes
         node.setRoutes(routes);
-        
         //Set node successor
-        setNodeSuccessor( );
+        setNodeSuccessor(preSucc);
         
         return temp;
     }
@@ -90,18 +85,17 @@ public class RouteInitializer implements IInitializerRoute, IInitializerFileInde
                 }
             }
         }
+        //Previous successor
+        Node preSucc = node.getSuccessor();
         //Set new routes
         node.setRoutes(routes);
-        
         //Set node successor
-        setNodeSuccessor();
+        setNodeSuccessor(preSucc);
     }
     
-    private void setNodeSuccessor(){
-        Node preSucc = node.getSuccessor();
+    private void setNodeSuccessor(Node preSucc){
         Node[] routes = node.getRoutes();
         int m = idCreator.getBIN_ID_LENGTH();
-        node.setSuccessor(null);
         for(int i = 0; i < m; i++){
             Node temp = routes[i];
             if(temp != null){
@@ -126,12 +120,7 @@ public class RouteInitializer implements IInitializerRoute, IInitializerFileInde
             }
         }
         if(updated){
-            updatePredecessor.send(new MessageDTO(newSucc));
-            sendFileIndexToSuc.send(new MessageDTO(newSucc));
-            sendWordIndexToSuc.send(new MessageDTO(newSucc));
-            fileIndexInitializer.updateWhenSucChanged();
-            wordIndexInitializer.updateWhenSucChanged();
-            mainController.getMainFrame().updateSuccessorDetails(newSucc);
+            updatePredecessor.send(new MessageDTO(newSucc, false));
         }
     }
     

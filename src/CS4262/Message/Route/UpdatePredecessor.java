@@ -21,13 +21,17 @@ public class UpdatePredecessor implements IMessage{
     }
     
     /*
-    Update successor message format 
+    Update predecessor message format 
     length PRE sender_ip sender_port
     */
     @Override
     public String createMsg() {
         String msg = " PRE ";
-        msg += node.getipAdress() + " " + node.getUdpPort();
+        String confirmed = "FALSE";
+        if(msgDTO.isConfirmed()){
+            confirmed = "TRUE";
+        }
+        msg += node.getipAdress() + " " + node.getUdpPort() + " " + confirmed;
         return String.format("%04d", msg.length() + 5) + " " + msg;
     }
     
@@ -38,11 +42,19 @@ public class UpdatePredecessor implements IMessage{
         int prePort = Integer.parseInt(st.nextToken());
         String preID = idCreator.generateNodeID(preIP, prePort);
         Node predecessor = new Node(preIP, prePort, preID);
-        node.setPredecessor(predecessor);
-        mainController.getMainFrame().updatePredecessorDetails(predecessor);
         
-        //Send file index backup to new predecessor
-        new BackupFileIndex().send(new MessageDTO(predecessor));
+        String confirmed = st.nextToken();
+        
+        if(confirmed.equals("TRUE")){
+            node.setPredecessor(predecessor);
+            mainController.getMainFrame().updatePredecessorDetails(predecessor);
+
+            //Send file index backup to new predecessor
+            new BackupFileIndex().send(new MessageDTO(predecessor));
+        }
+        else{
+            new ConfirmPredecessor().send(new MessageDTO(predecessor));
+        }
     }
     
 }

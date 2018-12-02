@@ -9,17 +9,24 @@ import java.util.List;
  */
 public class MessageDTO {
     
-    private NodeDTO sender;
     private final NodeDTO receiver;
+    
     private int hopCount = 0;
+    private boolean confirmed = false;
     private File file;
     private Word word;
     private SearchDTO searchDTO;
+    private NodeDTO sender;
     private List<NodeDTO> additional;
     private List<SearchResult> searchResults;
     
     public MessageDTO(NodeDTO receiver){
         this.receiver = receiver;
+    }
+    
+    public MessageDTO(NodeDTO receiver, boolean confirmed){
+        this.receiver = receiver;
+        this.confirmed = confirmed;
     }
     
     public MessageDTO(NodeDTO receiver, Word word){
@@ -79,6 +86,10 @@ public class MessageDTO {
 
     public int getHopCount() {
         return hopCount;
+    }
+
+    public boolean isConfirmed() {
+        return confirmed;
     }
     
     public File getFile() {

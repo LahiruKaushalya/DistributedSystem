@@ -1,9 +1,6 @@
 package CS4262.Models.DataTransfer;
 
 import CS4262.Models.File;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 /**
  *

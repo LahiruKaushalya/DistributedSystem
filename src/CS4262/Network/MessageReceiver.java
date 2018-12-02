@@ -128,6 +128,10 @@ public class MessageReceiver extends Thread{
                 response = processMsg(new UpdatePredecessor(), command, st);
                 return response;
                 
+            case "CON_PRE":
+                response = processMsg(new ConfirmPredecessor(), command, st);
+                return response;
+                
             case "ISALIVE":
                 response = "ALIVE";
                 return response;
